@@ -85,10 +85,16 @@ class GitHub:
         return result['id'], result['tag_name']
 
     def create(self, tag, source):
-        command(['gh', 'release', 'create', tag, '--repo', 'https://github.com/' + REPOSITORY, '--target', source,
-                 '--draft', '--prerelease', '--latest=false', '--title', 'Immutable catalog candidate',
-                 '--notes', 'Immutable package-owned store overlay for checksum-pinned consumers. '
-                 'Only the explicitly qualified platforms are included. No application or production-channel promotion.'])
+        response = command([
+            'gh', 'api', '--hostname', 'github.com', '--method', 'POST',
+            'repos/' + REPOSITORY + '/releases',
+            '-f', 'tag_name=' + tag, '-f', 'target_commitish=' + source,
+            '-F', 'draft=true', '-F', 'prerelease=true', '-f', 'make_latest=false',
+            '-f', 'name=Immutable catalog candidate',
+            '-f', 'body=Immutable package-owned store overlay for checksum-pinned consumers. '
+            'Only the explicitly qualified platforms are included. No application or production-channel promotion.',
+        ])
+        return json.loads(response)
 
     def upload(self, tag, path):
         # Deliberately no overwrite switch. A concurrent asset upload fails and

@@ -50,6 +50,7 @@ class FakeGitHub:
         self.events.append(('create', tag, source))
         self.current = {'id': 7, 'tag_name': tag, 'target_commitish': source,
                         'prerelease': True, 'draft': True, 'assets': []}
+        return {'id': self.current['id'], 'tag_name': tag}
 
     def upload(self, tag, path):
         if path.name in self.bytes:
@@ -107,6 +108,30 @@ class PublisherTest(unittest.TestCase):
                          {self.archive.name, publish_candidate.METADATA_NAME})
         self.assertEqual(self.client.events[0][0], 'create')
         self.assertEqual(self.client.events[-1][0], 'publish')
+
+    def test_creation_does_not_depend_on_eventually_consistent_release_listing(self):
+        original_find = self.client.find
+        with patch.object(self.client, 'find', side_effect=original_find) as find:
+            with patch.object(self.client, 'release', wraps=self.client.release) as readback:
+                self.assertTrue(self.publish()['success'])
+        find.assert_called_once()
+        self.assertEqual(readback.call_args_list[0].args, (7,))
+
+    def test_invalid_create_response_stops_before_asset_upload(self):
+        for response in (None, {}, {'id': True, 'tag_name': 'candidate'},
+                         {'id': 0, 'tag_name': 'candidate'},
+                         {'id': 7, 'tag_name': 'different'}):
+            with self.subTest(response=response):
+                with patch.object(self.client, 'create', return_value=response):
+                    with self.assertRaisesRegex(ValueError, 'ID/tag identity'):
+                        self.publish('invalid-' + str(len(list(self.root.iterdir()))))
+                self.assertEqual(self.client.events, [])
+
+    def test_created_id_readback_mismatch_stops_before_asset_upload(self):
+        with patch.object(self.client, 'release', return_value={'id': 8}):
+            with self.assertRaisesRegex(ValueError, 'ID changed'):
+                self.publish()
+        self.assertEqual([event[0] for event in self.client.events], ['create'])
 
     def test_exact_published_candidate_resumes_read_only(self):
         self.publish()
@@ -218,7 +243,8 @@ class PublisherTest(unittest.TestCase):
 
     def test_mutation_commands_never_clobber_force_delete_or_promote_latest(self):
         operations = []
-        with patch.object(publish_candidate, 'command', side_effect=lambda args: operations.append(args) or ''):
+        with patch.object(publish_candidate, 'command',
+                          side_effect=lambda args: operations.append(args) or '{}'):
             client = publish_candidate.GitHub()
             client.create('candidate', self.source)
             client.upload('candidate', self.archive)
@@ -226,8 +252,11 @@ class PublisherTest(unittest.TestCase):
         flattened = [item for operation in operations for item in operation]
         for forbidden in ('--clobber', '--force', 'delete', '--latest', '--latest=true'):
             self.assertNotIn(forbidden, flattened)
-        self.assertEqual(flattened.count('--latest=false'), 2)
-        for operation in operations:
+        self.assertEqual(flattened.count('--latest=false'), 1)
+        self.assertIn('make_latest=false', operations[0])
+        self.assertEqual(operations[0][:6], ['gh', 'api', '--hostname', 'github.com', '--method', 'POST'])
+        self.assertEqual(operations[0][6], 'repos/' + native_store.REPOSITORY + '/releases')
+        for operation in operations[1:]:
             self.assertEqual(operation[operation.index('--repo') + 1],
                              'https://github.com/' + native_store.REPOSITORY)
 
