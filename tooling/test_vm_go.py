@@ -54,7 +54,10 @@ class VMHostMatrixTests(unittest.TestCase):
             WINDOWS_RUNNER.main()
         calls = run.call_args_list
         self.assertEqual(len(calls), 5)
-        self.assertTrue(calls[0].args[0][1].endswith('workflows/codeql.build/assets/scripts/build.py'))
+        self.assertEqual(
+            Path(calls[0].args[0][1]),
+            WINDOWS_RUNNER.ROOT / 'workflows/codeql.build/assets/scripts/build.py',
+        )
         self.assertEqual(calls[1].args[0][-3:], [
             'test', './packages/secrets/tools/...', './packages/remote/tools/...'])
         self.assertEqual([call.args[0] for call in calls[2:]], vm_go.test_arguments('Windows'))

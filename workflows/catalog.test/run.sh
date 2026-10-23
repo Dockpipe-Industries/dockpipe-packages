@@ -17,3 +17,4 @@ fi
 export DOCKPIPE_BIN="$dockpipe_bin"
 "$dockpipe_bin" package test --workdir "$repo_root"
 python3 -B -m unittest discover -s "$repo_root/workflows/package/package-store-staging-infra/tests" -p 'test_*.py'
+python3 -B -m unittest discover -s "$repo_root/workflows/package/package-release-setup/tests" -p 'test_*.py'

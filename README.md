@@ -14,7 +14,7 @@ Pipeon source currently requires repository access.
 | --- | --- |
 | [agent](packages/agent) | AI resolver integrations and cloud-lane diagnostics |
 | [cloud](packages/cloud) | Cloud storage, registry and publication workflows |
-| [cockpit](packages/cockpit/README.md) | Optional spatial workspace and native packages |
+| [Cockpit (external)](docs/migration/cockpit-retirement.md) | Independently owned SpatialPipe package; consume its pinned published runtime |
 | [ide](packages/ide) | Editor and development-container integrations |
 | [native-sdk](packages/native-sdk) | Product/native SDK packaging support |
 | [pipelang](packages/pipelang/README.md) | Standalone language-command workflows |
