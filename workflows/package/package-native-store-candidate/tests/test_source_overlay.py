@@ -66,6 +66,17 @@ class SourceOverlayTests(unittest.TestCase):
         return source_overlay.publish(candidate, self.lock_path, self.root / suffix, client,
                                       self.environment, attestor or (lambda path, source: None))
 
+    def test_workflow_yaml_parses_and_publication_remains_dev_push_only(self):
+        import yaml
+        workflow = self.template.parents[1] / '.github/workflows/source-store-candidate.yml'
+        document = yaml.safe_load(workflow.read_text())
+        build = document['jobs']['build']
+        install = next(step for step in build['steps'] if step.get('name', '').startswith('Install only'))
+        self.assertIn('--only-binary=:all:', install['run'])
+        publish = document['jobs']['publish']
+        self.assertIn("github.event_name == 'push'", publish['if'])
+        self.assertIn("github.ref == 'refs/heads/dev'", publish['if'])
+
     def test_complete_template_has_only_real_public_runtime_dependencies(self):
         source_overlay.load_lock(self.template, template=True)
         source_overlay.load_lock(self.lock_path)

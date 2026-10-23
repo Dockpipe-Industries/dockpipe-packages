@@ -30,7 +30,8 @@ jobs:
         with:
           python-version: '3.13.7'
       - name: Install only the hash-locked source verifier dependency
-        run: python -m pip install --require-hashes --only-binary=:all: -r release/source-overlay-requirements.lock.txt
+        run: |
+          python -m pip install --require-hashes --only-binary=:all: -r release/source-overlay-requirements.lock.txt
       - name: Test source and immutable publication contracts without mutation
         run: |
           python -B -m unittest discover -s workflows/package/package-native-store-candidate/tests -p 'test_source_overlay.py' -v
