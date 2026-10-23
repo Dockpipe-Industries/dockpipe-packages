@@ -1,0 +1,8 @@
+name: catalog-codeql-build
+description: Build catalog Go sources for CodeQL using the locked external Dockpipe SDK.
+docker_preflight: false
+steps:
+  - id: catalog-go-build
+    kind: host
+    cwd: repo
+    run: assets/scripts/build.sh

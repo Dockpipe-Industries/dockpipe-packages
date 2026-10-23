@@ -1,0 +1,18 @@
+/// <summary>Primary Windows guest display geometry. The guest driver must support this mode.</summary>
+public Class VmResolutionConfig
+{
+    /// <summary>Width in guest pixels. Accepted range: 640 to 8192.</summary>
+    [DisplayName = "Width"]
+    [EnvName = "DOCKPIPE_VM_DISPLAY_WIDTH"]
+    public string Width = "1920";
+
+    /// <summary>Height in guest pixels. Accepted range: 480 to 8192.</summary>
+    [DisplayName = "Height"]
+    [EnvName = "DOCKPIPE_VM_DISPLAY_HEIGHT"]
+    public string Height = "1080";
+
+    /// <summary>VM run ID for CLI use. Leave empty when invoked from the VM page.</summary>
+    [DisplayName = "VM run ID (CLI only)"]
+    [EnvName = "DOCKPIPE_VM_TARGET_RUN_ID"]
+    public string RunId = "";
+}

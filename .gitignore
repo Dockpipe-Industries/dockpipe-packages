@@ -1,0 +1,17 @@
+# Workflow/package runtime products and downloaded immutable SDK artifacts.
+/bin/
+/build/
+/.cache/
+**/__pycache__/
+*.pyc
+# Root Go test binaries; authored workflow directories can end in .test.
+/*.test
+/packages/*/build/
+/packages/*/bin/
+
+# Private operator configuration never belongs in this public catalog.
+/.env
+/.env.local
+*.tfstate
+*.tfstate.*
+**/.terraform/

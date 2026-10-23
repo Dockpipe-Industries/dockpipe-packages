@@ -1,0 +1,6 @@
+name: vm-snapshot
+description: Package-owned VM snapshot operation.
+steps:
+  - id: snapshot
+    kind: host
+    cmd: dockpipe-vm-manager snapshot

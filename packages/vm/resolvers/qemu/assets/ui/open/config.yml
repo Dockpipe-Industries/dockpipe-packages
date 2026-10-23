@@ -1,0 +1,6 @@
+name: vm-open
+description: Package-owned VM open operation.
+steps:
+  - id: open
+    kind: host
+    cmd: dockpipe-vm-manager open

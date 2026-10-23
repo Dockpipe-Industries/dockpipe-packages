@@ -1,0 +1,22 @@
+Dockpipe Guest Tools dynamically links the unmodified Qt 6.10.3 Core, Gui, Network and
+Widgets libraries and the Windows platform plugin. Qt is copyright The Qt Company
+Ltd. and other contributors, used under the GNU Lesser General Public License
+version 3. The LGPL and referenced GPL version 3 texts are included alongside
+this notice. Corresponding Qt source:
+https://download.qt.io/archive/qt/6.10/6.10.3/single/
+
+The Qt shared libraries may be replaced with compatible builds. Debugging
+modifications to the LGPL libraries is permitted. The application does not modify
+Qt. Qt's optional SVG/icon or image format plugins selected by windeployqt retain
+their upstream licenses and are part of this dynamically linked distribution.
+
+The MinGW compiler runtime is dynamically linked. Upstream GCC runtime exception,
+MinGW-w64 and winpthreads notices are copied from the exact locked compiler kit
+into the mingw subdirectory. The compiler itself is not distributed in the app.
+
+Dockpipe Guest Tools application source and build instructions:
+https://github.com/Dockpipe-Industries/dockpipe-packages/tree/master/packages/vm/guest-tools
+
+Dockpipe Guest Tools does not include the runtime-owned Windows guest provisioning
+implementation or an SSH public/private key. The installed Dockpipe runtime or
+its original bootstrap media supplies those separately.

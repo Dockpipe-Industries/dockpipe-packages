@@ -1,0 +1,78 @@
+{
+  "schema": 1,
+  "target": "windows-amd64",
+  "qt_version": "6.10.3",
+  "qt_architecture": "win64_mingw",
+  "compiler": "MinGW-w64 13.1.0 x86_64 posix seh msvcrt rt_v11 rev1",
+  "archives": [
+    {
+      "name": "qtbase",
+      "version": "6.10.3-0-202603310407",
+      "url": "https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/qt6_6103/qt6_6103/qt.qt6.6103.win64_mingw/6.10.3-0-202603310407qtbase-Windows-Windows_11_24H2-Mingw-Windows-Windows_11_24H2-X86_64.7z",
+      "metadata_url": "https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/qt6_6103/qt6_6103/qt.qt6.6103.win64_mingw/6.10.3-0-202603310407qtbase-Windows-Windows_11_24H2-Mingw-Windows-Windows_11_24H2-X86_64.7z.meta4",
+      "size_bytes": 25360372,
+      "sha256": "5c551318297ed374ac2c40a3e9a8061ffb0414f01346f15304e0ca5c0b8de08c",
+      "intended_layout_relative_to_qt_root": "6.10.3/mingw_64",
+      "extract_to_relative": "6.10.3/mingw_64"
+    },
+    {
+      "name": "qttools",
+      "version": "6.10.3-0-202603310407",
+      "url": "https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/qt6_6103/qt6_6103/qt.qt6.6103.win64_mingw/6.10.3-0-202603310407qttools-Windows-Windows_11_24H2-Mingw-Windows-Windows_11_24H2-X86_64.7z",
+      "metadata_url": "https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/qt6_6103/qt6_6103/qt.qt6.6103.win64_mingw/6.10.3-0-202603310407qttools-Windows-Windows_11_24H2-Mingw-Windows-Windows_11_24H2-X86_64.7z.meta4",
+      "size_bytes": 26567806,
+      "sha256": "a6009054edb9103e049d204ea7f73eff53e0c2344bc3f586d8ab11a05447506c",
+      "intended_layout_relative_to_qt_root": "6.10.3/mingw_64",
+      "extract_to_relative": "6.10.3/mingw_64"
+    },
+    {
+      "name": "mingw-runtime",
+      "version": "6.10.3-0-202603310407",
+      "url": "https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/qt6_6103/qt6_6103/qt.qt6.6103.win64_mingw/6.10.3-0-202603310407MinGW-w64-x86_64-13.1.0-release-posix-seh-msvcrt-rt_v11-rev1-runtime.7z",
+      "metadata_url": "https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/qt6_6103/qt6_6103/qt.qt6.6103.win64_mingw/6.10.3-0-202603310407MinGW-w64-x86_64-13.1.0-release-posix-seh-msvcrt-rt_v11-rev1-runtime.7z.meta4",
+      "size_bytes": 644845,
+      "sha256": "715868bd23b50fadc0a7ee160c3e24c59cb2a836f5390a4e32e0ab0491dc8325",
+      "intended_layout_relative_to_qt_root": "6.10.3/mingw_64/bin",
+      "extract_to_relative": "6.10.3/mingw_64/bin"
+    },
+    {
+      "name": "mingw",
+      "version": "13.1.0-202407240918",
+      "url": "https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/tools_mingw1310/qt.tools.win64_mingw1310/13.1.0-202407240918mingw1310.7z",
+      "metadata_url": "https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/tools_mingw1310/qt.tools.win64_mingw1310/13.1.0-202407240918mingw1310.7z.meta4",
+      "size_bytes": 112089140,
+      "sha256": "a7b502294a903b64fccd4a41ba39f48d3f6c9a5ece167f0cfaeac920d15b344f",
+      "intended_layout_relative_to_qt_root": "Tools/mingw1310_64",
+      "extract_to_relative": "."
+    },
+    {
+      "name": "cmake",
+      "version": "3.30.5-202502251255",
+      "url": "https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/tools_cmake/qt.tools.cmake/3.30.5-202502251255windows64_x64_cmake_tools.7z",
+      "metadata_url": "https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/tools_cmake/qt.tools.cmake/3.30.5-202502251255windows64_x64_cmake_tools.7z.meta4",
+      "size_bytes": 27883601,
+      "sha256": "257ff96c0e9fa6765c8c247132cf3a2a02b2a5ba360d32097b3605674196cabf",
+      "intended_layout_relative_to_qt_root": "Tools/CMake_64",
+      "extract_to_relative": "Tools/CMake_64"
+    },
+    {
+      "name": "ninja",
+      "version": "1.12.1-202502251256",
+      "url": "https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/tools_ninja/qt.tools.ninja/1.12.1-202502251256ninja_win64.7z",
+      "metadata_url": "https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/tools_ninja/qt.tools.ninja/1.12.1-202502251256ninja_win64.7z.meta4",
+      "size_bytes": 233312,
+      "sha256": "f85026ed07850918109f80d82039f1ae3af8e74d26d806bbeb6501c994102a04",
+      "intended_layout_relative_to_qt_root": "Tools/Ninja",
+      "extract_to_relative": "Tools/Ninja"
+    }
+  ],
+  "total_archive_bytes": 192779076,
+  "expected_executables": {
+    "qmake": "6.10.3/mingw_64/bin/qmake.exe",
+    "windeployqt": "6.10.3/mingw_64/bin/windeployqt.exe",
+    "c_compiler": "Tools/mingw1310_64/bin/gcc.exe",
+    "cxx_compiler": "Tools/mingw1310_64/bin/g++.exe",
+    "cmake": "Tools/CMake_64/bin/cmake.exe",
+    "ninja": "Tools/Ninja/ninja.exe"
+  }
+}

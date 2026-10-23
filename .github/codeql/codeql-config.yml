@@ -1,0 +1,3 @@
+name: dockpipe-packages
+queries:
+  - uses: security-extended

@@ -1,0 +1,8 @@
+schema: 1
+kind: package
+name: pipelang
+version: 0.1.0
+title: Standalone PipeLang tools
+license: Apache-2.0
+repository: https://github.com/Dockpipe-Industries/dockpipe-packages
+description: Run the independently versioned PipeLang compiler through Dockpipe workflows.

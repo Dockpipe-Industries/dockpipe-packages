@@ -1,0 +1,6 @@
+name: vm-clipboard-stop
+description: Package-owned VM clipboard control.
+steps:
+  - id: clipboard-stop
+    kind: host
+    cmd: dockpipe-vm-manager clipboard-stop

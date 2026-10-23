@@ -1,0 +1,6 @@
+name: catalog.build
+description: Build the standalone package catalog with an installed Dockpipe CLI.
+steps:
+  - id: build
+    kind: host
+    run: run.sh

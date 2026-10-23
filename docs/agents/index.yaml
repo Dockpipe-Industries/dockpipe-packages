@@ -1,0 +1,16 @@
+schema: 1
+description: Bounded routing for the independent Dockpipe package repository.
+external_sources:
+  runtime: https://github.com/Dockpipe-Industries/dockpipe
+  language: https://github.com/Dockpipe-Industries/pipelang
+routes:
+  orientation:
+    read: [AGENTS.md, docs/agents/ownership.md]
+  package_change:
+    read: [AGENTS.md, docs/agents/ownership.md, docs/agents/validation.md]
+    package_reads: [package.yml, README.md]
+  release:
+    read: [AGENTS.md, docs/agents/ownership.md, docs/agents/validation.md]
+    requirements: [pinned Dockpipe compiler, pinned PipeLang SDK, exact ownership inventory, immutable artifact manifest]
+  future_cpp:
+    read: [docs/agents/cpp-direction.md]

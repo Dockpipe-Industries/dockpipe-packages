@@ -1,0 +1,60 @@
+name: Package catalog
+on:
+  workflow_dispatch:
+  push:
+    branches: [master, staging, dev]
+  pull_request:
+    branches: [master, staging, dev]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26.9'
+      - name: Verify locked installation integrity
+        run: python3 -m unittest discover -s tooling -p test_*.py
+      - name: Install the locked Dockpipe version
+        run: python3 tooling/bootstrap_dockpipe.py --output "$RUNNER_TEMP/dockpipe"
+      - name: Fetch the pinned Dockpipe SDK
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 tooling/fetch_sdk_release.py --output "$RUNNER_TEMP/sdk-inputs"
+      - name: Build and test through Dockpipe
+        env:
+          DOCKPIPE_GO_SDK_INPUTS: ${{ runner.temp }}/sdk-inputs
+        run: |
+          "$DOCKPIPE_BIN" --workflow-file workflows/codeql.build/config.yml --
+          "$DOCKPIPE_BIN" --workflow-file workflows/catalog.test/config.yml --
+  test-windows:
+    runs-on: windows-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version: '1.26.9'
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: Verify locked installation integrity
+        run: python -m unittest discover -s tooling -p test_*.py
+      - name: Install the official checksum-verified Dockpipe release
+        shell: pwsh
+        run: python tooling/bootstrap_dockpipe.py --output "$env:RUNNER_TEMP/dockpipe"
+      - name: Fetch the pinned Dockpipe SDK
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python tooling/fetch_sdk_release.py --output "$env:RUNNER_TEMP/sdk-inputs"
+      - name: Test through the native Dockpipe workflow
+        shell: pwsh
+        env:
+          DOCKPIPE_GO_SDK_INPUTS: ${{ runner.temp }}/sdk-inputs
+        run: |
+          & $env:DOCKPIPE_BIN --workflow-file workflows/ci.windows/config.yml --
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

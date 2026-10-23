@@ -1,0 +1,6 @@
+name: vm-repair
+description: Package-owned VM repair operation.
+steps:
+  - id: repair
+    kind: host
+    cmd: dockpipe-vm-manager repair
