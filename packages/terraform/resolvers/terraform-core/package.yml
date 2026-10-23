@@ -1,0 +1,6 @@
+schema: 1
+kind: workflow
+name: dockpipe.terraform.core
+version: 0.6.3
+namespace: dockpipe-terraform
+license: Apache-2.0

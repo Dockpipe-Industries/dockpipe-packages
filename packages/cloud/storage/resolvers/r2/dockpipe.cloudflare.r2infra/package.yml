@@ -1,0 +1,7 @@
+schema: 1
+kind: workflow
+name: dockpipe.cloudflare.r2infra
+version: 0.6.4
+namespace: dockpipe-cloudflare
+license: Apache-2.0
+depends: [dockpipe.terraform.core]
