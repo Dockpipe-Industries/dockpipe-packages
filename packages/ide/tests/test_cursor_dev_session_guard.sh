@@ -21,6 +21,8 @@ test_existing_session_guard() (
     rm -rf "$tmp"
   ' EXIT
   export XDG_STATE_HOME="${tmp}/state"
+  # This fixture owns a new workspace rather than the parent workflow state.
+  unset DOCKPIPE_STATE_DIR
   export DOCKPIPE_PACKAGE_ROOT="${REPO_ROOT}/packages/ide"
   export DOCKPIPE_PACKAGE_MANIFEST="${DOCKPIPE_PACKAGE_ROOT}/package.yml"
   fakebin="${tmp}/bin"
