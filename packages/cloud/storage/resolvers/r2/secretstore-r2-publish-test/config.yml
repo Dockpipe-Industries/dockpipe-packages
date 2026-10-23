@@ -63,4 +63,4 @@ steps:
   - id: publish-r2
     kind: host
     run:
-      - scripts/dockpipe/r2-publish.sh
+      - scripts/dorkpipe/r2-publish.sh

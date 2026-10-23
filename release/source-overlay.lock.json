@@ -1,0 +1,77 @@
+{
+  "schema": 1,
+  "source_commit": null,
+  "owned": [
+    [
+      "workflow",
+      "dockpipe.terraform.core"
+    ],
+    [
+      "workflow",
+      "dockpipe.cloudflare.r2infra"
+    ],
+    [
+      "workflow",
+      "secretstore-r2-publish-test"
+    ]
+  ],
+  "cli_version": "0.6.25",
+  "workflows": [
+    {
+      "name": "dockpipe.terraform.core",
+      "version": "0.6.3",
+      "path": "packages/terraform/resolvers/terraform-core"
+    },
+    {
+      "name": "dockpipe.cloudflare.r2infra",
+      "path": "packages/cloud/storage/resolvers/r2/dockpipe.cloudflare.r2infra",
+      "version": "0.6.4"
+    },
+    {
+      "name": "secretstore-r2-publish-test",
+      "path": "packages/cloud/storage/resolvers/r2/secretstore-r2-publish-test",
+      "version": "0.6.2"
+    }
+  ],
+  "inputs": {
+    "source": null,
+    "cli": {
+      "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/v0.6.25-staging.39554459680.1.2a984e78d9da/dockpipe_0.6.25_linux_amd64.tar.gz",
+      "sha256": "4a314695ff806662e146aeae9e25ae70efcda7980b88fdb6e343e2f963227189",
+      "size_bytes": 5481393,
+      "format": "tar.gz",
+      "root": ""
+    },
+    "runtime_core": {
+      "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/v0.6.25-staging.39554459680.1.2a984e78d9da/dockpipe-core-0.6.25.tar.gz",
+      "sha256": "a141b4e2aeccc79d57f77ecdc542c3c2acb88dfbcda67f1520db5539cd193277",
+      "size_bytes": 2785294,
+      "format": "file",
+      "root": ""
+    },
+    "baseline": {
+      "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/v0.6.16-staging.38567355491.1.70d207f11d1f/dockpipe-packages_0.6.16_linux-amd64.tar.gz",
+      "sha256": "3d367887e3ef04db27a1df76f1623e64056c017874695515651e86f8f9e0ac44",
+      "size_bytes": 393580684,
+      "manifest_sha256": "57402cd65d204ea34635839b63470c3173831833f0788fd7cb9bdc3b1617be51"
+    },
+    "dorkpipe": {
+      "url": "https://packages.staging.dockpipe.com/packages/standalone/dorkpipe/candidates/0.6.5-staging.cc31cf0aa848/dorkpipe-packages-0.6.5-linux-amd64.tar.gz",
+      "sha256": "e00a93057b3e1afedfd13d01c951f16c261ddbd4ea677584ff34b347d5140955",
+      "size_bytes": 19418995,
+      "manifest_sha256": "464aec661eed0eea756599d08a6e98a4261fffe7d53a5c2aff28fb38d74c2438"
+    },
+    "verifier_source": {
+      "url": "https://codeload.github.com/Dockpipe-Industries/dockpipe/tar.gz/f077ab7650246d32145a124e546e43053814e622",
+      "sha256": "6a2532a371566b3ff12257c1488d148023e199776c5b8e5f1ef12e9eee3ca99a",
+      "size_bytes": 8344375,
+      "format": "tar.gz",
+      "root": "dockpipe-f077ab7650246d32145a124e546e43053814e622"
+    }
+  },
+  "previous_artifacts": {
+    "dockpipe-workflow-dockpipe.cloudflare.r2infra-0.6.3.tar.gz": "1d003759db261d221111f631fadada5a996395272bf21bea5aa28ef2c12062eb",
+    "dockpipe-workflow-secretstore-r2-publish-test-0.6.1.tar.gz": "61475c3688153d07d4feba78598cc4356e91ef0d04e966b803567641f9791b2e",
+    "dockpipe-workflow-dockpipe.terraform.core-0.6.2.tar.gz": "00bc490e55a2399a68d667b9857690aa5daf65360cb657ed221dfb63a11d9e2e"
+  }
+}
