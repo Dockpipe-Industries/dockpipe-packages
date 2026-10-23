@@ -19,6 +19,8 @@ jobs:
         run: python3 -m unittest discover -s tooling -p test_*.py
       - name: Install the locked Dockpipe version
         run: python3 tooling/bootstrap_dockpipe.py --output "$RUNNER_TEMP/dockpipe"
+      - name: Install the locked compiled runtime core
+        run: python3 tooling/bootstrap_runtime_core.py --output "$RUNNER_TEMP/dockpipe-runtime"
       - name: Fetch the pinned Dockpipe SDK
         env:
           GH_TOKEN: ${{ github.token }}
@@ -46,6 +48,9 @@ jobs:
       - name: Install the official checksum-verified Dockpipe release
         shell: pwsh
         run: python tooling/bootstrap_dockpipe.py --output "$env:RUNNER_TEMP/dockpipe"
+      - name: Install the locked compiled runtime core
+        shell: pwsh
+        run: python tooling/bootstrap_runtime_core.py --output "$env:RUNNER_TEMP/dockpipe-runtime"
       - name: Fetch the pinned Dockpipe SDK
         shell: pwsh
         env:
