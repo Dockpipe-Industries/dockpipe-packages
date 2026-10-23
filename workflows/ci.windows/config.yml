@@ -1,0 +1,8 @@
+name: ci.windows
+description: Verify portable Go tools on the native Windows CI host.
+docker_preflight: false
+steps:
+  - id: portable-tests
+    kind: host
+    cwd: repo
+    run: assets/scripts/test.sh

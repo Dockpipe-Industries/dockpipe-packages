@@ -1,0 +1,6 @@
+name: catalog.test
+description: Test the standalone package catalog with an installed Dockpipe CLI.
+steps:
+  - id: test
+    kind: host
+    run: run.sh

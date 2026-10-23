@@ -1,0 +1,8 @@
+name: guest-tools.build
+description: Build, test and bundle native Windows Guest Tools with its exact locked Qt toolchain.
+docker_preflight: false
+steps:
+  - id: native-guest-tools
+    kind: host
+    cwd: repo
+    cmd: powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File packages/vm/guest-tools/workflows/build/assets/scripts/build.ps1

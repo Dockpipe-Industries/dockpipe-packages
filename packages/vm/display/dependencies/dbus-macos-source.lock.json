@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "name": "dbus",
+  "version": "1.16.2",
+  "platform": "darwin-arm64",
+  "source_url": "https://dbus.freedesktop.org/releases/dbus/dbus-1.16.2.tar.xz",
+  "source_size_bytes": 1115644,
+  "source_sha256": "0ba2a1a4b16afe7bceb2c07e9ce99a8c2c3508e5dec290dbb643384bd6beb7e2",
+  "patch": "dbus-1.16.2-macos-peerpid.patch",
+  "patch_sha256": "69a03882576fd264a287a21d3dd298638e8fd58515552acb645edff6ab90526b",
+  "patch_origin": "package-authored; not an upstream release",
+  "required_feature": "GetConnectionUnixProcessID from kernel LOCAL_PEERPID",
+  "license_files": [
+    "COPYING",
+    "LICENSES/AFL-2.1.txt",
+    "LICENSES/GPL-2.0-or-later.txt"
+  ],
+  "system_service_install": false,
+  "qualification": "native build and live private-bus PID proof required"
+}

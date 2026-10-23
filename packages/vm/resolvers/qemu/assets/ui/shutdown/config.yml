@@ -1,0 +1,6 @@
+name: vm-shutdown
+description: Package-owned VM shutdown operation.
+steps:
+  - id: shutdown
+    kind: host
+    cmd: dockpipe-vm-manager shutdown

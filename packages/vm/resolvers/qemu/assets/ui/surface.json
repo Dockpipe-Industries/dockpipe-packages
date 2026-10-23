@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "id": "dockpipe.vm",
+  "title": "VM",
+  "snapshot": "assets/ui/snapshot/config.yml",
+  "actions": [
+    {
+      "id": "start-windows",
+      "title": "Start Windows VM",
+      "scope": "surface",
+      "workflow_id": "windows-vm"
+    },
+    {
+      "id": "open",
+      "title": "Open Guest Tools",
+      "scope": "resource",
+      "workflow": "assets/ui/open/config.yml"
+    },
+    {
+      "id": "resolution",
+      "title": "Display resolution",
+      "scope": "resource",
+      "workflow_id": "vm-resolution"
+    },
+    {
+      "id": "repair",
+      "title": "Repair Guest Tools",
+      "scope": "resource",
+      "workflow": "assets/ui/repair/config.yml"
+    },
+    {
+      "id": "shutdown",
+      "title": "Shut down guest",
+      "scope": "resource",
+      "workflow": "assets/ui/shutdown/config.yml"
+    },
+    {
+      "id": "clipboard-start",
+      "title": "Enable clipboard",
+      "scope": "resource",
+      "workflow": "assets/ui/clipboard-start/config.yml"
+    },
+    {
+      "id": "clipboard-stop",
+      "title": "Disable clipboard",
+      "scope": "resource",
+      "workflow": "assets/ui/clipboard-stop/config.yml"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+name: vm-resolution
+title: VM display resolution
+description: Change and save the primary Windows guest display resolution through the logged-in Guest Tools app. Only modes advertised by the guest driver are accepted.
+catalog_type: integration
+categories: [virtual-machines, development]
+platforms: [windows, deb]
+types:
+  - models/VmResolutionConfig.pipe
+view:
+  pages:
+    - id: display
+      title: Display resolution
+      sections:
+        - id: geometry
+          title: Guest display
+          fields: [Width, Height, RunId]
+steps:
+  - id: resolution
+    kind: host
+    run: assets/scripts/vm-resolution.py

@@ -1,0 +1,8 @@
+name: pipelang.check
+description: Run standalone PipeLang check on the host.
+docker_preflight: false
+steps:
+  - id: compiler
+    kind: host
+    cwd: repo
+    run: assets/scripts/run.sh

@@ -1,0 +1,58 @@
+name: CodeQL
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [master, staging, dev]
+  push:
+    branches: [master, staging, dev]
+  schedule:
+    - cron: '18 11 * * 1'
+concurrency:
+  group: codeql-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  codeql:
+    name: CodeQL (${{ matrix.language == 'go' && 'Go' || 'Actions' }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: go
+            build-mode: manual
+          - language: actions
+            build-mode: none
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        if: matrix.language == 'go'
+        with:
+          go-version: '1.26.9'
+      - name: Install the locked Dockpipe version
+        if: matrix.language == 'go'
+        run: python3 tooling/bootstrap_dockpipe.py --output "$RUNNER_TEMP/dockpipe"
+      - name: Fetch the pinned public Dockpipe SDK
+        if: matrix.language == 'go'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 -B tooling/fetch_sdk_release.py --output "$RUNNER_TEMP/sdk-inputs"
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+          config-file: ./.github/codeql/codeql-config.yml
+      - name: Build through Dockpipe
+        if: matrix.language == 'go'
+        env:
+          DOCKPIPE_GO_SDK_INPUTS: ${{ runner.temp }}/sdk-inputs
+        run: '"$DOCKPIPE_BIN" --workflow-file workflows/codeql.build/config.yml --workdir "$GITHUB_WORKSPACE" --'
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v4
+        with:
+          category: "/language:${{ matrix.language }}"

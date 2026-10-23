@@ -1,0 +1,18 @@
+name: vm-manage
+title: Manage virtual machines
+description: Inspect VM status or run a package-owned management action from the CLI.
+catalog_type: integration
+categories: [virtual-machines, development]
+platforms: [windows, deb]
+steps:
+  - id: manage
+    kind: host
+    cmd: |
+      python3 -c "
+      import os
+      import runpy
+      from pathlib import Path
+
+      script = Path(os.environ['DOCKPIPE_WORKFLOW_DIR']) / 'assets/scripts/vm-manage.py'
+      runpy.run_path(str(script), run_name='__main__')
+      "

@@ -1,0 +1,6 @@
+name: vm-clipboard-start
+description: Package-owned VM clipboard control.
+steps:
+  - id: clipboard-start
+    kind: host
+    cmd: dockpipe-vm-manager clipboard-start

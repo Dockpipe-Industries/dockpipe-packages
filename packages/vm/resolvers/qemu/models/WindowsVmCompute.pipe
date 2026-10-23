@@ -1,0 +1,45 @@
+/// <summary>
+/// Guest CPU, memory, and display settings.
+/// </summary>
+public Interface IWindowsVmCompute
+{
+    /// <summary>Default vCPU count for the guest.</summary>
+    [DisplayName = "CPUs"]
+    [EnvName = "DOCKPIPE_VM_CPUS"]
+    public string Cpus;
+
+    /// <summary>Default guest memory allocation.</summary>
+    [DisplayName = "Memory"]
+    [EnvName = "DOCKPIPE_VM_MEMORY"]
+    public string Memory;
+
+    /// <summary>Optional display mode for visible VM sessions. On Windows hosts Dockpipe defaults interactive sessions to gtk,grab-on-hover=on,window-close=on unless you override it.</summary>
+    [DisplayName = "Display"]
+    [EnvName = "DOCKPIPE_VM_DISPLAY"]
+    public string Display;
+
+    /// <summary>Optional preferred standard-VGA EDID width at the next VM start. Supply with BootDisplayHeight. This is not a live mode change; the guest driver may keep its current supported modes.</summary>
+    [DisplayName = "Boot display width"]
+    [EnvName = "DOCKPIPE_VM_BOOT_DISPLAY_WIDTH"]
+    public string BootDisplayWidth;
+
+    /// <summary>Optional preferred standard-VGA EDID height at the next VM start. Supply with BootDisplayWidth. Dimensions must fit the standard VGA 16 MiB framebuffer; no video device or host GPU is replaced.</summary>
+    [DisplayName = "Boot display height"]
+    [EnvName = "DOCKPIPE_VM_BOOT_DISPLAY_HEIGHT"]
+    public string BootDisplayHeight;
+
+    /// <summary>Native view pointer mode: auto or absolute supplies a standard USB tablet; relative uses click capture and Ctrl+Alt+G to release. No GPU passthrough is involved.</summary>
+    [DisplayName = "Pointer mode"]
+    [EnvName = "DOCKPIPE_VM_POINTER_MODE"]
+    public string PointerMode;
+}
+
+public Class WindowsVmCompute : IWindowsVmCompute
+{
+    public string Cpus = "4";
+    public string Memory = "12G";
+    public string Display = "";
+    public string PointerMode = "auto";
+    public string BootDisplayWidth = "";
+    public string BootDisplayHeight = "";
+}
