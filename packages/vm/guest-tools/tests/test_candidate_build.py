@@ -121,6 +121,21 @@ class CandidateBuildTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'ignored/generated'):
             self.snapshot()
 
+    def test_windows_powershell_child_rebuilds_compatible_module_path(self):
+        inherited = {'PSModulePath': 'PowerShell7/Modules', 'pSmOdUlEpAtH': 'other/Modules',
+                     'PATH': 'explicit-tools', 'SystemRoot': 'C:/Windows',
+                     'OPERATOR_INPUT': 'literal-value'}
+        original = dict(inherited)
+        child = emitter.windows_powershell_environment(inherited)
+        self.assertEqual(child, {'PATH': 'explicit-tools', 'SystemRoot': 'C:/Windows',
+                                 'OPERATOR_INPUT': 'literal-value'})
+        self.assertEqual(inherited, original)
+
+    def test_windows_powershell_child_preserves_environment_without_module_override(self):
+        inherited = {'PATH': 'explicit-tools', 'SystemRoot': 'C:/Windows'}
+        self.assertEqual(emitter.windows_powershell_environment(inherited), inherited)
+        self.assertIsNot(emitter.windows_powershell_environment(inherited), inherited)
+
     def test_non_native_build_refused_before_any_output_or_subprocess(self):
         with mock.patch.object(emitter.platform, 'system', return_value='Linux'), \
                 mock.patch.object(emitter.subprocess, 'run') as run:

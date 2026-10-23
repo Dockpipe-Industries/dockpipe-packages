@@ -114,6 +114,13 @@ def actual_tools(qt):
     return observations
 
 
+def windows_powershell_environment(environment):
+    # A pwsh -> Python -> Windows PowerShell chain inherits PowerShell 7 module
+    # directories. Let Windows PowerShell rebuild its own compatible defaults.
+    return {key: value for key, value in environment.items()
+            if key.casefold() != 'psmodulepath'}
+
+
 def build(repository, source_sha, git, binary, cli_sha, qt, output):
     if platform.system() != 'Windows' or platform.machine().casefold() not in {'amd64', 'x86_64'}:
         raise ValueError('Native Windows amd64 execution is required')
@@ -152,7 +159,8 @@ def build(repository, source_sha, git, binary, cli_sha, qt, output):
     subprocess.run([str(powershell), '-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass',
                     '-File', str(repository / COMPONENT / 'tests/InstallerIntegrity.Tests.ps1'),
                     '-BundlePath', str(native / 'bundle'), '-InteractiveUserName', getpass.getuser(),
-                    '-OutputDirectory', str(integrity_output)], env=environment, check=True, timeout=120)
+                    '-OutputDirectory', str(integrity_output)],
+                   env=windows_powershell_environment(environment), check=True, timeout=120)
     integrity, _ = candidate.document(integrity_output / 'result.json')
     if (integrity.get('schema') != 1 or integrity.get('platform') != candidate.PLATFORM
             or integrity.get('installer_parse') != 'passed'
