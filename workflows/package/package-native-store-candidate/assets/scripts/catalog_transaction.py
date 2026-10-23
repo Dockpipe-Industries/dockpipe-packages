@@ -70,10 +70,13 @@ def publish_assets(release_document, by_platform, output, metadata_name, client)
     verify_reference(client.reference('refs/tags/' + tag), source,
                      missing=release is None or release.get('draft') is True)
     if release is None:
-        client.create(tag, source)
-        release = client.find(tag)
-        if release is None:
-            raise ValueError('Created draft is unavailable; inspect and explicitly resume later')
+        created = client.create(tag, source)
+        if (not isinstance(created, dict) or type(created.get('id')) is not int
+                or created['id'] <= 0 or created.get('tag_name') != tag):
+            raise ValueError('Created release response lacks its exact ID/tag identity')
+        release = client.release(created['id'])
+        if not isinstance(release, dict) or release.get('id') != created['id']:
+            raise ValueError('Created release ID changed during deterministic readback')
     seen = inventory(release, tag, source, assets, complete=not release['draft'])
     if release['draft']:
         for name in sorted(set(assets) - seen):
