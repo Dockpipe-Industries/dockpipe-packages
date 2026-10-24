@@ -28,7 +28,7 @@ class NativeInputsTest(unittest.TestCase):
         for target, recipe in self.recipes.items():
             with self.subTest(target=target):
                 native_inputs.validate(recipe, target)
-        self.assertEqual(len(self.recipes['linux-amd64']['archives']), 39)
+        self.assertEqual(len(self.recipes['linux-amd64']['archives']), 57)
         self.assertEqual(len(self.recipes['windows-amd64']['archives']), 30)
 
     def test_linux_qt_opengl_build_inputs_are_exact_and_owned(self):
@@ -47,6 +47,42 @@ class NativeInputsTest(unittest.TestCase):
         libraries = {Path(record['path']).name for record in recipe['libraries']}
         self.assertTrue({'libGL.so.1', 'libGLX.so.0', 'libOpenGL.so.0',
                          'libGLdispatch.so.0', 'libEGL.so.1'}.issubset(libraries))
+
+    def test_linux_qt_xcb_dependencies_have_exact_archives_libraries_and_licenses(self):
+        recipe = self.recipes['linux-amd64']
+        expected = {
+            'libbsd0': 'libbsd.so.0',
+            'libmd0': 'libmd.so.0',
+            'libxau6': 'libXau.so.6',
+            'libxcb-cursor0': 'libxcb-cursor.so.0',
+            'libxcb-icccm4': 'libxcb-icccm.so.4',
+            'libxcb-image0': 'libxcb-image.so.0',
+            'libxcb-keysyms1': 'libxcb-keysyms.so.1',
+            'libxcb-render-util0': 'libxcb-render-util.so.0',
+            'libxcb-render0': 'libxcb-render.so.0',
+            'libxcb-shape0': 'libxcb-shape.so.0',
+            'libxcb-shm0': 'libxcb-shm.so.0',
+            'libxcb-util1': 'libxcb-util.so.1',
+            'libxcb-xkb1': 'libxcb-xkb.so.1',
+            'libxcb1': 'libxcb.so.1',
+            'libxdmcp6': 'libXdmcp.so.6',
+            'libxkbcommon-x11-0': 'libxkbcommon-x11.so.0',
+            'libxkbcommon0': 'libxkbcommon.so.0',
+        }
+        archives = {entry['package'].split(':')[0]: entry for entry in recipe['archives']}
+        for package, soname in expected.items():
+            with self.subTest(package=package):
+                entry = archives[package]
+                self.assertEqual(entry['destination'], 'gio')
+                self.assertTrue(entry['asset']['url'].startswith(
+                    'https://archive.ubuntu.com/ubuntu/pool/'))
+                libraries = [record for record in recipe['libraries']
+                             if record['archive_id'] == entry['id']]
+                self.assertEqual([Path(record['path']).name for record in libraries], [soname])
+                licenses = [record for record in recipe['licenses']
+                            if record['archive_id'] == entry['id']]
+                self.assertEqual(len(licenses), 1)
+        self.assertIn('xkb-data', archives)
 
     def test_recipe_replaces_four_roles_without_loosening_other_public_pins(self):
         lock = self.fixture.lock()

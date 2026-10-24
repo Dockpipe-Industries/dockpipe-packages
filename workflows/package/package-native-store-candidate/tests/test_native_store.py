@@ -236,6 +236,7 @@ class NativeStoreTest(unittest.TestCase):
         def invoke(arguments, repository, environment):
             commands.append([str(item) for item in arguments])
             self.assertEqual(environment['DOCKPIPE_DISPLAY_SDK'], 'display')
+            self.assertEqual(environment['DOCKPIPE_VM_BUILD_DIAGNOSTICS'], str(output / 'diagnostics'))
             for key, value in (recipe_environment or {}).items():
                 self.assertEqual(environment[key], value)
             if arguments[1:4] != ['package', 'build', 'store']:

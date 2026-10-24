@@ -15,6 +15,7 @@ import sys
 sys.dont_write_bytecode = True
 from tooling.runtime_closure import windows_closure, macos_closure
 from tooling.broker_closure import broker_inputs, bundle_broker
+from tooling.windows_test_diagnostics import diagnose_tests
 
 ROOT = Path(__file__).resolve().parent
 SYSTEM_ABI = {"libc.so.6", "libm.so.6", "libdl.so.2", "libpthread.so.0", "librt.so.1"}
@@ -55,7 +56,7 @@ def material_sources(root):
     paths = [root / "CMakeLists.txt"]
     for directory in ("src", "tests", "tooling"):
         paths.extend(path for path in (root / directory).rglob("*")
-                     if path.is_file() and path.suffix in {".cpp", ".h", ".in"})
+                     if path.is_file() and path.suffix in {".cpp", ".h", ".in", ".cmake"})
     if len(paths) > 256:
         raise ValueError("Prepared build source inventory exceeds 256 files")
     inventory = {}
@@ -231,7 +232,15 @@ def main():
         run(arguments)
         run(["cmake", "--build", build, "--config", "Release", "-j4"])
     if not args.skip_tests:
-        run(["ctest", "--test-dir", build, "-C", "Release", "--output-on-failure"])
+        try:
+            run(["ctest", "--test-dir", build, "-C", "Release", "--output-on-failure"])
+        except subprocess.CalledProcessError:
+            if system == "Windows":
+                try:
+                    diagnose_tests(build, gio, qt, os.environ)
+                except (OSError, ValueError, subprocess.SubprocessError) as diagnostic_error:
+                    print("Windows test evidence collection failed: " + str(diagnostic_error)[:2000], file=sys.stderr)
+            raise
     destination = args.output / "package/assets/display"
     destination.mkdir(parents=True)
     module_name = {"Linux": "libdockpipe-vm-display.so", "Windows": "dockpipe-vm-display.dll",

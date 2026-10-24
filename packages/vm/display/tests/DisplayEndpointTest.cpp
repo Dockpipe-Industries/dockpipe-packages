@@ -19,7 +19,12 @@ class DisplayEndpointTest : public QObject {
 private slots:
     void privateMetadataAndProcessIdentity()
     {
-        QTemporaryDir temporary;
+        // Unix-domain sockets have a small fixed path capacity. The runner's
+        // ambient TMPDIR may be longer than that capacity on macOS.
+        QTemporaryDir temporary(QStringLiteral("/tmp/dockpipe-endpoint-XXXXXX"));
+        QVERIFY(temporary.isValid());
+        QVERIFY(QFile::setPermissions(temporary.path(),
+                                     QFile::ReadOwner | QFile::WriteOwner | QFile::ExeOwner));
         const auto state = QFileInfo(temporary.path()).canonicalFilePath() + "/display-fixture";
         QVERIFY(QDir().mkdir(state));
         QVERIFY(QFile::setPermissions(state, QFile::ReadOwner | QFile::WriteOwner | QFile::ExeOwner));

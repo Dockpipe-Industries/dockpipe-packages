@@ -37,7 +37,7 @@
   ],
   "profiles": {
     "linux-amd64": {
-      "cli_version": "0.6.26-staging.cli.sha49987891f4c3",
+      "cli_version": "0.6.27-staging.cli.sha48f628a8af6d",
       "guest_source_commit": "13ffe8ad8c59f1c8aa6ba75e2b229d9c26a34681",
       "inputs": {
         "source": {
@@ -48,9 +48,9 @@
           "root": null
         },
         "cli": {
-          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/cli-candidate-0.6.26-staging.49987891f4c3b81f5ef871b1c4cffd333e3ce274/dockpipe_0.6.26-staging.cli.sha49987891f4c3_linux_amd64.tar.gz",
-          "sha256": "1c0aa2f55f8a32154def694544c083f3f9ed3dd7e0968cf33e6d3426ca21b794",
-          "size_bytes": 5240088,
+          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/cli-candidate-0.6.27-staging.48f628a8af6def1ed9d87c77dff1566ba8c49031/dockpipe_0.6.27-staging.cli.sha48f628a8af6d_linux_amd64.tar.gz",
+          "sha256": "3b34335c79c5bb5b55f5ae46aaf6e8e2a37cc97d315d44f13749a1305a92f0e2",
+          "size_bytes": 5247345,
           "format": "tar.gz",
           "root": ""
         },
@@ -723,6 +723,240 @@
               "format": "deb",
               "root": ""
             }
+          },
+          {
+            "id": "libbsd0-amd64",
+            "destination": "gio",
+            "package": "libbsd0:amd64",
+            "version": "0.11.5-1",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/libb/libbsd/libbsd0_0.11.5-1_amd64.deb",
+              "sha256": "09367acdf59f28ffb71ba7bc36c516cff03b2765930cf9be7bb7ea7273e4c312",
+              "size_bytes": 44760,
+              "format": "deb",
+              "root": ""
+            }
+          },
+          {
+            "id": "libmd0-amd64",
+            "destination": "gio",
+            "package": "libmd0:amd64",
+            "version": "1.0.4-1build1",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/libm/libmd/libmd0_1.0.4-1build1_amd64.deb",
+              "sha256": "bcdad5e400aeb660f0337a1c5c1a77e3effa91d0803e64ce2d000e9006f67cdb",
+              "size_bytes": 22964,
+              "format": "deb",
+              "root": ""
+            }
+          },
+          {
+            "id": "libxau6-amd64",
+            "destination": "gio",
+            "package": "libxau6:amd64",
+            "version": "1:1.0.9-1build5",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/libx/libxau/libxau6_1.0.9-1build5_amd64.deb",
+              "sha256": "551fa4101394af894f5f401285eeca9756da94bb31ecb08ed36a549ec580cd10",
+              "size_bytes": 7634,
+              "format": "deb",
+              "root": ""
+            }
+          },
+          {
+            "id": "libxcb-cursor0-amd64",
+            "destination": "gio",
+            "package": "libxcb-cursor0:amd64",
+            "version": "0.1.1-4ubuntu1",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/universe/x/xcb-util-cursor/libxcb-cursor0_0.1.1-4ubuntu1_amd64.deb",
+              "sha256": "c9b5d1ad4af57397b1bd77e0a92750e34419def134c0282a0836ae9efc07cf64",
+              "size_bytes": 10538,
+              "format": "deb",
+              "root": ""
+            }
+          },
+          {
+            "id": "libxcb-icccm4-amd64",
+            "destination": "gio",
+            "package": "libxcb-icccm4:amd64",
+            "version": "0.4.1-1.1build2",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/x/xcb-util-wm/libxcb-icccm4_0.4.1-1.1build2_amd64.deb",
+              "sha256": "4dfe14a0ce681b823b740dabb3de84b3ce0958c9a404af61823b11f64047b0ef",
+              "size_bytes": 11460,
+              "format": "deb",
+              "root": ""
+            }
+          },
+          {
+            "id": "libxcb-image0-amd64",
+            "destination": "gio",
+            "package": "libxcb-image0:amd64",
+            "version": "0.4.0-2",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/x/xcb-util-image/libxcb-image0_0.4.0-2_amd64.deb",
+              "sha256": "b52babc3b4f2aa5241cac3a7888ce3b37d25a7f18867cae180e8cd11ec945cb9",
+              "size_bytes": 11502,
+              "format": "deb",
+              "root": ""
+            }
+          },
+          {
+            "id": "libxcb-keysyms1-amd64",
+            "destination": "gio",
+            "package": "libxcb-keysyms1:amd64",
+            "version": "0.4.0-1build3",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/x/xcb-util-keysyms/libxcb-keysyms1_0.4.0-1build3_amd64.deb",
+              "sha256": "1d62f96a793cc1aa0df860de3f7d83edea2fa461d97e2b3d4d7f7e7a10e55f42",
+              "size_bytes": 8746,
+              "format": "deb",
+              "root": ""
+            }
+          },
+          {
+            "id": "libxcb-render-util0-amd64",
+            "destination": "gio",
+            "package": "libxcb-render-util0:amd64",
+            "version": "0.3.9-1build3",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/x/xcb-util-renderutil/libxcb-render-util0_0.3.9-1build3_amd64.deb",
+              "sha256": "f87659a2369430ed2acb1cdae54a06fa9d60727a6545594e213173ddb4377727",
+              "size_bytes": 10272,
+              "format": "deb",
+              "root": ""
+            }
+          },
+          {
+            "id": "libxcb-render0-amd64",
+            "destination": "gio",
+            "package": "libxcb-render0:amd64",
+            "version": "1.14-3ubuntu3",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/libx/libxcb/libxcb-render0_1.14-3ubuntu3_amd64.deb",
+              "sha256": "26d331ed6e1219485dbd6a35b7c9cf552e1470f41bf2158b44a1331405f05250",
+              "size_bytes": 16356,
+              "format": "deb",
+              "root": ""
+            }
+          },
+          {
+            "id": "libxcb-shape0-amd64",
+            "destination": "gio",
+            "package": "libxcb-shape0:amd64",
+            "version": "1.14-3ubuntu3",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/libx/libxcb/libxcb-shape0_1.14-3ubuntu3_amd64.deb",
+              "sha256": "71666977d7aa11877d7af663231cabf4bde60b033947b83358522c6f43873b3d",
+              "size_bytes": 6158,
+              "format": "deb",
+              "root": ""
+            }
+          },
+          {
+            "id": "libxcb-shm0-amd64",
+            "destination": "gio",
+            "package": "libxcb-shm0:amd64",
+            "version": "1.14-3ubuntu3",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/libx/libxcb/libxcb-shm0_1.14-3ubuntu3_amd64.deb",
+              "sha256": "6d86c9ea2666276c862e64e8a1daa6cb1dd3e4da5ad9165eeb2507311c8a09bd",
+              "size_bytes": 5780,
+              "format": "deb",
+              "root": ""
+            }
+          },
+          {
+            "id": "libxcb-util1-amd64",
+            "destination": "gio",
+            "package": "libxcb-util1:amd64",
+            "version": "0.4.0-1build2",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/x/xcb-util/libxcb-util1_0.4.0-1build2_amd64.deb",
+              "sha256": "237d51a378b93c1669ff193084ebeb6422fe1e2ea96c2e9a0099eac40992a345",
+              "size_bytes": 11448,
+              "format": "deb",
+              "root": ""
+            }
+          },
+          {
+            "id": "libxcb-xkb1-amd64",
+            "destination": "gio",
+            "package": "libxcb-xkb1:amd64",
+            "version": "1.14-3ubuntu3",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/libx/libxcb/libxcb-xkb1_1.14-3ubuntu3_amd64.deb",
+              "sha256": "4cf69af3ff6a60b63f9f6ea6e7d27471114c6bcbcf3f981f7b88f361029e5eb8",
+              "size_bytes": 32836,
+              "format": "deb",
+              "root": ""
+            }
+          },
+          {
+            "id": "libxcb1-amd64",
+            "destination": "gio",
+            "package": "libxcb1:amd64",
+            "version": "1.14-3ubuntu3",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/libx/libxcb/libxcb1_1.14-3ubuntu3_amd64.deb",
+              "sha256": "9258f04136434e7a0ccd76041505421934284209693373cfa9c24acb3a641ec5",
+              "size_bytes": 49030,
+              "format": "deb",
+              "root": ""
+            }
+          },
+          {
+            "id": "libxdmcp6-amd64",
+            "destination": "gio",
+            "package": "libxdmcp6:amd64",
+            "version": "1:1.1.3-0ubuntu5",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/libx/libxdmcp/libxdmcp6_1.1.3-0ubuntu5_amd64.deb",
+              "sha256": "6f6c869dcfc072fa77d24b72ba127bdf15d606bdffbeba4314fb39f4f324363d",
+              "size_bytes": 10904,
+              "format": "deb",
+              "root": ""
+            }
+          },
+          {
+            "id": "libxkbcommon-x11-0-amd64",
+            "destination": "gio",
+            "package": "libxkbcommon-x11-0:amd64",
+            "version": "1.4.0-1",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/libx/libxkbcommon/libxkbcommon-x11-0_1.4.0-1_amd64.deb",
+              "sha256": "e29c40fab6e0f055218aee4c7e60cd61ea82283229d7ac7ac02e226e92a5b0d5",
+              "size_bytes": 14368,
+              "format": "deb",
+              "root": ""
+            }
+          },
+          {
+            "id": "libxkbcommon0-amd64",
+            "destination": "gio",
+            "package": "libxkbcommon0:amd64",
+            "version": "1.4.0-1",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/libx/libxkbcommon/libxkbcommon0_1.4.0-1_amd64.deb",
+              "sha256": "a0470edb237d52b71ad41f755c043164abed01423585ed5ea19525b3baaf84f7",
+              "size_bytes": 124684,
+              "format": "deb",
+              "root": ""
+            }
+          },
+          {
+            "id": "xkb-data-amd64",
+            "destination": "gio",
+            "package": "xkb-data",
+            "version": "2.33-1",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/x/xkeyboard-config/xkb-data_2.33-1_all.deb",
+              "sha256": "26f74d6ac0caf3f7b2926d9c1fca85bc868531c8159f943fb78fbb4b6c5a8c80",
+              "size_bytes": 394460,
+              "format": "deb",
+              "root": ""
+            }
           }
         ],
         "licenses": [
@@ -1005,6 +1239,150 @@
             "package": "libegl1:amd64",
             "version": "1.4.0-1",
             "archive_id": "libegl1-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libbsd0/copyright",
+            "sha256": "3761714adb9c45fa588b77b372d6e75dcc9e6822cc2d6baa712007241aec714e",
+            "size_bytes": 25649,
+            "package": "libbsd0:amd64",
+            "version": "0.11.5-1",
+            "archive_id": "libbsd0-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libmd0/copyright",
+            "sha256": "4365ef6255ad553fce69dd4bc0e093472c5d0e41b8ea493a545cc926ce171aa6",
+            "size_bytes": 8018,
+            "package": "libmd0:amd64",
+            "version": "1.0.4-1build1",
+            "archive_id": "libmd0-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libxau6/copyright",
+            "sha256": "118dd263a7b91c8f21c489f949bf13281dff9e766deea92b829dac4dce66601a",
+            "size_bytes": 1224,
+            "package": "libxau6:amd64",
+            "version": "1:1.0.9-1build5",
+            "archive_id": "libxau6-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libxcb-cursor0/copyright",
+            "sha256": "42dc92e851927a08d00db5a44122cff695e143d7a16aec391fe7290caea5e00f",
+            "size_bytes": 1779,
+            "package": "libxcb-cursor0:amd64",
+            "version": "0.1.1-4ubuntu1",
+            "archive_id": "libxcb-cursor0-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libxcb-icccm4/copyright",
+            "sha256": "b5b83faabe190515e7a5938aa00441204cd163e24191ef7bcf5e4ac690acd376",
+            "size_bytes": 2683,
+            "package": "libxcb-icccm4:amd64",
+            "version": "0.4.1-1.1build2",
+            "archive_id": "libxcb-icccm4-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libxcb-image0/copyright",
+            "sha256": "daf2d51e978ec64fc21f59b12d850c2efc907c15eae5c4ba2f3237ce946476de",
+            "size_bytes": 2707,
+            "package": "libxcb-image0:amd64",
+            "version": "0.4.0-2",
+            "archive_id": "libxcb-image0-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libxcb-keysyms1/copyright",
+            "sha256": "ec64999ff22c8cbba2aa1c88828cd51461efd74db3a6f4044ea81fbc0a6f6288",
+            "size_bytes": 2757,
+            "package": "libxcb-keysyms1:amd64",
+            "version": "0.4.0-1build3",
+            "archive_id": "libxcb-keysyms1-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libxcb-render-util0/copyright",
+            "sha256": "94e32edbc98a324a3c13cd7a1687406328a9a94c6fefe319d6ac43dd4cbf151c",
+            "size_bytes": 2722,
+            "package": "libxcb-render-util0:amd64",
+            "version": "0.3.9-1build3",
+            "archive_id": "libxcb-render-util0-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libxcb-render0/copyright",
+            "sha256": "4f7cb9db6bf6542f5417e3d674c780d3a5fd12291a54d63054fb576ee0cfae80",
+            "size_bytes": 1781,
+            "package": "libxcb-render0:amd64",
+            "version": "1.14-3ubuntu3",
+            "archive_id": "libxcb-render0-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libxcb-shape0/copyright",
+            "sha256": "4f7cb9db6bf6542f5417e3d674c780d3a5fd12291a54d63054fb576ee0cfae80",
+            "size_bytes": 1781,
+            "package": "libxcb-shape0:amd64",
+            "version": "1.14-3ubuntu3",
+            "archive_id": "libxcb-shape0-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libxcb-shm0/copyright",
+            "sha256": "4f7cb9db6bf6542f5417e3d674c780d3a5fd12291a54d63054fb576ee0cfae80",
+            "size_bytes": 1781,
+            "package": "libxcb-shm0:amd64",
+            "version": "1.14-3ubuntu3",
+            "archive_id": "libxcb-shm0-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libxcb-util1/copyright",
+            "sha256": "1142dc404c2f6845a5e9a39ee569e670fd629b3a974a03bcd64f84e57e5acd90",
+            "size_bytes": 2741,
+            "package": "libxcb-util1:amd64",
+            "version": "0.4.0-1build2",
+            "archive_id": "libxcb-util1-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libxcb-xkb1/copyright",
+            "sha256": "4f7cb9db6bf6542f5417e3d674c780d3a5fd12291a54d63054fb576ee0cfae80",
+            "size_bytes": 1781,
+            "package": "libxcb-xkb1:amd64",
+            "version": "1.14-3ubuntu3",
+            "archive_id": "libxcb-xkb1-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libxcb1/copyright",
+            "sha256": "4f7cb9db6bf6542f5417e3d674c780d3a5fd12291a54d63054fb576ee0cfae80",
+            "size_bytes": 1781,
+            "package": "libxcb1:amd64",
+            "version": "1.14-3ubuntu3",
+            "archive_id": "libxcb1-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libxdmcp6/copyright",
+            "sha256": "1bcbb50f8603fe8b86d330bfa460b772ea04fbd3c70e4499f0768b5340b9fd6e",
+            "size_bytes": 1265,
+            "package": "libxdmcp6:amd64",
+            "version": "1:1.1.3-0ubuntu5",
+            "archive_id": "libxdmcp6-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libxkbcommon-x11-0/copyright",
+            "sha256": "5eeaeb1b6e029a0274e1573765bb0bae2926ef96a3679203faa4fd00fdaeaa88",
+            "size_bytes": 3566,
+            "package": "libxkbcommon-x11-0:amd64",
+            "version": "1.4.0-1",
+            "archive_id": "libxkbcommon-x11-0-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libxkbcommon0/copyright",
+            "sha256": "5eeaeb1b6e029a0274e1573765bb0bae2926ef96a3679203faa4fd00fdaeaa88",
+            "size_bytes": 3566,
+            "package": "libxkbcommon0:amd64",
+            "version": "1.4.0-1",
+            "archive_id": "libxkbcommon0-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/xkb-data/copyright",
+            "sha256": "648621d1a2180678818eb393565849bbc8b332cc521c21e009d948ea5541b3c3",
+            "size_bytes": 9933,
+            "package": "xkb-data",
+            "version": "2.33-1",
+            "archive_id": "xkb-data-amd64"
           }
         ],
         "libraries": [
@@ -1143,6 +1521,142 @@
             "package": "libegl1:amd64",
             "version": "1.4.0-1",
             "archive_id": "libegl1-amd64"
+          },
+          {
+            "path": "gio/usr/lib/x86_64-linux-gnu/libbsd.so.0",
+            "sha256": "e4ad21c203d8e8b9b7f49071311339af6b438026e1ad236403e3b379b022f23d",
+            "size_bytes": 89096,
+            "package": "libbsd0:amd64",
+            "version": "0.11.5-1",
+            "archive_id": "libbsd0-amd64"
+          },
+          {
+            "path": "gio/usr/lib/x86_64-linux-gnu/libmd.so.0",
+            "sha256": "bb376813876bb214535bbbdac70f2c0c4b00baecb81557dab78a79518248df06",
+            "size_bytes": 47472,
+            "package": "libmd0:amd64",
+            "version": "1.0.4-1build1",
+            "archive_id": "libmd0-amd64"
+          },
+          {
+            "path": "gio/usr/lib/x86_64-linux-gnu/libXau.so.6",
+            "sha256": "98343a8324ea62ed75a13c923ed5dea96b7a8ad41aeba9f18126c4cbf7178064",
+            "size_bytes": 18720,
+            "package": "libxau6:amd64",
+            "version": "1:1.0.9-1build5",
+            "archive_id": "libxau6-amd64"
+          },
+          {
+            "path": "gio/usr/lib/x86_64-linux-gnu/libxcb-cursor.so.0",
+            "sha256": "729297e66519bdb0df3ac8d5a2950e2e09b1e8d0b9eeea33250fce57a27aafa3",
+            "size_bytes": 24080,
+            "package": "libxcb-cursor0:amd64",
+            "version": "0.1.1-4ubuntu1",
+            "archive_id": "libxcb-cursor0-amd64"
+          },
+          {
+            "path": "gio/usr/lib/x86_64-linux-gnu/libxcb-icccm.so.4",
+            "sha256": "bba23d0d7e19f602113032e351035aa7968514fc85a9f30b152c363f153ccb6a",
+            "size_bytes": 22616,
+            "package": "libxcb-icccm4:amd64",
+            "version": "0.4.1-1.1build2",
+            "archive_id": "libxcb-icccm4-amd64"
+          },
+          {
+            "path": "gio/usr/lib/x86_64-linux-gnu/libxcb-image.so.0",
+            "sha256": "2ae417d723f9ad4e68951fa7890c8b50b2a386bee16c4ad5491da24addd67f13",
+            "size_bytes": 18688,
+            "package": "libxcb-image0:amd64",
+            "version": "0.4.0-2",
+            "archive_id": "libxcb-image0-amd64"
+          },
+          {
+            "path": "gio/usr/lib/x86_64-linux-gnu/libxcb-keysyms.so.1",
+            "sha256": "46afa09b0cce49e33792b8527bc714cf23832c67eb2e436c372fcf5ff708be1d",
+            "size_bytes": 14488,
+            "package": "libxcb-keysyms1:amd64",
+            "version": "0.4.0-1build3",
+            "archive_id": "libxcb-keysyms1-amd64"
+          },
+          {
+            "path": "gio/usr/lib/x86_64-linux-gnu/libxcb-render-util.so.0",
+            "sha256": "2a6dd5e6d3062be2874691c93392765f1d9ef224e2097fc22bc73906070de7bb",
+            "size_bytes": 22864,
+            "package": "libxcb-render-util0:amd64",
+            "version": "0.3.9-1build3",
+            "archive_id": "libxcb-render-util0-amd64"
+          },
+          {
+            "path": "gio/usr/lib/x86_64-linux-gnu/libxcb-render.so.0",
+            "sha256": "116b70d1eef6cbad17bec65091b19fce427dc009a6213cee796935fa6a9ce520",
+            "size_bytes": 55544,
+            "package": "libxcb-render0:amd64",
+            "version": "1.14-3ubuntu3",
+            "archive_id": "libxcb-render0-amd64"
+          },
+          {
+            "path": "gio/usr/lib/x86_64-linux-gnu/libxcb-shape.so.0",
+            "sha256": "db29fddf057f86d4561cd54c843efd34ec17af3471ca2ab32e8f3031aa3aad33",
+            "size_bytes": 14552,
+            "package": "libxcb-shape0:amd64",
+            "version": "1.14-3ubuntu3",
+            "archive_id": "libxcb-shape0-amd64"
+          },
+          {
+            "path": "gio/usr/lib/x86_64-linux-gnu/libxcb-shm.so.0",
+            "sha256": "722e13a0a26551dd9f11b930c4632c9e51d2e9f743315d45c1b665356950d42d",
+            "size_bytes": 14568,
+            "package": "libxcb-shm0:amd64",
+            "version": "1.14-3ubuntu3",
+            "archive_id": "libxcb-shm0-amd64"
+          },
+          {
+            "path": "gio/usr/lib/x86_64-linux-gnu/libxcb-util.so.1",
+            "sha256": "d05e3f95b9fdc2264c28f3df6aa735c2942e39d6a7184e42bc092fd637ea6c80",
+            "size_bytes": 31096,
+            "package": "libxcb-util1:amd64",
+            "version": "0.4.0-1build2",
+            "archive_id": "libxcb-util1-amd64"
+          },
+          {
+            "path": "gio/usr/lib/x86_64-linux-gnu/libxcb-xkb.so.1",
+            "sha256": "05db2c686a9d76722d4e2a433286b266ee39286e0eef87782431a10d2e16c5a1",
+            "size_bytes": 116984,
+            "package": "libxcb-xkb1:amd64",
+            "version": "1.14-3ubuntu3",
+            "archive_id": "libxcb-xkb1-amd64"
+          },
+          {
+            "path": "gio/usr/lib/x86_64-linux-gnu/libxcb.so.1",
+            "sha256": "aabc489094abd96c876d1c989a2da8a8aa6d28f5a676c4a84dd6d0a0c34aec5d",
+            "size_bytes": 166504,
+            "package": "libxcb1:amd64",
+            "version": "1.14-3ubuntu3",
+            "archive_id": "libxcb1-amd64"
+          },
+          {
+            "path": "gio/usr/lib/x86_64-linux-gnu/libXdmcp.so.6",
+            "sha256": "1dc3ff1269a5ede69ef9a8ec2436d73fccbcd10531055b359292e0bde4e29b46",
+            "size_bytes": 26800,
+            "package": "libxdmcp6:amd64",
+            "version": "1:1.1.3-0ubuntu5",
+            "archive_id": "libxdmcp6-amd64"
+          },
+          {
+            "path": "gio/usr/lib/x86_64-linux-gnu/libxkbcommon-x11.so.0",
+            "sha256": "18144e8476746721512f4a23a2670fa4b3c0683715db0ed16f12e6bad39cc298",
+            "size_bytes": 39864,
+            "package": "libxkbcommon-x11-0:amd64",
+            "version": "1.4.0-1",
+            "archive_id": "libxkbcommon-x11-0-amd64"
+          },
+          {
+            "path": "gio/usr/lib/x86_64-linux-gnu/libxkbcommon.so.0",
+            "sha256": "26773f54626af26f5f26f0279a9748ea2445c1adcfef50a7d572c9b54575bd86",
+            "size_bytes": 285232,
+            "package": "libxkbcommon0:amd64",
+            "version": "1.4.0-1",
+            "archive_id": "libxkbcommon0-amd64"
           }
         ]
       },
@@ -1176,7 +1690,7 @@
       }
     },
     "windows-amd64": {
-      "cli_version": "0.6.26-staging.cli.sha49987891f4c3",
+      "cli_version": "0.6.27-staging.cli.sha48f628a8af6d",
       "guest_source_commit": "13ffe8ad8c59f1c8aa6ba75e2b229d9c26a34681",
       "inputs": {
         "source": {
@@ -1187,9 +1701,9 @@
           "root": null
         },
         "cli": {
-          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/cli-candidate-0.6.26-staging.49987891f4c3b81f5ef871b1c4cffd333e3ce274/dockpipe_0.6.26-staging.cli.sha49987891f4c3_windows_amd64.zip",
-          "sha256": "a0450281f7ba646bf5a115fb77c3fe8166364526dc11559f837bbedb9efc9ff4",
-          "size_bytes": 5192055,
+          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/cli-candidate-0.6.27-staging.48f628a8af6def1ed9d87c77dff1566ba8c49031/dockpipe_0.6.27-staging.cli.sha48f628a8af6d_windows_amd64.zip",
+          "sha256": "48ca4763a8ed23ff74b49ddb301f4ec857edef1bda217ff39510f2da530762f1",
+          "size_bytes": 5201649,
           "format": "zip",
           "root": ""
         },
@@ -2180,7 +2694,7 @@
       }
     },
     "darwin-arm64": {
-      "cli_version": "0.6.26-staging.cli.sha49987891f4c3",
+      "cli_version": "0.6.27-staging.cli.sha48f628a8af6d",
       "guest_source_commit": "13ffe8ad8c59f1c8aa6ba75e2b229d9c26a34681",
       "inputs": {
         "source": {
@@ -2191,9 +2705,9 @@
           "root": null
         },
         "cli": {
-          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/cli-candidate-0.6.26-staging.49987891f4c3b81f5ef871b1c4cffd333e3ce274/dockpipe_0.6.26-staging.cli.sha49987891f4c3_darwin_arm64.tar.gz",
-          "sha256": "f2b8a6c26667e0e154c5e8fa7e59e559df1d2e474bc6298f11dfff2f1f742db0",
-          "size_bytes": 4847575,
+          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/cli-candidate-0.6.27-staging.48f628a8af6def1ed9d87c77dff1566ba8c49031/dockpipe_0.6.27-staging.cli.sha48f628a8af6d_darwin_arm64.tar.gz",
+          "sha256": "142108fd2d5211428bc51643c6611bd3fbfba879b1dd5ec7bb394f637e51f0ad",
+          "size_bytes": 4856261,
           "format": "tar.gz",
           "root": ""
         },

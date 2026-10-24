@@ -73,6 +73,7 @@ jobs:
           DOCKPIPE_NATIVE_FETCH: '1'
         run: python -B workflows/package/package-native-store-candidate/assets/scripts/bootstrap.py
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: native-catalog-${{ matrix.platform }}-${{ github.sha }}
           path: ${{ runner.temp }}/native-store-output
