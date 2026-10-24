@@ -81,6 +81,32 @@ class ToolchainTests(unittest.TestCase):
         self.assertEqual(path.read_bytes(), self.payload)
         self.assertEqual(path.name, self.entry['sha256'])
 
+    def test_download_closes_writer_before_hash_and_link(self):
+        opener = unittest.mock.Mock()
+        opener.open.return_value = io.BytesIO(self.payload)
+        original_open = Path.open
+        original_digest = acquire.digest
+        writer = None
+
+        def tracked_open(path, mode='r', *args, **kwargs):
+            nonlocal writer
+            stream = original_open(path, mode, *args, **kwargs)
+            if mode == 'wb':
+                writer = stream
+            return stream
+
+        def closed_digest(path):
+            self.assertIsNotNone(writer)
+            self.assertTrue(writer.closed, 'Hashing must not reopen an active Windows writer')
+            return original_digest(path)
+
+        with patch.object(acquire.urllib.request, 'build_opener', return_value=opener), \
+                patch.object(Path, 'open', tracked_open), \
+                patch.object(acquire, 'digest', side_effect=closed_digest):
+            path = acquire.acquire(self.entry, self.root)
+        self.assertEqual(path.read_bytes(), self.payload)
+        self.assertEqual(list(self.root.iterdir()), [path])
+
     def test_acquisition_bound_rejected_before_request(self):
         self.entry['size_bytes'] = acquire.MAX_INPUT + 1
         with patch.object(acquire.urllib.request, 'build_opener') as opener:

@@ -78,21 +78,23 @@ def acquire(entry, cache):
         return target
     deadline = time.monotonic() + 300
     opener = urllib.request.build_opener(OfficialRedirects())
-    with tempfile.NamedTemporaryFile(dir=cache, prefix='acquisition-', delete=True) as temporary:
-        with opener.open(entry['url'], timeout=60) as response:
-            remaining = size
-            while remaining:
-                if time.monotonic() >= deadline:
-                    raise ValueError('Toolchain acquisition exceeded its total deadline')
-                block = response.read(min(1 << 20, remaining))
-                if not block:
-                    raise ValueError('Truncated toolchain acquisition')
-                temporary.write(block)
-                remaining -= len(block)
-            if response.read(1):
-                raise ValueError('Toolchain acquisition exceeds declared size')
-        temporary.flush()
-        candidate = Path(temporary.name)
+    with tempfile.TemporaryDirectory(dir=cache, prefix='acquisition-') as temporary:
+        candidate = Path(temporary) / 'input'
+        with candidate.open('wb') as output:
+            with opener.open(entry['url'], timeout=60) as response:
+                remaining = size
+                while remaining:
+                    if time.monotonic() >= deadline:
+                        raise ValueError('Toolchain acquisition exceeded its total deadline')
+                    block = response.read(min(1 << 20, remaining))
+                    if not block:
+                        raise ValueError('Truncated toolchain acquisition')
+                    output.write(block)
+                    remaining -= len(block)
+                if response.read(1):
+                    raise ValueError('Toolchain acquisition exceeds declared size')
+        # Close the writer before reopening for hashing or linking. Windows
+        # does not permit reopening the default delete-on-close temporary file.
         if digest(candidate) != checksum:
             raise ValueError('Toolchain acquisition checksum mismatch')
         # No existing bytes are replaced; a new cache object is linked atomically.

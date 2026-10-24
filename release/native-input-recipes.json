@@ -538,6 +538,19 @@
           "format": "deb",
           "root": ""
         }
+      },
+      {
+        "id": "libegl1-amd64",
+        "destination": "gio",
+        "package": "libegl1:amd64",
+        "version": "1.4.0-1",
+        "asset": {
+          "url": "https://archive.ubuntu.com/ubuntu/pool/main/libg/libglvnd/libegl1_1.4.0-1_amd64.deb",
+          "sha256": "4a35c0e925e15a076e7ce11d7c76f8ecb16615fc347c2c09afa4c205a7ca8ec4",
+          "size_bytes": 28564,
+          "format": "deb",
+          "root": ""
+        }
       }
     ],
     "licenses": [
@@ -812,6 +825,14 @@
         "package": "libopengl0:amd64",
         "version": "1.4.0-1",
         "archive_id": "libopengl0-amd64"
+      },
+      {
+        "path": "gio/usr/share/doc/libegl1/copyright",
+        "sha256": "cf246da9d8979f9be80e5b9c3ce0010c09786f11a55637ff3d09f1a36d269b25",
+        "size_bytes": 4283,
+        "package": "libegl1:amd64",
+        "version": "1.4.0-1",
+        "archive_id": "libegl1-amd64"
       }
     ],
     "libraries": [
@@ -942,6 +963,14 @@
         "package": "libopengl0:amd64",
         "version": "1.4.0-1",
         "archive_id": "libopengl0-amd64"
+      },
+      {
+        "path": "gio/usr/lib/x86_64-linux-gnu/libEGL.so.1",
+        "sha256": "69816a7062d7d624144472f5ef71f5b23732b9003df7472662920602e62805db",
+        "size_bytes": 72352,
+        "package": "libegl1:amd64",
+        "version": "1.4.0-1",
+        "archive_id": "libegl1-amd64"
       }
     ]
   },
