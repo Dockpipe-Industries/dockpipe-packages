@@ -5,3 +5,5 @@ version: 1.3.6
 min_dockpipe_version: 0.6.26-0
 namespace: dockpipeproject
 license: Apache-2.0
+requires_resolvers: [qemu]
+platforms: [windows, deb, macos, flatpak]
