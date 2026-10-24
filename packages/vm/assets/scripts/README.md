@@ -1,7 +1,9 @@
 The native source producer is `build-source.py`. It requires Python 3, Go and an
 absolute pinned `DOCKPIPE_BIN`. It invokes the catalog's checksum-verified SDK
-wrapper with its offline module boundary intact, builds the manager and native
-QEMU shim, obtains the package-owned staging scope through the public CLI, and
+wrapper with its offline module boundary intact. It first runs the complete native
+`packages/vm/management/...` Go unit suite without cached test results. A test
+failure stops the source build before manager or resolver publication. It then
+builds the manager and native QEMU shim, obtains the package-owned staging scope through the public CLI, and
 compiles the owning resolver. It does not inspect a sibling core checkout.
 
 The existing `build-source.sh` delegates to Python for callers using the old
