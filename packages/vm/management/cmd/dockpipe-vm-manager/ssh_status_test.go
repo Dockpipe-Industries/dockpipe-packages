@@ -53,18 +53,35 @@ func TestGuestStatusRejectsFutureOrInvalidUpdateTime(t *testing.T) {
 			// Replace every Windows service/task/network boundary. Only the
 			// temporary status file is real; execute the exact production script.
 			fixture := `
+[Console]::Error.WriteLine('::dockpipe-guest-status-fixture-start::')
 function Get-ScheduledTask { param($TaskName,$ErrorAction) return $null }
 function Get-Service { param($Name) [pscustomobject]@{Status='Running'} }
 function Invoke-RestMethod { param($Uri,$TimeoutSec) [pscustomobject]@{name='dockpipe-guest-agent';status='ready'} }
 `
 			ctx, cancel := context.WithTimeout(context.Background(), 8*time.Second)
 			defer cancel()
-			command := exec.CommandContext(ctx, powerShell, "-NoProfile", "-NonInteractive", "-EncodedCommand", encodePowerShell(fixture+readGuestStatus))
+			script := fixture + readGuestStatus + "\n[Console]::Error.WriteLine('::dockpipe-guest-status-fixture-end::')\n"
+			command := exec.CommandContext(ctx, powerShell, "-NoProfile", "-NonInteractive", "-EncodedCommand", encodePowerShell(script))
 			command.Env = append(os.Environ(), "ProgramData="+root, "ProgramFiles="+root, "COMPUTERNAME=fixture")
-			output, err := command.Output()
+			outputBuffer := &boundedBuffer{maximum: 64 * 1024}
+			diagnosticBuffer := &boundedBuffer{maximum: 8 * 1024}
+			command.Stdout = outputBuffer
+			command.Stderr = diagnosticBuffer
+			started := time.Now()
+			err = command.Run()
+			elapsed := time.Since(started)
+			var userTime, systemTime time.Duration
+			if command.ProcessState != nil {
+				userTime = command.ProcessState.UserTime()
+				systemTime = command.ProcessState.SystemTime()
+			}
+			t.Logf("guest status fixture interpreter=%s elapsed=%s user=%s system=%s context=%v updatecheck=%q telemetry_optout=%q stderr=%q",
+				powerShell, elapsed, userTime, systemTime, ctx.Err(), os.Getenv("POWERSHELL_UPDATECHECK"),
+				os.Getenv("POWERSHELL_TELEMETRY_OPTOUT"), diagnosticBuffer.Bytes())
 			if err != nil {
 				t.Fatalf("guest status fixture failed: %v", err)
 			}
+			output := outputBuffer.Bytes()
 			var result guestStatus
 			if err := json.Unmarshal(output, &result); err != nil {
 				t.Fatal(err)
