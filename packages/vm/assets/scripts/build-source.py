@@ -81,9 +81,9 @@ def update_launcher(surface_path, goos, launcher):
         raise ValueError("Unsupported native QEMU launcher platform or asset")
     surface = json.loads(surface_path.read_text())
     if goos == "darwin":
-        # Native display/management is qualified separately from guest launch and
-        # clipboard products. Do not advertise unimplemented macOS host actions.
-        unavailable = {"start-windows", "clipboard-start", "clipboard-stop"}
+        # The generic Darwin VM backend is required by this package's runtime
+        # floor. Clipboard remains unavailable until its host bridge is qualified.
+        unavailable = {"clipboard-start", "clipboard-stop"}
         surface["actions"] = [action for action in surface.get("actions", [])
                               if action.get("id") not in unavailable]
     for action in surface.get("actions", []):

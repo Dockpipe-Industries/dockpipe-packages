@@ -3,6 +3,14 @@
 /// </summary>
 public Interface IWindowsVmAdvanced
 {
+    /// <summary>Optional absolute path to an installed Bash 4.3 or newer for the host VM runtime. Leave empty to use normal host discovery. This does not install tools or change global PATH.</summary>
+    [DisplayName = "Host Bash Executable"]
+    [EnvName = "DOCKPIPE_HOST_BASH_BIN"]
+    [Control = "file"]
+    [FileMode = "open-file"]
+    [Placeholder = "Absolute path to Bash 4.3 or newer"]
+    public string HostBashPath;
+
     /// <summary>Enable the Dockpipe guest agent service path for structured readiness, observability, and graceful shutdown on provisioned Windows guests.</summary>
     [DisplayName = "Dockpipe Guest Agent"]
     [EnvName = "DOCKPIPE_VM_AGENT"]
@@ -56,6 +64,7 @@ public Interface IWindowsVmAdvanced
 
 public Class WindowsVmAdvanced : IWindowsVmAdvanced
 {
+    public string HostBashPath = "";
     public string Agent = "";
     public string AgentPort = "47831";
     public string ConfirmPrompts = "";

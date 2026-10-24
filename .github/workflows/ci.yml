@@ -1,6 +1,19 @@
 name: Package catalog
 on:
   workflow_dispatch:
+    inputs:
+      catalog_promotion_execute:
+        description: Execute the reviewed optional staging catalog transaction
+        type: boolean
+        default: false
+      catalog_promotion_request:
+        description: Reviewed request JSON path beneath release/
+        type: string
+        required: false
+      catalog_promotion_request_sha256:
+        description: Exact reviewed request file SHA256
+        type: string
+        required: false
   push:
     branches: [master, staging, dev]
   pull_request:
@@ -67,3 +80,201 @@ jobs:
         run: |
           & $env:DOCKPIPE_BIN --workflow-file workflows/ci.windows/config.yml --
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+  catalog-promotion-contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13.7'
+      - name: Install the existing exact YAML verifier wheel
+        run: >-
+          python -m pip install --require-hashes --only-binary=:all: -r release/source-overlay-requirements.lock.txt
+      - name: Test promotion contracts without provider access
+        run: python -B -m unittest discover -s workflows/package/package-catalog-staging-promote/tests -v
+
+  catalog-prepare:
+    permissions:
+      contents: read
+      actions: read
+    needs: [test, test-windows, catalog-promotion-contracts]
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/staging' && inputs.catalog_promotion_execute
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    outputs:
+      bundle_sha256: ${{ steps.prepare.outputs.bundle_sha256 }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13.7'
+      - name: Install the owning pinned YAML verifier dependency
+        run: >-
+          python -m pip install --require-hashes --only-binary=:all: -r release/source-overlay-requirements.lock.txt
+      - name: Verify promotion source contracts without provider mutation
+        run: python -B -m unittest discover -s workflows/package/package-catalog-staging-promote/tests -v
+      - id: prepare
+        name: Admit exact public product, runtime, policy and source qualification
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CATALOG_PROMOTION_REQUEST: ${{ inputs.catalog_promotion_request }}
+          CATALOG_PROMOTION_REQUEST_SHA256: ${{ inputs.catalog_promotion_request_sha256 }}
+        run: >-
+          python -B workflows/package/package-catalog-staging-promote/assets/scripts/catalog_driver.py prepare
+          --request "$CATALOG_PROMOTION_REQUEST"
+          --request-sha256 "$CATALOG_PROMOTION_REQUEST_SHA256"
+          --bundle "$RUNNER_TEMP/catalog-bundle"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: catalog-plan-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/catalog-bundle
+          if-no-files-found: error
+
+  catalog-upload:
+    permissions:
+      contents: read
+      actions: read
+    needs: catalog-prepare
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13.7'
+      - uses: actions/download-artifact@v4
+        with:
+          name: catalog-plan-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/catalog-bundle
+      - name: Create or reconcile immutable optional catalog objects only
+        env:
+          GH_TOKEN: ${{ github.token }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.CATALOG_STAGING_R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.CATALOG_STAGING_R2_SECRET_ACCESS_KEY }}
+          CATALOG_STAGING_R2_ENDPOINT: ${{ vars.CATALOG_STAGING_R2_ENDPOINT }}
+          CATALOG_STAGING_R2_BUCKET: ${{ vars.CATALOG_STAGING_R2_BUCKET }}
+        run: >-
+          python -B workflows/package/package-catalog-staging-promote/assets/scripts/catalog_driver.py upload
+          --bundle "$RUNNER_TEMP/catalog-bundle"
+          --bundle-sha256 '${{ needs.catalog-prepare.outputs.bundle_sha256 }}'
+          --state "$RUNNER_TEMP/catalog-upload" --execute
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: catalog-upload-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/catalog-upload/staged.json
+            ${{ runner.temp }}/catalog-upload/checkpoints.jsonl
+          if-no-files-found: warn
+
+  catalog-consumer:
+    needs: [catalog-prepare, catalog-upload]
+    name: consumer (${{ matrix.platform }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux-amd64
+            runner: ubuntu-22.04
+          - platform: windows-amd64
+            runner: windows-2025-vs2026
+          - platform: darwin-arm64
+            runner: macos-15
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /workflows/package/package-catalog-staging-promote/assets/scripts/*.py
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13.7'
+      - uses: actions/download-artifact@v4
+        with:
+          name: catalog-plan-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/catalog-bundle
+      - name: Execute exact public CLI catalog and independent fresh app installations
+        shell: python
+        env:
+          CATALOG_BUNDLE_SHA256: ${{ needs.catalog-prepare.outputs.bundle_sha256 }}
+          CATALOG_NATIVE_PLATFORM: ${{ matrix.platform }}
+        run: |
+          import os
+          from pathlib import Path
+          import subprocess
+          import sys
+
+          temporary = Path(os.environ["RUNNER_TEMP"])
+          subprocess.run([
+              sys.executable, "-B",
+              "workflows/package/package-catalog-staging-promote/assets/scripts/catalog_driver.py",
+              "consume", "--bundle", str(temporary / "catalog-bundle"),
+              "--bundle-sha256", os.environ["CATALOG_BUNDLE_SHA256"],
+              "--platform", os.environ["CATALOG_NATIVE_PLATFORM"],
+              "--state", str(temporary / "catalog-consumer"),
+          ], check=True)
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: catalog-consumer-${{ matrix.platform }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/catalog-consumer/receipt.json
+          if-no-files-found: warn
+
+  catalog-promote:
+    permissions:
+      contents: read
+      actions: read
+    needs: [catalog-prepare, catalog-upload, catalog-consumer]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13.7'
+      - uses: actions/download-artifact@v4
+        with:
+          name: catalog-plan-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/catalog-bundle
+      - uses: actions/download-artifact@v4
+        with:
+          name: catalog-upload-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/catalog-receipts/upload
+      - uses: actions/download-artifact@v4
+        with:
+          name: catalog-consumer-linux-amd64-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/catalog-receipts/linux-amd64
+      - uses: actions/download-artifact@v4
+        with:
+          name: catalog-consumer-windows-amd64-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/catalog-receipts/windows-amd64
+      - uses: actions/download-artifact@v4
+        with:
+          name: catalog-consumer-darwin-arm64-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/catalog-receipts/darwin-arm64
+      - name: Recheck real consumers and runtime then conditionally promote only optional latest
+        env:
+          GH_TOKEN: ${{ github.token }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.CATALOG_STAGING_R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.CATALOG_STAGING_R2_SECRET_ACCESS_KEY }}
+          CATALOG_STAGING_R2_ENDPOINT: ${{ vars.CATALOG_STAGING_R2_ENDPOINT }}
+          CATALOG_STAGING_R2_BUCKET: ${{ vars.CATALOG_STAGING_R2_BUCKET }}
+        run: >-
+          python -B workflows/package/package-catalog-staging-promote/assets/scripts/catalog_driver.py promote
+          --bundle "$RUNNER_TEMP/catalog-bundle"
+          --bundle-sha256 '${{ needs.catalog-prepare.outputs.bundle_sha256 }}'
+          --receipts "$RUNNER_TEMP/catalog-receipts"
+          --state "$RUNNER_TEMP/catalog-promotion" --execute
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: catalog-promotion-result-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/catalog-promotion/promotion.json
+            ${{ runner.temp }}/catalog-promotion/checkpoints.jsonl
+          if-no-files-found: warn

@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "version": "2.32.9",
+  "platform": "linux-amd64",
+  "archive": {
+    "url": "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-2.32.9.zip",
+    "sha256": "42d3f84cec471979333ead1fd50152889ecb35c73f1cacb9e3d99662c04cf2b5",
+    "size_bytes": 62987751
+  },
+  "signature": {
+    "url": "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-2.32.9.zip.sig",
+    "sha256": "766cd469a06ee0f3a45e411b037ccdaa564cda52a99d3dba3f28587b7437f65f",
+    "size_bytes": 566,
+    "fingerprint": "FB5DB77FD5C118B80511ADA8A6310ACC4672475C",
+    "valid": true
+  },
+  "signing_key": {
+    "url": "https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html",
+    "ascii_sha256": "279541b6dd1c831a260ee0f9fb71d63bbcc14ebc4bf62c605336e86c11d4eefb"
+  },
+  "license_inventory": [
+    {
+      "path": "aws/THIRD_PARTY_LICENSES",
+      "sha256": "85fce11752b3b8364fb549cdb585657296043c3896251e7809095b2f58d584cd",
+      "size_bytes": 66216
+    },
+    {
+      "path": "aws/dist/prompt_toolkit-3.0.51.dist-info/licenses/LICENSE",
+      "sha256": "303574d9bdd85c757d6025017942bf17baeedf2778f62bd7f425d07d880f4c4a",
+      "size_bytes": 1493
+    },
+    {
+      "path": "aws/dist/wheel-0.45.1.dist-info/LICENSE.txt",
+      "sha256": "30c23618679108f3e8ea1d2a658c7ca417bdfc891c98ef1a89fa4ff0c9828654",
+      "size_bytes": 1107
+    }
+  ],
+  "acquisition": "task-private ZIP extraction; no installer or system changes",
+  "verification": "Archive SHA/size are source-bound; detached signature independently verified against the primary AWS-published key before admission."
+}

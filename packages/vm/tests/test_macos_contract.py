@@ -19,14 +19,17 @@ runner = module('mac_test_hook', ROOT / 'tests/run.py')
 
 
 class MacContractTest(unittest.TestCase):
-    def test_native_surface_does_not_offer_unsupported_guest_launch_or_clipboard(self):
+    def test_native_surface_exposes_mac_launch_but_not_unqualified_clipboard(self):
         with tempfile.TemporaryDirectory() as temporary:
             path = Path(temporary) / 'surface.json'
             actions = ['start-windows', 'clipboard-start', 'clipboard-stop', 'resolution', 'shutdown']
             path.write_text(json.dumps({'actions': [{'id': name} for name in actions]}))
             hook.update_launcher(path, 'darwin', 'dockpipe-qemu-launch')
             result = json.loads(path.read_text())
-            self.assertEqual([item['id'] for item in result['actions']], ['resolution', 'shutdown'])
+            self.assertEqual([item['id'] for item in result['actions']], ['start-windows', 'resolution', 'shutdown'])
+            launch = result['actions'][0]['launch_environment']['macos']
+            self.assertEqual(launch['DOCKPIPE_VM_QEMU_BIN'],
+                             {'asset': 'assets/tooling/bin/dockpipe-qemu-launch'})
             self.assertEqual(hook.LIBRARIES['darwin'], 'libdockpipe-vm-display.dylib')
 
     def test_linux_launch_environment_contract_is_preserved(self):
@@ -73,14 +76,14 @@ class MacContractTest(unittest.TestCase):
         self.assertTrue(all('./...' not in arguments for directory, arguments in commands))
 
     def test_only_supported_metadata_is_extended(self):
-        self.assertIn('version: 1.3.6\n', (ROOT / 'package.yml').read_text())
-        self.assertIn('min_dockpipe_version: 0.6.26-0\n', (ROOT / 'package.yml').read_text())
+        self.assertIn('version: 1.3.7\n', (ROOT / 'package.yml').read_text())
+        self.assertIn('min_dockpipe_version: 0.6.28-0\n', (ROOT / 'package.yml').read_text())
         self.assertIn('platforms: [windows, deb, macos]', (ROOT / 'package.yml').read_text())
         self.assertIn('script: assets/scripts/build-source.py', (ROOT / 'package.yml').read_text())
         self.assertIn('script: tests/run.py', (ROOT / 'package.yml').read_text())
-        self.assertIn('platforms: [windows, deb, macos]', (ROOT / 'workflows/vm-resolution/config.yml').read_text())
+        self.assertIn('platforms: [windows, deb, macos, flatpak]', (ROOT / 'workflows/vm-resolution/config.yml').read_text())
         management = (ROOT / 'workflows/vm-manage/config.yml').read_text()
-        self.assertIn('platforms: [windows, deb, macos]', management)
+        self.assertIn('platforms: [windows, deb, macos, flatpak]', management)
         self.assertIn('run: assets/scripts/vm-manage.py', management)
         self.assertNotIn('cmd:', management)
 
