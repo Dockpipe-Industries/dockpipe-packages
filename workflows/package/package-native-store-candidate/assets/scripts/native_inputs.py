@@ -458,6 +458,8 @@ def compiler_environment(recipe, toolchain, environment):
         if path.is_symlink() or not path.is_file() or path.stat().st_size > 65536:
             raise ValueError('Native MSVC receipt is missing or unbounded')
         receipt = json.loads(path.read_bytes(), object_pairs_hook=unique_fields)
+        if isinstance(receipt, dict) and receipt.get('acquisition_sha256') != expected['acquisition_sha256']:
+            raise ValueError('Native MSVC preparation differs from its source-bound hosted ABI: acquisition_sha256')
         if (not isinstance(receipt, dict) or set(receipt) != {'schema', 'acquisition_mode', 'compiler_id', 'compiler_version', 'windows_sdk_version',
                              'acquisition_sha256', 'installation', 'observed_image', 'tools', 'sdk_tools', 'host_runtime'}
                 or type(receipt['schema']) is not int or receipt['schema'] != 1

@@ -196,7 +196,12 @@ class NativeStoreTest(unittest.TestCase):
             'CMAKE_PREFIX_PATH': '/declared/native-inputs/gio/usr',
         })
 
-    def assert_producer_orchestration(self, recipe_environment=None):
+    def test_declared_runtime_prefix_replaces_ambient_library_search(self):
+        self.assert_producer_orchestration(
+            {'CMAKE_GENERATOR': 'Ninja', 'LD_LIBRARY_PATH': '/declared/private/runtime'},
+            ambient_environment={'LD_LIBRARY_PATH': '/unrelated/ambient/runtime'})
+
+    def assert_producer_orchestration(self, recipe_environment=None, ambient_environment=None):
         document = self.lock()
         document['owned'] = [list(identity) for identity in sorted(native_store.VM_FAMILY)]
         profile = document['profiles']['linux-amd64']
@@ -251,7 +256,7 @@ class NativeStoreTest(unittest.TestCase):
                 {'schema': 1, 'platform': 'linux-amd64', 'packages': {group: entries}}))
         extracted = [inputs[role] for role in profile['inputs'] if role != 'runtime_core']
         with (
-            patch.dict(os.environ, {}, clear=True),
+            patch.dict(os.environ, ambient_environment or {}, clear=True),
             patch.object(native_store.platform, 'system', return_value='Linux'),
             patch.object(native_store.platform, 'machine', return_value='x86_64'),
         ):

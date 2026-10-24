@@ -29,8 +29,8 @@ class MacInputTest(unittest.TestCase):
 
     def test_profile_exact_public_inputs_and_baseline(self):
         self.assertIs(native.validate(self.profile), self.profile)
-        self.assertEqual(len(self.profile['archives']), 9)
-        self.assertEqual(len(self.profile['libraries']), 6)
+        self.assertEqual(len(self.profile['archives']), 11)
+        self.assertEqual(len(self.profile['libraries']), 8)
         for change in ('compiler', 'platform', 'missing', 'url', 'boolean-size'):
             profile = copy.deepcopy(self.profile)
             if change == 'compiler':
@@ -45,6 +45,26 @@ class MacInputTest(unittest.TestCase):
                 profile['archives'][2]['asset']['size_bytes'] = True
             with self.subTest(change=change), self.assertRaises(ValueError):
                 native.validate(profile)
+
+    def test_real_build_metadata_inputs_are_owned_and_lock_profiles_match(self):
+        expected = {'libffi': '3.8.0', 'zlib': '1.3.2'}
+        for package, version in expected.items():
+            archive = next(entry for entry in self.profile['archives'] if entry['id'] == package)
+            self.assertEqual(archive['version'], version)
+            self.assertEqual(archive['destination'], 'gio/Cellar')
+            for inventory in ('libraries', 'licenses'):
+                records = [entry for entry in self.profile[inventory] if entry['archive_id'] == package]
+                self.assertEqual(len(records), 1)
+                self.assertEqual(records[0]['package'], package)
+                self.assertEqual(records[0]['version'], version)
+        for name in ('native-store.lock.json', 'native-store.lock.example.json'):
+            lock = json.loads((ROOT.parent / name).read_text())
+            self.assertEqual(lock['profiles']['darwin-arm64']['native_inputs'], self.profile)
+
+    def test_complete_flags_graph_is_admitted_before_broker_build(self):
+        source = (SCRIPTS / 'native_inputs_macos.py').read_text()
+        self.assertNotIn('sdk_pkgconfig', source)
+        self.assertLess(source.index('private_pkgconfig.admit_gio_graph'), source.index("source = root / 'broker-source'"))
 
     def entry(self):
         digest = hashlib.sha256(b'abc').hexdigest()

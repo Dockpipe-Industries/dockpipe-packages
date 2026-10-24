@@ -15,11 +15,11 @@ import urllib.request
 
 import framework_extract
 import macho_metadata
-import sdk_pkgconfig
+import private_pkgconfig
 
 BASELINE = {'id': 'AppleClang', 'version': '17.0.0.17000013', 'os_id': 'macos', 'os_version': '15.0'}
 PATCH_SHA256 = '69a03882576fd264a287a21d3dd298638e8fd58515552acb645edff6ab90526b'
-PACKAGES = {'glib', 'gettext', 'pcre2', 'json-c', 'libunistring'}
+PACKAGES = {'glib', 'gettext', 'pcre2', 'json-c', 'libunistring', 'libffi', 'zlib'}
 MAX_ASSET = 256 << 20
 
 
@@ -37,15 +37,15 @@ def validate(recipe):
             or recipe['platform'] != 'darwin-arm64' or recipe['compiler'] != BASELINE):
         raise ValueError('The macOS recipe requires its explicit OS15/arm64/compiler17 baseline')
     entries = recipe['archives']
-    if not isinstance(entries, list) or len(entries) != 9:
-        raise ValueError('The complete nine-archive Mac recipe is required')
+    if not isinstance(entries, list) or len(entries) != 11:
+        raise ValueError('The complete eleven-archive Mac recipe is required')
     expected_records = {
         'qtbase': ('qt-qtbase', '6.10.3', 'qt/6.10.3/macos', ''),
         'qttools': ('qt-qttools', '6.10.3', 'qt/6.10.3/macos', ''),
         'glib-source': ('glib', '2.90.1', 'gio/license-source', 'glib-2.90.1'),
         'dbus-source': ('dbus', '1.16.2', 'broker-source', 'dbus-1.16.2'),
     }
-    for package, version in {'glib': '2.90.1', 'gettext': '1.0', 'pcre2': '10.49', 'json-c': '0.19', 'libunistring': '1.5'}.items():
+    for package, version in {'glib': '2.90.1', 'gettext': '1.0', 'pcre2': '10.49', 'json-c': '0.19', 'libunistring': '1.5', 'libffi': '3.8.0', 'zlib': '1.3.2'}.items():
         expected_records[package] = (package, version, 'gio/Cellar', '')
     seen = set()
     total = 0
@@ -289,9 +289,6 @@ def prepare(recipe, root, toolchain, cache, fetch, acquire, environment):
         raise ValueError('Native SDK must match the published macOS15/AppleClang17 baseline')
     sdk = str(Path(sdk).resolve(strict=True))
     environment['SDKROOT'] = sdk
-    sdk_metadata = sdk_pkgconfig.project(sdk, '15.5', root / 'sdk-pkgconfig', pkgconfig, environment)
-    sdk_receipt = root / 'sdk-pkgconfig-receipt.json'
-    sdk_receipt.write_text(json.dumps(sdk_metadata, indent=2) + '\n')
     probe = root / 'compiler-probe'
     probe.mkdir()
     (probe / 'CMakeLists.txt').write_text('cmake_minimum_required(VERSION 3.21)\nproject(MacRecipeProbe LANGUAGES CXX)\nfile(WRITE "${CMAKE_BINARY_DIR}/identity.json" "{\\"id\\":\\"${CMAKE_CXX_COMPILER_ID}\\",\\"version\\":\\"${CMAKE_CXX_COMPILER_VERSION}\\"}")\n')
@@ -333,9 +330,7 @@ def prepare(recipe, root, toolchain, cache, fetch, acquire, environment):
                        PKG_CONFIG=str(pkgconfig), PKG_CONFIG_PATH='', PKG_CONFIG_SYSROOT_DIR='',
                        PKG_CONFIG_LIBDIR=os.pathsep.join(str(root / 'gio/Cellar' / entry['package'] / entry['version'] / 'lib/pkgconfig')
                            for entry in recipe['archives'] if entry['id'] in PACKAGES))
-    environment['PKG_CONFIG_LIBDIR'] += os.pathsep + sdk_metadata['directory']
-    sdk_metadata['gio_graph'] = sdk_pkgconfig.admit_gio_graph(pkgconfig, environment)
-    sdk_receipt.write_text(json.dumps(sdk_metadata, indent=2) + '\n')
+    pkgconfig_metadata = private_pkgconfig.admit_gio_graph(pkgconfig, environment, root / 'gio/Cellar')
     environment['PATH'] = os.pathsep.join((str(toolchain / 'bin'), str(qt / 'bin'), str(gio / 'bin'), '/usr/bin', '/bin', '/usr/sbin', '/sbin'))
     source = root / 'broker-source'
     patch = Path(__file__).with_name('macos-dbus-peerpid.patch')
@@ -363,5 +358,5 @@ def prepare(recipe, root, toolchain, cache, fetch, acquire, environment):
         'licenses': licenses}, indent=2) + '\n')
     (root / 'macos-input-derivations.json').write_text(json.dumps({'schema': 1, 'source_libraries': transformations,
         'deployment_target': '15.0', 'sdk_version': '15.5', 'compiler': identity,
-        'sdk_pkgconfig': sdk_metadata, 'native_store_qualified': False}, indent=2) + '\n')
+        'private_pkgconfig': pkgconfig_metadata, 'native_store_qualified': False}, indent=2) + '\n')
     return {'qt': qt, 'gio': gio, 'broker': broker.parent, 'broker_provenance': provenance}, environment

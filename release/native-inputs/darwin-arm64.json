@@ -146,6 +146,32 @@
       },
       "package": "dbus",
       "version": "1.16.2"
+    },
+    {
+      "id": "libffi",
+      "destination": "gio/Cellar",
+      "asset": {
+        "url": "https://ghcr.io/v2/homebrew/core/libffi/blobs/sha256:ba141e26c8d3b55fa4534317c474b34d649355d93299e35aa33a6eebf60117f8",
+        "sha256": "ba141e26c8d3b55fa4534317c474b34d649355d93299e35aa33a6eebf60117f8",
+        "size_bytes": 270967,
+        "format": "tar.gz",
+        "root": ""
+      },
+      "package": "libffi",
+      "version": "3.8.0"
+    },
+    {
+      "id": "zlib",
+      "destination": "gio/Cellar",
+      "asset": {
+        "url": "https://ghcr.io/v2/homebrew/core/zlib/blobs/sha256:c43efaa12e3d22914f41882679ad8c86b58958660852f1edd7b305daee5860f0",
+        "sha256": "c43efaa12e3d22914f41882679ad8c86b58958660852f1edd7b305daee5860f0",
+        "size_bytes": 145320,
+        "format": "tar.gz",
+        "root": ""
+      },
+      "package": "zlib",
+      "version": "1.3.2"
     }
   ],
   "licenses": [
@@ -332,6 +358,22 @@
       "package": "dbus",
       "version": "1.16.2",
       "archive_id": "dbus-source"
+    },
+    {
+      "path": "gio/Cellar/libffi/3.8.0/LICENSE",
+      "sha256": "17b64dc60f3b6897a60f971e288b973f655c2edcdf08b25f3c3dd5549857881c",
+      "size_bytes": 1132,
+      "package": "libffi",
+      "version": "3.8.0",
+      "archive_id": "libffi"
+    },
+    {
+      "path": "gio/Cellar/zlib/1.3.2/LICENSE",
+      "sha256": "e32ff4e00d9d94930537635291da39e7e612703334bf6fde8c7f1686fe8a45a2",
+      "size_bytes": 1002,
+      "package": "zlib",
+      "version": "1.3.2",
+      "archive_id": "zlib"
     }
   ],
   "libraries": [
@@ -382,6 +424,22 @@
       "package": "pcre2",
       "version": "10.49",
       "archive_id": "pcre2"
+    },
+    {
+      "path": "gio/Cellar/libffi/3.8.0/lib/libffi.8.dylib",
+      "sha256": "eb44e3628fcbadc3ff14b96dad6eeaa5226b4fd7336d19a39529861bdf0f6295",
+      "size_bytes": 120576,
+      "package": "libffi",
+      "version": "3.8.0",
+      "archive_id": "libffi"
+    },
+    {
+      "path": "gio/Cellar/zlib/1.3.2/lib/libz.1.3.2.dylib",
+      "sha256": "ebfc169aaa707ec47d1f30039c3e2eea1bd0c8c55313711a4ce2f303cd6efa74",
+      "size_bytes": 108528,
+      "package": "zlib",
+      "version": "1.3.2",
+      "archive_id": "zlib"
     }
   ]
 }
