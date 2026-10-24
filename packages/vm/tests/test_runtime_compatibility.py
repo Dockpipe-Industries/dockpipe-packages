@@ -13,10 +13,10 @@ import yaml
 
 
 PACKAGE = Path(__file__).resolve().parents[1]
-MINIMUM = "0.6.28-0"
+MINIMUM = "0.6.29-0"
 VERSION = "1.3.7"
 OLD_CLI = os.environ.get("DOCKPIPE_VM_COMPAT_OLD_BIN", "")
-OLD_VERSION = os.environ.get("DOCKPIPE_VM_COMPAT_OLD_VERSION", "0.6.27")
+OLD_VERSION = os.environ.get("DOCKPIPE_VM_COMPAT_OLD_VERSION", "0.6.28")
 NEW_CLI = os.environ.get("DOCKPIPE_VM_COMPAT_NEW_BIN", "")
 NEW_VERSION = os.environ.get("DOCKPIPE_VM_COMPAT_NEW_VERSION", "")
 
@@ -158,10 +158,12 @@ class RuntimeCompatibilityTests(unittest.TestCase):
                 return subprocess.run([binary, *map(str, arguments)], cwd=root, env=environment,
                                       capture_output=True, text=True, timeout=30)
 
-            self.assertEqual(OLD_VERSION.split("-", 1)[0].split("+", 1)[0], "0.6.27",
-                             "select the actual previous public 0.6.27 runtime")
+            self.assertEqual(OLD_VERSION.split("-", 1)[0].split("+", 1)[0], "0.6.28",
+                             "select the actual previous public 0.6.28 runtime")
             self.assertEqual(invoke(OLD_CLI, "--version").stdout.strip(), OLD_VERSION)
             self.assertTrue(NEW_VERSION, "select the exact published backend-capable CLI version")
+            self.assertEqual(NEW_VERSION.split("-", 1)[0].split("+", 1)[0], "0.6.29",
+                             "select the actual public 0.6.29 compatibility runtime")
             self.assertEqual(invoke(NEW_CLI, "--version").stdout.strip(), NEW_VERSION)
             for kind in ("workflows", "resolvers"):
                 result = invoke(NEW_CLI, "package", "compile", kind, "--workdir", root,

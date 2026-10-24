@@ -1,43 +1,43 @@
 {
   "schema": 1,
   "dockpipe": {
-    "version": "0.6.28-staging.cli.sha0bab9c0e60c0",
-    "release": "cli-candidate-0.6.28-staging.0bab9c0e60c0eccdbafe899818b16860dba83606",
+    "version": "0.6.29-staging.cli.sha324a2f2fd49e",
+    "release": "cli-candidate-0.6.29-staging.324a2f2fd49ea6d58b31e8d5105489f63eccb635",
     "artifacts": {
       "darwin/amd64": {
-        "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/cli-candidate-0.6.28-staging.0bab9c0e60c0eccdbafe899818b16860dba83606/dockpipe_0.6.28-staging.cli.sha0bab9c0e60c0_darwin_amd64.tar.gz",
-        "size_bytes": 5303745,
-        "sha256": "a8869f6cdc69d63cd1eec015d3eb892ba9ff27ae206fc1353afdcb63c6a48ef4",
+        "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/cli-candidate-0.6.29-staging.324a2f2fd49ea6d58b31e8d5105489f63eccb635/dockpipe_0.6.29-staging.cli.sha324a2f2fd49e_darwin_amd64.tar.gz",
+        "size_bytes": 5305762,
+        "sha256": "b4d01b3403bc93c4d548fb4e1c8035d14e3bc4ccadfdbdd46d05ce2a724e76dd",
         "executable": "dockpipe",
-        "executable_size_bytes": 13877568
+        "executable_size_bytes": 13885760
       },
       "darwin/arm64": {
-        "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/cli-candidate-0.6.28-staging.0bab9c0e60c0eccdbafe899818b16860dba83606/dockpipe_0.6.28-staging.cli.sha0bab9c0e60c0_darwin_arm64.tar.gz",
-        "size_bytes": 4857637,
-        "sha256": "72ff18812cb9c3e2dacbe6a916550c37165edd9070e0021a912d7a9a2faa85e9",
+        "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/cli-candidate-0.6.29-staging.324a2f2fd49ea6d58b31e8d5105489f63eccb635/dockpipe_0.6.29-staging.cli.sha324a2f2fd49e_darwin_arm64.tar.gz",
+        "size_bytes": 4860890,
+        "sha256": "907e9e92d549cc06bf65a1d0068b1aaea7ebd94a5422ea12798e89353f8fe89c",
         "executable": "dockpipe",
         "executable_size_bytes": 12693554
       },
       "linux/amd64": {
-        "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/cli-candidate-0.6.28-staging.0bab9c0e60c0eccdbafe899818b16860dba83606/dockpipe_0.6.28-staging.cli.sha0bab9c0e60c0_linux_amd64.tar.gz",
-        "size_bytes": 5248555,
-        "sha256": "89bab4e1984ed9be69385eee5ffd67afde0f3bfb2d55e103c4635d86489702da",
+        "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/cli-candidate-0.6.29-staging.324a2f2fd49ea6d58b31e8d5105489f63eccb635/dockpipe_0.6.29-staging.cli.sha324a2f2fd49e_linux_amd64.tar.gz",
+        "size_bytes": 5251146,
+        "sha256": "96b068ad535fb6f977eb284768e38579f966cfb2aa9117230521a09b64b03190",
         "executable": "dockpipe",
-        "executable_size_bytes": 13664418
+        "executable_size_bytes": 13672610
       },
       "linux/arm64": {
-        "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/cli-candidate-0.6.28-staging.0bab9c0e60c0eccdbafe899818b16860dba83606/dockpipe_0.6.28-staging.cli.sha0bab9c0e60c0_linux_arm64.tar.gz",
-        "size_bytes": 4700365,
-        "sha256": "419f0e9be15df299a41fbd52ce070e1601b434be05b52d90fd59deaf0b3905a0",
+        "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/cli-candidate-0.6.29-staging.324a2f2fd49ea6d58b31e8d5105489f63eccb635/dockpipe_0.6.29-staging.cli.sha324a2f2fd49e_linux_arm64.tar.gz",
+        "size_bytes": 4702048,
+        "sha256": "fd019002ce4a541569664d2c87ded21b2cbbc33f916f76f6345eb156aeb8ce31",
         "executable": "dockpipe",
         "executable_size_bytes": 12517538
       },
       "windows/amd64": {
-        "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/cli-candidate-0.6.28-staging.0bab9c0e60c0eccdbafe899818b16860dba83606/dockpipe_0.6.28-staging.cli.sha0bab9c0e60c0_windows_amd64.zip",
-        "size_bytes": 5202363,
-        "sha256": "c534147cfb86dbc1529b581c8b8c3fd80f84e4395fb949207d98fc433ce8fb3e",
+        "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/cli-candidate-0.6.29-staging.324a2f2fd49ea6d58b31e8d5105489f63eccb635/dockpipe_0.6.29-staging.cli.sha324a2f2fd49e_windows_amd64.zip",
+        "size_bytes": 5206205,
+        "sha256": "0adc1609e57f161277863303dde56839b4a60dc085af87864daf5243fd6e29a0",
         "executable": "dockpipe.exe",
-        "executable_size_bytes": 13551104
+        "executable_size_bytes": 13559808
       }
     }
   }

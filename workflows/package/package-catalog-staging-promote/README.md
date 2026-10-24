@@ -62,20 +62,33 @@ only a declared system baseline and fresh private home/XDG/global roots.
 
 ## Required configuration and unresolved execution inputs
 
-No provider operation has run for this draft. Repository secret/variable inspection
-found no catalog staging credentials or environment. Provisioning or granting
-access is a separate reviewed operation, not a side effect of running this source.
-The workflow does not declare or auto-create a GitHub environment.
-The intended exact secret references are `CATALOG_STAGING_R2_ACCESS_KEY_ID` and
-`CATALOG_STAGING_R2_SECRET_ACCESS_KEY`; the nonsecret destination references are
-`CATALOG_STAGING_R2_ENDPOINT` and `CATALOG_STAGING_R2_BUCKET`. Execution must fail
-before writes if any is absent. Source requests declare only those reference names
-and the reviewed SHA256 of canonical endpoint/bucket JSON; resolved operator
-values are not committed or printed. The credential policy must restrict writes to the
-reviewed immutable catalog prefix and optional `packages/latest.json` key.
+The owning registered catalog pipeline uses the existing `release-staging`
+GitHub environment and the established `AWS_ACCESS_KEY_ID`,
+`AWS_SECRET_ACCESS_KEY`, `R2_ENDPOINT_URL` and `DOCKPIPE_RELEASE_BUCKET`
+references. A read-only prepare-stage API check requires that environment to
+exist before dependent upload/promote jobs may bind it. This check never creates
+an environment, reads secret values, or proves credentials are configured.
+Missing settings still fail before provider writes. Request destination fields
+name only the two standard public-setting references and the reviewed SHA256 of
+canonical endpoint/bucket JSON; resolved values are not committed or printed.
+
+The existing `package-release-setup` Dockpipe workflow supports upload-only
+checks using the existing `packages-staging` secret-environment mapping and
+`RELEASE_SETUP_ENVIRONMENT=release-staging`. Its public environment ID remains
+an operator placeholder. Use an actual already configured private mapping;
+never infer a vault ID or borrow core environment secrets. Setup defaults to
+read-only validation; applying settings is a separate explicit pipeline setup
+operation. The target environment must already exist with its intended branch
+policy. Neither setup nor catalog execution creates access or provider credentials.
+
+Only upload and promote bind the environment. Source checks, request preparation
+and all three native consumers receive no publication credentials. Core runtime
+publication remains independent and continues to own only its runtime pointer.
+The credential policy must restrict writes to the reviewed immutable catalog
+prefix and optional `packages/latest.json` key.
 
 The runnable request/CI wrapper still needs the actual public candidate N, the
-actual public0.6.28 CLI and compiled-core pins, the reviewed all-platform policy,
+independently published CLI0.6.29 and compiled-core0.6.30 pins, the reviewed all-platform policy,
 and the source-bound named-workflow qualification projection. No default, placeholder
 or source-cache fallback may fill those values. These missing inputs do not affect
 independent core runtime publication.
