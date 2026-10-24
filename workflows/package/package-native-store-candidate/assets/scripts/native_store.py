@@ -428,6 +428,7 @@ def build(lock_path, target, cache, work, output, fetch=False):
                        GOWORK='off', GOTOOLCHAIN='local')
     environment['DOCKPIPE_GLOBAL_ROOT'] = str(global_root)
     environment['DOCKPIPE_APPROVE_PROMPTS'] = '1'
+    environment['DOCKPIPE_VM_BUILD_DIAGNOSTICS'] = str(output / 'diagnostics')
     sdk = work / 'sdk-inputs'
     sdk.mkdir()
     shutil.copyfile(inputs['go_sdk_archive'], sdk / 'sdk.tar.gz')
