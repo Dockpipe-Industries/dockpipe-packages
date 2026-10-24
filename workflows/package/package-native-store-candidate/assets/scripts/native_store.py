@@ -362,8 +362,8 @@ def verify_vm_family(manifest):
             identity = (kind, artifact['name'])
             if identity not in VM_FAMILY:
                 continue
-            if artifact.get('version') != '1.3.6' or artifact.get('min_dockpipe_version') != '0.6.26-0':
-                raise ValueError('Native VM family requires coherent1.3.6/min0.6.26-0 metadata')
+            if artifact.get('version') != '1.3.7' or artifact.get('min_dockpipe_version') != '0.6.28-0':
+                raise ValueError('Native VM family requires coherent1.3.7/min0.6.28-0 metadata')
             found.add(identity)
     if found != VM_FAMILY:
         raise ValueError('Native candidate must contain all five VM family installables')

@@ -18,8 +18,8 @@ class ManagementFlatpakProfiles(unittest.TestCase):
                 self.assertEqual(manifest['kind'], 'workflow')
                 self.assertEqual(manifest['name'], name)
                 self.assertEqual(manifest['requires_resolvers'], ['qemu'])
-                self.assertEqual(manifest['version'], '1.3.6')
-                self.assertEqual(manifest['min_dockpipe_version'], '0.6.26-0')
+                self.assertEqual(manifest['version'], '1.3.7')
+                self.assertEqual(manifest['min_dockpipe_version'], '0.6.28-0')
                 self.assertEqual(manifest['platforms'], ['windows', 'deb', 'macos', 'flatpak'])
 
     def test_host_python_steps_do_not_activate_a_vm_boot_profile(self):

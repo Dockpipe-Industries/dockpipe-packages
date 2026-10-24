@@ -59,16 +59,23 @@ func configureDisplaySupervisor(command *exec.Cmd) {
 }
 
 func displayRuntimeRoot() (string, error) {
-	cache, err := os.UserCacheDir()
-	if err != nil || !filepath.IsAbs(cache) {
-		return "", fmt.Errorf("per-user macOS cache is unavailable")
+	path := os.Getenv("XDG_RUNTIME_DIR")
+	if path == "" {
+		// Use a stable, private per-user parent. Each launch already owns and
+		// removes its unique child; the stock Darwin TMPDIR may be too long.
+		path = filepath.Join("/private/tmp", "dockpipe-display-"+strconv.Itoa(os.Getuid()))
+		if err := os.Mkdir(path, 0700); err != nil && !os.IsExist(err) {
+			return "", err
+		}
 	}
-	path := filepath.Join(cache, "DockpipeDisplay")
-	if err := os.Mkdir(path, 0700); err != nil && !os.IsExist(err) {
-		return "", err
+	canonical, err := filepath.EvalSymlinks(path)
+	if err != nil || !filepath.IsAbs(path) || canonical != filepath.Clean(path) || !privateOwnedPath(path, true, 0700) {
+		return "", fmt.Errorf("macOS display runtime directory must be canonical, private and owned")
 	}
-	if !privateOwnedPath(path, true, 0700) {
-		return "", fmt.Errorf("macOS display runtime directory is not private")
+	// MkdirTemp adds the prefix plus a random decimal suffix. Reserve its
+	// maximum suffix and the longest current endpoint, including separators.
+	if len([]byte(path))+1+len("dockpipe-vm-")+20+len("/input") > 103 {
+		return "", fmt.Errorf("macOS display runtime directory exceeds Unix socket limits")
 	}
 	return path, nil
 }

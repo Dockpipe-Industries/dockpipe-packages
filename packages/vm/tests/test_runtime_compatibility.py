@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 import shutil
 import subprocess
+import sys
 import tarfile
 import tempfile
 import unittest
@@ -12,10 +13,12 @@ import yaml
 
 
 PACKAGE = Path(__file__).resolve().parents[1]
-MINIMUM = "0.6.26-0"
-VERSION = "1.3.6"
+MINIMUM = "0.6.28-0"
+VERSION = "1.3.7"
 OLD_CLI = os.environ.get("DOCKPIPE_VM_COMPAT_OLD_BIN", "")
+OLD_VERSION = os.environ.get("DOCKPIPE_VM_COMPAT_OLD_VERSION", "0.6.27")
 NEW_CLI = os.environ.get("DOCKPIPE_VM_COMPAT_NEW_BIN", "")
+NEW_VERSION = os.environ.get("DOCKPIPE_VM_COMPAT_NEW_VERSION", "")
 
 
 class RuntimeCompatibilityTests(unittest.TestCase):
@@ -32,12 +35,105 @@ class RuntimeCompatibilityTests(unittest.TestCase):
                 self.assertEqual(manifest["min_dockpipe_version"], MINIMUM)
                 self.assertEqual(manifest["name"], path.parent.name)
 
+    def test_boot_apps_install_the_resolver_and_preserve_actual_host_contract(self):
+        expected = {"linux-vm": ["deb"], "windows-vm": ["windows", "deb", "macos"]}
+        for name, platforms in expected.items():
+            with self.subTest(workflow=name):
+                workflow = PACKAGE / "workflows" / name
+                manifest = yaml.safe_load((workflow / "package.yml").read_text())
+                config = yaml.safe_load((workflow / "config.yml").read_text())
+                self.assertEqual(manifest["requires_resolvers"], ["qemu"])
+                self.assertEqual(manifest["platforms"], platforms)
+                self.assertEqual(config["platforms"], platforms)
+                self.assertEqual(config["runtime"], "vm")
+                self.assertEqual(config["resolver"], "qemu")
+
     def test_family_version_does_not_relabel_legacy_controller(self):
         manifest = yaml.safe_load((PACKAGE / "package.yml").read_text())
         self.assertEqual(manifest["version"], VERSION)
         self.assertEqual(manifest["min_dockpipe_version"], MINIMUM)
         controller = (PACKAGE / "tools/cmd/dockpipe-qemu-controller/main.go").read_text()
         self.assertIn('const version = "1.3.5"', controller)
+
+    def test_host_bash_picker_is_part_of_the_actual_advanced_page(self):
+        config = yaml.safe_load((PACKAGE / "workflows/windows-vm/config.yml").read_text())
+        page = next(item for item in config["view"]["pages"] if item["id"] == "advanced")
+        section = next(item for item in page["sections"] if item["id"] == "host-tools")
+        self.assertEqual(section["fields"], ["Advanced.HostBashPath"])
+        self.assertNotIn("Advanced.HostBashPath", config.get("inputs", {}))
+
+    def test_pinned_cli_compiles_picker_and_propagates_host_bash_input(self):
+        selected_cli = os.environ.get("DOCKPIPE_BIN", "")
+        binary = Path(selected_cli)
+        self.assertTrue(selected_cli and binary.is_absolute() and binary.is_file(),
+                        "select the actual pinned DOCKPIPE_BIN for the compiler/consumer test")
+        with tempfile.TemporaryDirectory(prefix="vm-host-bash-input-") as temporary:
+            root = Path(temporary)
+            workflow = root / "workflows/host-bash"
+            workflow.mkdir(parents=True)
+            shutil.copytree(PACKAGE / "resolvers/qemu/models", workflow / "models")
+            selected_bash = str(root / "selected Bash executable")
+            config = {
+                "name": "host-bash-field-consumer", "docker_preflight": False,
+                "types": ["models/QemuVmResolverConfig"],
+                "inputs": {"Advanced.HostBashPath": selected_bash},
+                "steps": [{"id": "capture-input", "kind": "host", "run": "capture.py"}],
+            }
+            (workflow / "config.yml").write_text(yaml.safe_dump(config, sort_keys=False))
+            # This Python step observes the typed environment only. It never
+            # invokes the selected path; executable admission belongs to core.
+            (workflow / "capture.py").write_text(
+                "import json, os\nfrom pathlib import Path\n"
+                "Path('captured.json').write_text(json.dumps({"
+                "'selected': os.environ.get('DOCKPIPE_HOST_BASH_BIN')}))\n")
+            environment = {name: value for name, value in os.environ.items()
+                           if not name.startswith("DOCKPIPE_")}
+            for name in ("BASH_ENV", "ENV", "PYTHONPATH", "PYTHONHOME"):
+                environment.pop(name, None)
+            environment.update(DOCKPIPE_BIN=str(binary), DOCKPIPE_HOST_PYTHON_BIN=sys.executable,
+                               DOCKPIPE_GLOBAL_ROOT=str(root / "global"),
+                               DOCKPIPE_SYSTEM_ROOT=str(root / "system"))
+            for kind in ("CACHE", "STATE", "CONFIG", "DATA"):
+                environment["XDG_" + kind + "_HOME"] = str(root / kind.lower())
+
+            def invoke(*arguments):
+                result = subprocess.run([str(binary), *map(str, arguments)], cwd=root,
+                                        env=environment, capture_output=True, text=True, timeout=30)
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                return result.stdout
+
+            invoke("pipelang", "compile", "--in", workflow / "models/WindowsVmAdvanced.pipe",
+                   "--entry", "WindowsVmAdvanced", "--out", root / "compiled")
+            compiled = json.loads((root / "compiled/WindowsVmAdvanced.bindings.json").read_text())
+            field = next(item for item in compiled["fields"] if item["name"] == "HostBashPath")
+            self.assertEqual(field["value"], "")
+            catalog = json.loads(invoke("catalog", "list", "--format", "json", "--workdir", root))
+
+            def find_field(value):
+                if isinstance(value, dict):
+                    if value.get("env_name") == "DOCKPIPE_HOST_BASH_BIN":
+                        return value
+                    values = value.values()
+                elif isinstance(value, list):
+                    values = value
+                else:
+                    return None
+                for child in values:
+                    found = find_field(child)
+                    if found is not None:
+                        return found
+                return None
+
+            described = find_field(catalog)
+            self.assertIsNotNone(described)
+            self.assertEqual(described["field_name"], "HostBashPath")
+            self.assertEqual(described["attributes"]["control"], "file")
+            self.assertEqual(described["attributes"]["filemode"], "open-file")
+            self.assertIn("Absolute path", described["attributes"]["placeholder"])
+            invoke("--workflow-file", workflow / "config.yml", "--workdir", root,
+                   "--no-vault", "--no-op-inject", "--")
+            self.assertEqual(json.loads((root / "captured.json").read_text()),
+                             {"selected": selected_bash})
 
     @unittest.skipUnless(OLD_CLI and NEW_CLI, "select explicit old/new CLI binaries for admission proof")
     def test_real_cli_source_installed_metadata_and_safe_resolver_asset_admission(self):
@@ -62,8 +158,11 @@ class RuntimeCompatibilityTests(unittest.TestCase):
                 return subprocess.run([binary, *map(str, arguments)], cwd=root, env=environment,
                                       capture_output=True, text=True, timeout=30)
 
-            self.assertEqual(invoke(OLD_CLI, "--version").stdout.strip(), "0.6.25")
-            self.assertTrue(invoke(NEW_CLI, "--version").stdout.strip().startswith("0.6.26-staging."))
+            self.assertEqual(OLD_VERSION.split("-", 1)[0].split("+", 1)[0], "0.6.27",
+                             "select the actual previous public 0.6.27 runtime")
+            self.assertEqual(invoke(OLD_CLI, "--version").stdout.strip(), OLD_VERSION)
+            self.assertTrue(NEW_VERSION, "select the exact published backend-capable CLI version")
+            self.assertEqual(invoke(NEW_CLI, "--version").stdout.strip(), NEW_VERSION)
             for kind in ("workflows", "resolvers"):
                 result = invoke(NEW_CLI, "package", "compile", kind, "--workdir", root,
                                 "--from", vm / kind)

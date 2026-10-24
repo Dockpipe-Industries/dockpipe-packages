@@ -7,7 +7,7 @@ What it does:
 
 - lets you choose between a bootable guest disk and an installer ISO
 - gets its concrete VM implementation defaults from the packaged `qemu` resolver
-- auto-detects the host backend: `qemu-kvm` on Linux, `qemu-windows` on Windows
+- auto-detects the host backend: `qemu-kvm` on Linux, `qemu-darwin` on macOS, `qemu-windows` on Windows
 - defaults to Windows 11-friendly VM requirements with TPM and secure boot enabled
 - defaults the guest disk to `sata` so Windows setup sees the install disk without manual driver loading
 - defaults the guest network adapter to `e1000e` so Windows setup sees networking without manual driver loading
@@ -234,7 +234,7 @@ After the script succeeds:
 Resolver-owned defaults:
 
 - packaged resolver: `qemu`
-- default backend: `auto` (`qemu-kvm` on Linux, `qemu-windows` on Windows)
+- default backend: `auto` (`qemu-kvm` on Linux, `qemu-darwin` on macOS, `qemu-windows` on Windows)
 - default disk bus: `sata`
 - default network adapter: `e1000e`
 - default TPM mode: `required`
@@ -352,3 +352,25 @@ Guest Tools ownership and boot repair:
 - Setup preserves the existing account, requests Windows elevation, and installs `DockPipeGuestProvisioning` as a SYSTEM startup task. Every boot reconciles SSH and the guest agent, including after interrupted setup; it does not skip repair based on a success marker.
 - The startup task keeps protected local copies of its helper, agent, and nonsecret configuration. Repair does not require the original mounted media, create accounts, or reset passwords. Failed attempts are bounded and reported by Windows Task Scheduler.
 - Provisioning persists with the guest disk. Rebooting Windows preserves it; discarding an ephemeral overlay discards guest changes. Use a retained guest disk for tests across separate VM launches.
+
+
+## Select the host Bash executable
+
+The optional VM runtime requires Bash 4.3 or newer. In Advanced → Host Tools,
+select its absolute executable path using **Host Bash Executable**. The field is
+empty by default and maps to the existing `DOCKPIPE_HOST_BASH_BIN` interpreter
+selection; it does not change native shell defaults or install anything.
+On macOS the system `/bin/bash` is too old for this runtime. Select an admitted
+modern Bash from your VM toolchain instead.
+
+The same setting remains ordinary YAML:
+
+```yaml
+inputs:
+  Advanced.HostBashPath: /absolute/path/to/your/vm-tools/bin/bash
+```
+
+An invalid, relative or non-executable selection fails at the generic host-script
+boundary. GNU `timeout` or `gtimeout` is still a separate reporting prerequisite
+and must be available in the workflow's declared host PATH. Choosing Bash does
+not silently add other directories or change the machine's global PATH.
