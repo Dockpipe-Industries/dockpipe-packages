@@ -53,7 +53,7 @@ class SourceOverlayTests(unittest.TestCase):
         descriptor = {'schema': 1, 'repository': native_store.REPOSITORY, 'source_commit': self.commit,
             'source_state': 'committed-snapshot', 'source_archive_sha256': self.lock['inputs']['source']['sha256'],
             'tag': 'catalog-candidate-' + self.commit, 'owned': source_overlay.OWNED,
-            'platform': 'linux-amd64', 'native_build': False, 'source_only': True, 'published': False,
+            'platform': 'linux-amd64', 'publication_mode': 'source-only', 'native_build': False, 'source_only': True, 'published': False,
             'checks': source_overlay.CHECKS, 'inputs_lock_sha256': native_store.sha256(self.lock_path),
             'asset': archive.name, 'sha256': native_store.sha256(archive), 'size_bytes': archive.stat().st_size,
             'manifest_sha256': native_store.sha256(flat / 'packages-store-manifest.json'),
@@ -114,7 +114,7 @@ class SourceOverlayTests(unittest.TestCase):
     def test_source_candidate_is_refused_by_native_publication_mode(self):
         candidate = self.candidate()
         with self.assertRaises(ValueError):
-            publication_plan.plan([candidate])
+            publication_plan.plan([candidate], qualification='native')
         plan = publication_plan.plan([candidate], qualification='source-only')
         self.assertEqual(plan['owned'], source_overlay.OWNED)
         self.assertEqual(set(plan['artifacts']), {'linux-amd64'})

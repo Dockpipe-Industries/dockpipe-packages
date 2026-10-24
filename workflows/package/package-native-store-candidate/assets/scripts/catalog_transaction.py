@@ -1,8 +1,21 @@
 """Shared immutable catalog release transaction; callers admit qualification first."""
 import hashlib
 import json
+import re
 
 REPOSITORY = 'Dockpipe-Industries/dockpipe-packages'
+
+
+def release_tag(qualification, source):
+    prefixes = {
+        'native': 'catalog-native-candidate-',
+        'source-only': 'catalog-candidate-',
+    }
+    if qualification not in prefixes:
+        raise ValueError('Unsupported publication qualification class')
+    if not isinstance(source, str) or not re.fullmatch('[0-9a-f]{40}', source):
+        raise ValueError('Publication source must be an exact commit')
+    return prefixes[qualification] + source
 
 def sha256(path):
     digest = hashlib.sha256()
@@ -52,7 +65,18 @@ def inventory(release, tag, source, assets, complete):
     return seen
 
 
-def publish_assets(release_document, by_platform, output, metadata_name, client):
+def publish_assets(release_document, by_platform, output, metadata_name, client, *, qualification):
+    expected_class = {
+        'native': 'native-store-overlay',
+        'source-only': 'source-only-store-overlay',
+    }
+    tag = release_tag(qualification, release_document.get('source_commit'))
+    if (release_document.get('publication_mode') != qualification
+            or release_document.get('artifact_class') != expected_class[qualification]
+            or release_document.get('tag') != tag
+            or release_document.get('native_build') is not (qualification == 'native')
+            or (qualification == 'source-only' and release_document.get('source_only') is not True)):
+        raise ValueError('Publication mode, receipt class and immutable tag differ')
     metadata = (json.dumps(release_document, sort_keys=True, indent=2) + '\n').encode()
     if output.exists():
         raise ValueError('Publication output must be fresh; immutable inputs are never rewritten')

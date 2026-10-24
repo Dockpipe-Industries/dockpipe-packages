@@ -1,5 +1,6 @@
 """Draft VM-owned immutable native catalog producer. Never publishes or edits source inputs."""
 import argparse
+import catalog_transaction
 import gzip
 import hashlib
 import io
@@ -17,11 +18,13 @@ import urllib.request
 import zipfile
 
 import native_inputs
+import toolchain_inputs
+import compatibility_overlay
 
 MAX_INPUT = 2 * 1024 ** 3
 MAX_FILES = 50000
 MAX_EXPANDED = 4 * 1024 ** 3
-SUPPORTED = {'linux-amd64', 'windows-amd64'}
+SUPPORTED = {'linux-amd64', 'windows-amd64', 'darwin-arm64'}
 ROLES = {'source', 'cli', 'display_sdk', 'qt', 'gio', 'toolchain', 'broker',
          'broker_provenance', 'go_sdk_archive', 'go_sdk_manifest', 'guest_tools', 'guest_descriptor', 'guest_release_manifest', 'runtime_core'}
 REPOSITORY = 'Dockpipe-Industries/dockpipe-packages'
@@ -100,13 +103,22 @@ def load_lock(path, target, source_template=False):
             or len({tuple(item) for item in owned}) != len(owned)):
         raise ValueError('Exact unique noncore package ownership is required')
     profile = lock['profiles'].get(target)
+    if target == 'darwin-arm64' and (not isinstance(profile, dict) or 'native_inputs' not in profile):
+        raise ValueError('Darwin requires its explicit native recipe and compiler/deployment baseline')
     required_profile = {'cli_version', 'inputs', 'previous_artifacts', 'guest_source_commit'}
-    if not isinstance(profile, dict) or not required_profile.issubset(profile) or set(profile) - required_profile - {'native_inputs'}:
+    if not isinstance(profile, dict) or not required_profile.issubset(profile) or set(profile) - required_profile - {'native_inputs', 'toolchain_recipe', 'compatibility_overlay'}:
         raise ValueError('Native profile lacks a required public closure input')
+    if 'compatibility_overlay' in profile:
+        compatibility_overlay.validate(profile['compatibility_overlay'], validate_asset)
+        if not all(item in owned for item in profile['compatibility_overlay']['owned']):
+            raise ValueError('Native union ownership must preserve all compatibility workflows')
     expected_roles = ROLES
     if 'native_inputs' in profile:
         native_inputs.validate(profile['native_inputs'], target)
         expected_roles = ROLES - native_inputs.DERIVED_ROLES
+    if 'toolchain_recipe' in profile:
+        toolchain_inputs.validate_reference(profile['toolchain_recipe'])
+        expected_roles = expected_roles - {'toolchain'}
     if not isinstance(profile['inputs'], dict) or set(profile['inputs']) != expected_roles:
         raise ValueError('Native profile mixes missing or duplicate direct/derived input roles')
     if not isinstance(profile['cli_version'], str) or not re.fullmatch(r'\d+\.\d+\.\d+(?:-[A-Za-z0-9.-]+)?', profile['cli_version']):
@@ -339,6 +351,24 @@ def combine(stores, owned, target, destination, previous):
     return result
 
 
+VM_FAMILY = {('resolver', 'qemu'), ('workflow', 'linux-vm'), ('workflow', 'windows-vm'),
+             ('workflow', 'vm-manage'), ('workflow', 'vm-resolution')}
+
+
+def verify_vm_family(manifest):
+    found = set()
+    for kind, group in (('workflow', 'workflows'), ('resolver', 'resolvers')):
+        for artifact in manifest['packages'].get(group, []):
+            identity = (kind, artifact['name'])
+            if identity not in VM_FAMILY:
+                continue
+            if artifact.get('version') != '1.3.6' or artifact.get('min_dockpipe_version') != '0.6.26-0':
+                raise ValueError('Native VM family requires coherent1.3.6/min0.6.26-0 metadata')
+            found.add(identity)
+    if found != VM_FAMILY:
+        raise ValueError('Native candidate must contain all five VM family installables')
+
+
 def archive_flat(directory, output):
     with output.open('xb') as raw, gzip.GzipFile(fileobj=raw, mode='wb', mtime=0, filename='') as zipped, tarfile.open(fileobj=zipped, mode='w') as archive:
         for path in sorted(directory.iterdir()):
@@ -372,9 +402,14 @@ def build(lock_path, target, cache, work, output, fetch=False):
         inputs[role] = extract(asset, acquire(asset, cache, fetch), work / role)
     validate_guest_release(read_json(inputs['guest_release_manifest']), profile)
     recipe_environment = {}
+    toolchain_receipt = None
+    if 'toolchain_recipe' in profile:
+        inputs['toolchain'], recipe_environment, toolchain_receipt = toolchain_inputs.prepare(
+            inputs['source'], profile['toolchain_recipe'], target, work / 'prepared-toolchain',
+            cache, fetch, dict(os.environ))
     if 'native_inputs' in profile:
         produced, recipe_environment = native_inputs.prepare(profile['native_inputs'], work / 'native-inputs',
-            inputs['toolchain'], cache, fetch, acquire, dict(os.environ))
+            inputs['toolchain'], cache, fetch, acquire, recipe_environment or dict(os.environ))
         inputs.update(produced)
     source = inputs['source']
     cli = inputs['cli'] / ('dockpipe.exe' if target.startswith('windows-') else 'dockpipe')
@@ -406,10 +441,15 @@ def build(lock_path, target, cache, work, output, fetch=False):
         raise ValueError('Go SDK acquisition differs from the catalog public dependency lock')
     environment['DOCKPIPE_GO_SDK_INPUTS'] = str(sdk)
     environment['PATH'] = os.pathsep.join(str(inputs[name] / 'bin') for name in ('toolchain', 'qt', 'gio')) + os.pathsep + os.defpath
-    for key in ('CC', 'CXX', 'PKG_CONFIG_SYSROOT_DIR', 'PKG_CONFIG_LIBDIR', 'LD_LIBRARY_PATH',
-                'DOCKPIPE_VM_LINUX_DEPENDENCY_MODE', 'DOCKPIPE_VM_LINUX_PREFIX_RECEIPT', 'DOCKPIPE_VM_DISPLAY_INSPECTOR'):
+    for key in ('CC', 'CXX', 'CMAKE_GENERATOR', 'PKG_CONFIG_SYSROOT_DIR', 'PKG_CONFIG_LIBDIR', 'LD_LIBRARY_PATH',
+                'DOCKPIPE_VM_LINUX_DEPENDENCY_MODE', 'DOCKPIPE_VM_LINUX_PREFIX_RECEIPT', 'DOCKPIPE_VM_DISPLAY_INSPECTOR',
+                'DOCKPIPE_NATIVE_LIB', 'DOCKPIPE_NATIVE_DUMPBIN', 'DOCKPIPE_NATIVE_RC', 'DOCKPIPE_NATIVE_MT', 'PATH', 'GOROOT'):
         if key in recipe_environment:
             environment[key] = recipe_environment[key]
+    if target == 'darwin-arm64':
+        for key in ('PKG_CONFIG', 'PKG_CONFIG_PATH', 'DOCKPIPE_VM_DISPLAY_BREW_PREFIX', 'SDKROOT', 'MACOSX_DEPLOYMENT_TARGET'):
+            if key in recipe_environment:
+                environment[key] = recipe_environment[key]
     actual_version = subprocess.check_output([str(cli), '--version'], env=environment, text=True, timeout=15).strip()
     if actual_version != profile['cli_version']:
         raise ValueError('CLI version differs from the public candidate lock')
@@ -422,18 +462,29 @@ def build(lock_path, target, cache, work, output, fetch=False):
     for kind in ('workflow', 'resolver'):
         stores[kind] = work / (kind + '-store')
         run([cli, 'package', 'build', 'store', '--workdir', source, '--out', stores[kind], '--only', kind + 's'], source, environment)
+    if 'compatibility_overlay' in profile:
+        reference = profile['compatibility_overlay']
+        archive = acquire(reference['asset'], cache, fetch)
+        extracted = extract(reference['asset'], archive, work / 'compatibility-overlay')
+        compatibility_overlay.merge(reference, extracted, stores['workflow'])
     flat = work / 'catalog'
-    combine(stores, lock['owned'], target, flat, profile['previous_artifacts'])
+    manifest = combine(stores, lock['owned'], target, flat, profile['previous_artifacts'])
+    verify_vm_family(manifest)
     artifact = output / ('dockpipe-catalog-' + target + '.tar.gz')
     archive_flat(flat, artifact)
     descriptor = {'schema': 1, 'source_commit': lock['source_commit'], 'owned': lock['owned'], 'platform': target,
-                  'repository': REPOSITORY, 'tag': 'catalog-candidate-' + lock['source_commit'],
+                  'repository': REPOSITORY, 'tag': catalog_transaction.release_tag('native', lock['source_commit']),
+                  'publication_mode': 'native',
                   'asset': artifact.name, 'sha256': sha256(artifact), 'size_bytes': artifact.stat().st_size,
                   'manifest_sha256': sha256(flat / 'packages-store-manifest.json'),
                   'inputs_lock_sha256': sha256(lock_path), 'native_build': True, 'published': False,
                   'source_state': 'committed-snapshot', 'source_archive_sha256': profile['inputs']['source']['sha256'],
                   'checks': ['public-locked-inputs', 'owning-native-source-hook',
                              'native-display-build-and-ctest', 'exact-noncore-ownership', 'flat-store-integrity']}
+    if toolchain_receipt is not None:
+        receipt_copy = output / ('toolchain-receipt-' + target + '.json')
+        shutil.copyfile(toolchain_receipt, receipt_copy)
+        descriptor['toolchain_receipt_sha256'] = sha256(receipt_copy)
     (output / 'candidate.json').write_text(json.dumps(descriptor, indent=2) + '\n')
     return descriptor
 

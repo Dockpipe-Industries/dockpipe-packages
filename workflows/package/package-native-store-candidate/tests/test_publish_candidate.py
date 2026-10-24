@@ -133,6 +133,34 @@ class PublisherTest(unittest.TestCase):
                 self.publish()
         self.assertEqual([event[0] for event in self.client.events], ['create'])
 
+    def test_toolchain_recipe_receipt_is_required_bound_and_published_as_immutable_asset(self):
+        profile = self.lock_document['profiles']['linux-amd64']
+        profile['toolchain_recipe'] = {'path': 'release/native-toolchain/linux-amd64.json', 'sha256': 'c' * 64}
+        del profile['inputs']['toolchain']
+        self.lock_path.write_text(json.dumps(self.lock_document))
+        descriptor = json.loads(self.candidate.read_text())
+        descriptor['inputs_lock_sha256'] = native_store.sha256(self.lock_path)
+        self.candidate.write_text(json.dumps(descriptor))
+        with self.assertRaisesRegex(ValueError, 'toolchain preparation receipt'):
+            self.publish('missing-receipt')
+        self.assertEqual(self.client.events, [])
+        receipt_path = self.candidate.parent / 'toolchain-receipt-linux-amd64.json'
+        source_profile = json.loads((SCRIPTS.parents[4] / 'release/native-toolchain/linux-amd64.json').read_text())
+        license_record = {'path': 'go/LICENSE', 'sha256': 'd' * 64, 'size_bytes': 10}
+        receipt_path.write_text(json.dumps({'schema': 1, 'platform': 'linux-amd64',
+            'profile': profile['toolchain_recipe'], 'system_installs_performed': False,
+            'compiler': source_profile['compiler'],
+            'acquisitions': source_profile['inputs'] + source_profile['compiler_inputs'],
+            'tools': {name: {'version': version, 'sha256': 'e' * 64} for name, version in
+                      [('go', 'go1.26.10'), ('cmake', '3.31.6'), ('ninja', '1.12.1'), ('pkg-config', '2.3.0')]},
+            'inventory': [license_record], 'licenses': [license_record],
+            'checks': ['exact-tool-versions', 'native-shared-library-consumer', 'isolated-pkgconf-metadata']}))
+        descriptor['toolchain_receipt_sha256'] = native_store.sha256(receipt_path)
+        self.candidate.write_text(json.dumps(descriptor))
+        result = self.publish('with-receipt')
+        self.assertIn('linux-amd64', result['toolchain_preparation'])
+        self.assertIn(receipt_path.name, self.client.bytes)
+
     def test_exact_published_candidate_resumes_read_only(self):
         self.publish()
         self.client.events.clear()

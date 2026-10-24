@@ -1,0 +1,128 @@
+{
+  "schema": 1,
+  "acquisition_mode": "hosted-exact",
+  "runner_label": "windows-2025-vs2026",
+  "runner_label_documentation": "https://github.com/actions/runner-images/blob/main/README.md",
+  "observed_image": {
+    "version": "20261021.278.1",
+    "software_documentation": "https://github.com/actions/runner-images/blob/win25-vs2026/20261021.278/images/windows/Windows2025-VS2026-Readme.md",
+    "immutable_image_pin": false
+  },
+  "installation_relative_to_program_files": "Microsoft Visual Studio/18/Enterprise",
+  "toolset_version": "14.51.36231",
+  "compiler_version": "19.51.36260.0",
+  "windows_sdk_version": "10.0.26100.0",
+  "windows_sdk_relative_to_program_files_x86": "Windows Kits/10",
+  "compiler_payload": {
+    "package": "Microsoft.VC.14.51.Tools.HostX64.TargetX64.base",
+    "version": "14.51.36260",
+    "url": "https://download.visualstudio.microsoft.com/download/pr/1a3f7ee8-40b3-467a-bca3-18a23a5e9a6c/86451403ada42c612d0eb773e479879e37b0e1ef45a6e406ad1b335805dec6fd/Microsoft.VC.14.51.Tools.HostX64.TargetX64.base.vsix",
+    "sha256": "86451403ada42c612d0eb773e479879e37b0e1ef45a6e406ad1b335805dec6fd",
+    "size_bytes": 29031822,
+    "compiler_path": "VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe",
+    "compiler_sha256": "b0a1818ebae6da7f18230a84e76ce839212584ac4c2ab55b97a0d5268085da57",
+    "compiler_pe_version": "19.51.36260.0",
+    "machine": "x64"
+  },
+  "desktop_runtime": {
+    "version": "14.51.36247.0",
+    "package": "Microsoft.VC.14.51.CRT.Redist.X64.base",
+    "package_version": "14.51.36247",
+    "url": "https://download.visualstudio.microsoft.com/download/pr/3984a6ef-2ffc-4c07-962e-bf9e9b862819/24a1c8dba0376d9b008ac2ba430d13c06664fc6f163511fd7866485030e289af/Microsoft.VC.14.51.CRT.Redist.X64.base.vsix",
+    "sha256": "24a1c8dba0376d9b008ac2ba430d13c06664fc6f163511fd7866485030e289af",
+    "size_bytes": 3397395,
+    "directory": "VC/Redist/MSVC/14.51.36231/x64/Microsoft.VC145.CRT",
+    "files": [
+      {
+        "name": "concrt140.dll",
+        "path": "VC/Redist/MSVC/14.51.36231/x64/Microsoft.VC145.CRT/concrt140.dll",
+        "sha256": "54716f0738af891f283d213b5c8d11b25896bb8ee3097d301eae718560cf974e",
+        "size_bytes": 374200,
+        "version": "14.51.36247.0"
+      },
+      {
+        "name": "vccorlib140.dll",
+        "path": "VC/Redist/MSVC/14.51.36231/x64/Microsoft.VC145.CRT/vccorlib140.dll",
+        "sha256": "09f93d5ff96ae09767f3e1af3cdd43a5a58f2598654fc63089429bb6f9f4737f",
+        "size_bytes": 350648,
+        "version": "14.51.36247.0"
+      },
+      {
+        "name": "vcruntime140.dll",
+        "path": "VC/Redist/MSVC/14.51.36231/x64/Microsoft.VC145.CRT/vcruntime140.dll",
+        "sha256": "d1f4225df2cd877dbf130d5668a021dce3f94118455ff5ec952061c30afc9ce7",
+        "size_bytes": 178616,
+        "version": "14.51.36247.0"
+      },
+      {
+        "name": "msvcp140.dll",
+        "path": "VC/Redist/MSVC/14.51.36231/x64/Microsoft.VC145.CRT/msvcp140.dll",
+        "sha256": "7c26614e1d733892c2deac7e245ce115504b1d80592dd0a01b08e3e5a55f89ca",
+        "size_bytes": 643512,
+        "version": "14.51.36247.0"
+      },
+      {
+        "name": "vcruntime140_1.dll",
+        "path": "VC/Redist/MSVC/14.51.36231/x64/Microsoft.VC145.CRT/vcruntime140_1.dll",
+        "sha256": "a7146c08f89fe5b04541ab507cdb59ff7b44534d4ba3c668a426c6450a03434e",
+        "size_bytes": 50112,
+        "version": "14.51.36247.0"
+      },
+      {
+        "name": "vcruntime140_threads.dll",
+        "path": "VC/Redist/MSVC/14.51.36231/x64/Microsoft.VC145.CRT/vcruntime140_threads.dll",
+        "sha256": "40f39e8cee5f5a531b4010e18b807e8fe265b908dc58f959ecb7ebc6ea6cb11a",
+        "size_bytes": 38840,
+        "version": "14.51.36247.0"
+      },
+      {
+        "name": "msvcp140_2.dll",
+        "path": "VC/Redist/MSVC/14.51.36231/x64/Microsoft.VC145.CRT/msvcp140_2.dll",
+        "sha256": "d50d7883f20d1dc6191768d3746f52dd9cac89c346ffaed5be1f110c2f34a838",
+        "size_bytes": 274872,
+        "version": "14.51.36247.0"
+      },
+      {
+        "name": "msvcp140_1.dll",
+        "path": "VC/Redist/MSVC/14.51.36231/x64/Microsoft.VC145.CRT/msvcp140_1.dll",
+        "sha256": "206c931bf90fdad8816de3b5e2ef80b2bcaa9406c89ecc05fe6fddffe251e982",
+        "size_bytes": 35768,
+        "version": "14.51.36247.0"
+      },
+      {
+        "name": "msvcp140_atomic_wait.dll",
+        "path": "VC/Redist/MSVC/14.51.36231/x64/Microsoft.VC145.CRT/msvcp140_atomic_wait.dll",
+        "sha256": "3d0cbfaa1bf3eecf5a3f4491d2960ee803cb994f30292c6adc4a07c498f60e2b",
+        "size_bytes": 57792,
+        "version": "14.51.36247.0"
+      },
+      {
+        "name": "msvcp140_codecvt_ids.dll",
+        "path": "VC/Redist/MSVC/14.51.36231/x64/Microsoft.VC145.CRT/msvcp140_codecvt_ids.dll",
+        "sha256": "8a65c7596ef2e6938731f5a1058e7e40145b6d97967cc649231a076b9a608d78",
+        "size_bytes": 31160,
+        "version": "14.51.36247.0"
+      }
+    ],
+    "policy": "matching host runtime; no System32 harvesting or VM-module redistribution"
+  },
+  "display_sdk": {
+    "source_sha": "79bb110c712e0d71d8bcde4cecff725f3c107a49",
+    "tag": "display-sdk-1.0.0-windows-amd64-staging.79bb110c712e0d71d8bcde4cecff725f3c107a49",
+    "metadata": {
+      "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/display-sdk-1.0.0-windows-amd64-staging.79bb110c712e0d71d8bcde4cecff725f3c107a49/sdk-release.json",
+      "sha256": "cc083f7536667198b580a06f63602873fc1629055f898c6dab06830a30d6eaae",
+      "size_bytes": 978
+    },
+    "compiler_id": "MSVC",
+    "compiler_version": "19.51.36260.0",
+    "qt_version": "6.10.3"
+  },
+  "policy": {
+    "installer_execution": false,
+    "system_installation": false,
+    "fallback": false,
+    "hosted_image_only": true,
+    "admission": "Exact selected compiler/desktop CRT bytes, Microsoft Authenticode, PE version/machine and native ABI execution"
+  }
+}

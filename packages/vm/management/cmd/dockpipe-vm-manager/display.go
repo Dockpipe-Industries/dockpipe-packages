@@ -21,6 +21,7 @@ type displayDescriptor struct {
 	ResourceID     string `json:"resource_id"`
 	Backend        string `json:"backend"`
 	BusAddress     string `json:"bus_address"`
+	InputAddress   string `json:"input_address,omitempty"`
 	ConsoleID      int    `json:"console_id"`
 	QemuPID        int    `json:"qemu_pid"`
 	QemuStartToken string `json:"qemu_start_token"`
@@ -175,13 +176,18 @@ func decodeDisplayJSON(path string, maximum int64, target any) error {
 			return fmt.Errorf("invalid display metadata field")
 		}
 	}
-	if _, descriptor := target.(*displayDescriptor); descriptor && len(seen) != 7 {
+	if _, descriptor := target.(*displayDescriptor); descriptor && len(seen) != 7 && len(seen) != 8 {
 		return fmt.Errorf("incomplete display resource metadata")
 	}
 	decoder := json.NewDecoder(bytes.NewReader(data))
 	decoder.DisallowUnknownFields()
 	if decoder.Decode(target) != nil {
 		return fmt.Errorf("invalid display metadata")
+	}
+	if descriptor, ok := target.(*displayDescriptor); ok {
+		if (descriptor.Schema == 1 && len(seen) != 7) || (descriptor.Schema == 2 && len(seen) != 8) || !validDisplayInputDescriptor(*descriptor) {
+			return fmt.Errorf("invalid versioned display input metadata")
+		}
 	}
 	var extra any
 	if decoder.Decode(&extra) != io.EOF {

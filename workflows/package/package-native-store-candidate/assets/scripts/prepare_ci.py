@@ -10,9 +10,17 @@ import urllib.parse
 import native_store
 from publish_candidate import command
 
-RUNNERS = {'linux-amd64': 'ubuntu-24.04', 'windows-amd64': 'windows-2022'}
+RUNNERS = {'linux-amd64': 'ubuntu-24.04', 'windows-amd64': 'windows-2022', 'darwin-arm64': 'macos-15'}
 MAX_SOURCE_BYTES = 64 * 1024 * 1024
 
+
+
+def runner_for(target, profile):
+    if target == 'linux-amd64' and any(key in profile for key in ('native_inputs', 'toolchain_recipe')):
+        return 'ubuntu-22.04'
+    if target == 'windows-amd64' and profile.get('native_inputs', {}).get('compiler', {}).get('acquisition_mode') == 'hosted-exact':
+        return 'windows-2025-vs2026'
+    return RUNNERS[target]
 
 def download_source(url, path):
     # Source is selected by the accepted immutable Git commit URL. Its actual
@@ -54,9 +62,8 @@ def prepare(template, output, environment=None, downloader=download_source):
     lock.write_text(json.dumps(effective, sort_keys=True, indent=2) + '\n')
     for target in effective['accepted_platforms']:
         native_store.load_lock(lock, target)
-    matrix = {'include': [{'platform': target, 'runner': (
-        'ubuntu-22.04' if target == 'linux-amd64' and 'native_inputs' in effective['profiles'][target]
-        else RUNNERS[target])} for target in effective['accepted_platforms']]}
+    matrix = {'include': [{'platform': target, 'runner': runner_for(target, effective['profiles'][target])}
+                          for target in effective['accepted_platforms']]}
     return matrix
 
 

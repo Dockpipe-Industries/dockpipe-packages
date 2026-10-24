@@ -1,0 +1,207 @@
+{
+  "schema": 1,
+  "platform": "linux-amd64",
+  "compiler": {
+    "id": "GNU",
+    "version": "11.4.0",
+    "os_id": "ubuntu",
+    "os_version": "22.04"
+  },
+  "inputs": [
+    {
+      "id": "go",
+      "version": "1.26.10",
+      "url": "https://go.dev/dl/go1.26.10.linux-amd64.tar.gz",
+      "size_bytes": 66936659,
+      "sha256": "ccfe7ae822d2c2f41f4fe7c956199967a4dac22d0ee0d2b2bfdb440aab3b20c5",
+      "format": "tar.gz",
+      "root": "go",
+      "destination": "go",
+      "license_path": "LICENSE"
+    },
+    {
+      "id": "cmake",
+      "version": "3.31.6",
+      "url": "https://github.com/Kitware/CMake/releases/download/v3.31.6/cmake-3.31.6-linux-x86_64.tar.gz",
+      "size_bytes": 55010959,
+      "sha256": "5a1133ff103c71eb5120e2cc3de922733e7d8a26a98ae716397e8676adb367bf",
+      "format": "tar.gz",
+      "root": "cmake-3.31.6-linux-x86_64",
+      "destination": "cmake",
+      "license_path": "doc/cmake/Copyright.txt"
+    },
+    {
+      "id": "ninja",
+      "version": "1.12.1",
+      "url": "https://github.com/ninja-build/ninja/releases/download/v1.12.1/ninja-linux.zip",
+      "size_bytes": 123084,
+      "sha256": "6f98805688d19672bd699fbbfa2c2cf0fc054ac3df1f0e6a47664d963d530255",
+      "format": "zip",
+      "root": "",
+      "destination": "ninja",
+      "license_reference": "https://github.com/ninja-build/ninja/blob/v1.12.1/COPYING",
+      "license_asset": {
+        "url": "https://raw.githubusercontent.com/ninja-build/ninja/v1.12.1/COPYING",
+        "size_bytes": 11358,
+        "sha256": "eb7e9ab9690124c5c9f42bdc81383d886a3dede26345b6ed15bbad7caf81f7ea"
+      }
+    },
+    {
+      "id": "pkgconf-source",
+      "version": "2.3.0",
+      "url": "https://distfiles.ariadne.space/pkgconf/pkgconf-2.3.0.tar.xz",
+      "size_bytes": 316160,
+      "sha256": "3a9080ac51d03615e7c1910a0a2a8df08424892b5f13b0628a204d3fcce0ea8b",
+      "format": "tar.xz",
+      "root": "pkgconf-2.3.0",
+      "destination": "pkgconf-source",
+      "license_path": "COPYING"
+    }
+  ],
+  "compiler_inputs": [
+    {
+      "package": "gcc-11",
+      "version": "11.4.0-1ubuntu1~22.04.3",
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/g/gcc-11/gcc-11_11.4.0-1ubuntu1~22.04.3_amd64.deb",
+      "size_bytes": 20143406,
+      "sha256": "5422307110e695d62a2574c8b765bf38d48b2ed520206e5b7d2b9081a68008f3",
+      "format": "deb"
+    },
+    {
+      "package": "g++-11",
+      "version": "11.4.0-1ubuntu1~22.04.3",
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/g/gcc-11/g++-11_11.4.0-1ubuntu1~22.04.3_amd64.deb",
+      "size_bytes": 11424396,
+      "sha256": "ddbaa04f056637caa11798750638bf4586c8b273719fd1bee70d0ecb3d872b94",
+      "format": "deb"
+    },
+    {
+      "package": "cpp-11",
+      "version": "11.4.0-1ubuntu1~22.04.3",
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/g/gcc-11/cpp-11_11.4.0-1ubuntu1~22.04.3_amd64.deb",
+      "size_bytes": 10000304,
+      "sha256": "5243177370b810cc40341801a3b8def6cdd7477ac765862f7727a868629947a3",
+      "format": "deb"
+    },
+    {
+      "package": "gcc-11-base",
+      "version": "11.4.0-1ubuntu1~22.04.3",
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/g/gcc-11/gcc-11-base_11.4.0-1ubuntu1~22.04.3_amd64.deb",
+      "size_bytes": 215826,
+      "sha256": "a0445a3889fd4441cc3b3a125d6d1589de3d2628ca4e92a352170ed0fea4d18b",
+      "format": "deb"
+    },
+    {
+      "package": "libgcc-11-dev",
+      "version": "11.4.0-1ubuntu1~22.04.3",
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/g/gcc-11/libgcc-11-dev_11.4.0-1ubuntu1~22.04.3_amd64.deb",
+      "size_bytes": 2517422,
+      "sha256": "35ed68622daf796ac010f63c73abd8aff851fc6d862038461b053b55dbec93a6",
+      "format": "deb"
+    },
+    {
+      "package": "libstdc++-11-dev",
+      "version": "11.4.0-1ubuntu1~22.04.3",
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/g/gcc-11/libstdc++-11-dev_11.4.0-1ubuntu1~22.04.3_amd64.deb",
+      "size_bytes": 2100928,
+      "sha256": "58e0cd2d1f758e75426eaa47a5e7228d1c86180500ed68d162bcbf7b0a1c5dd0",
+      "format": "deb"
+    },
+    {
+      "package": "libstdc++6:amd64",
+      "version": "12.3.0-1ubuntu1~22.04.3",
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/g/gcc-12/libstdc++6_12.3.0-1ubuntu1~22.04.3_amd64.deb",
+      "size_bytes": 698608,
+      "sha256": "29ef3d289b272704b75141906c8f683db0f2bdb0942061366691333bfb289bdc",
+      "format": "deb"
+    },
+    {
+      "package": "libgcc-s1:amd64",
+      "version": "12.3.0-1ubuntu1~22.04.3",
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/g/gcc-12/libgcc-s1_12.3.0-1ubuntu1~22.04.3_amd64.deb",
+      "size_bytes": 53896,
+      "sha256": "d383e642d83263147f7b4b69fb92cf1036e5246c6be3accf10b77f986684589a",
+      "format": "deb"
+    },
+    {
+      "package": "gcc-12-base:amd64",
+      "version": "12.3.0-1ubuntu1~22.04.3",
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/g/gcc-12/gcc-12-base_12.3.0-1ubuntu1~22.04.3_amd64.deb",
+      "size_bytes": 215782,
+      "sha256": "7f9253b7e0976f0526fc21346c73ee006e185a7b2f2f865048ea78a2af55bc8d",
+      "format": "deb"
+    },
+    {
+      "package": "liblsan0:amd64",
+      "version": "12.3.0-1ubuntu1~22.04.3",
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/g/gcc-12/liblsan0_12.3.0-1ubuntu1~22.04.3_amd64.deb",
+      "size_bytes": 1068998,
+      "sha256": "c308b0e39678a00b3ad3a9653119af4a29156e2c385111bdbd4890c96d376fa4",
+      "format": "deb"
+    },
+    {
+      "package": "libtsan0:amd64",
+      "version": "11.4.0-1ubuntu1~22.04.3",
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/g/gcc-11/libtsan0_11.4.0-1ubuntu1~22.04.3_amd64.deb",
+      "size_bytes": 2259536,
+      "sha256": "2fc0cb78e86d4635c8ed17f4a2816762050c48cb928df739bbe145dfb472957a",
+      "format": "deb"
+    },
+    {
+      "package": "libcc1-0:amd64",
+      "version": "12.3.0-1ubuntu1~22.04.3",
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/g/gcc-12/libcc1-0_12.3.0-1ubuntu1~22.04.3_amd64.deb",
+      "size_bytes": 48290,
+      "sha256": "749e0fd1732df5d79af17c472dfa8f91a36fcc8d6dd5baff3f999192f7aa4357",
+      "format": "deb"
+    },
+    {
+      "package": "libgomp1:amd64",
+      "version": "12.3.0-1ubuntu1~22.04.3",
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/g/gcc-12/libgomp1_12.3.0-1ubuntu1~22.04.3_amd64.deb",
+      "size_bytes": 126570,
+      "sha256": "870c27299185a5dd4accad3b15bf82a7409fd7073cccaa8025875307da4d0ce2",
+      "format": "deb"
+    },
+    {
+      "package": "libasan6:amd64",
+      "version": "11.4.0-1ubuntu1~22.04.3",
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/g/gcc-11/libasan6_11.4.0-1ubuntu1~22.04.3_amd64.deb",
+      "size_bytes": 2283168,
+      "sha256": "eb98f62bf6c7234132beab59113c249db40acfbd1c9965308ee612de1a6e819e",
+      "format": "deb"
+    },
+    {
+      "package": "libatomic1:amd64",
+      "version": "12.3.0-1ubuntu1~22.04.3",
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/g/gcc-12/libatomic1_12.3.0-1ubuntu1~22.04.3_amd64.deb",
+      "size_bytes": 10470,
+      "sha256": "56573c81b5dd84817882400cfea49fe671f5e6cfdd0f88b5d3a894c08b150462",
+      "format": "deb"
+    },
+    {
+      "package": "libquadmath0:amd64",
+      "version": "12.3.0-1ubuntu1~22.04.3",
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/g/gcc-12/libquadmath0_12.3.0-1ubuntu1~22.04.3_amd64.deb",
+      "size_bytes": 153976,
+      "sha256": "c4c59e67e76674c8c494ce5e0415b71d770a759b48893c0d3cbabddceeb690b2",
+      "format": "deb"
+    },
+    {
+      "package": "libubsan1:amd64",
+      "version": "12.3.0-1ubuntu1~22.04.3",
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/g/gcc-12/libubsan1_12.3.0-1ubuntu1~22.04.3_amd64.deb",
+      "size_bytes": 976076,
+      "sha256": "9e2669c014d5df3c486bf29cd18a6ec3cbed68355c366e32757fdc98d290f593",
+      "format": "deb"
+    },
+    {
+      "package": "libitm1:amd64",
+      "version": "12.3.0-1ubuntu1~22.04.3",
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/g/gcc-12/libitm1_12.3.0-1ubuntu1~22.04.3_amd64.deb",
+      "size_bytes": 30160,
+      "sha256": "80f42953fa98d3ef9d49c2fd8c580bea40e1ace953eb8850bc961eef59f211c2",
+      "format": "deb"
+    }
+  ]
+}

@@ -257,7 +257,7 @@ def build(lock_path, cache, work, output, fetch=False, development_source=None):
         'source_state': 'committed-snapshot' if development_source is None else 'development',
         'source_archive_sha256': inputs['source']['sha256'] if development_source is None else None,
         'tag': 'catalog-candidate-' + lock['source_commit'], 'owned': OWNED, 'platform': 'linux-amd64',
-        'native_build': False, 'source_only': True, 'published': False, 'checks': CHECKS,
+        'publication_mode': 'source-only', 'native_build': False, 'source_only': True, 'published': False, 'checks': CHECKS,
         'inputs_lock_sha256': native_store.sha256(lock_path), 'asset': artifact.name,
         'sha256': native_store.sha256(artifact), 'size_bytes': artifact.stat().st_size,
         'manifest_sha256': native_store.sha256(flat / 'packages-store-manifest.json'),
@@ -292,14 +292,14 @@ def publish(candidate, lock_path, output, client=None, environment=None, attesto
         attestor(path, source)
     release = {'schema': 1, 'product': 'DockpipeCatalogCandidate', 'artifact_class': 'source-only-store-overlay',
         'source_repository': native_store.REPOSITORY, 'source_commit': source, 'source_state': 'committed-snapshot',
-        'source_only': True, 'native_build': False, 'tag': plan['tag'], 'owned': OWNED,
+        'publication_mode': 'source-only', 'source_only': True, 'native_build': False, 'tag': plan['tag'], 'owned': OWNED,
         'platforms': ['linux-amd64'], 'artifacts': plan['artifacts'],
         'inputs_lock_sha256': native_store.sha256(lock_path), 'checks': CHECKS,
         'inputs': lock['inputs'], 'cli_version': lock['cli_version'],
         'source_archive_sha256': descriptor['source_archive_sha256'],
         'consumer_proof_sha256': descriptor['consumer_proof_sha256'], 'ci_attestation_verified': True}
     return catalog_transaction.publish_assets(release, {'linux-amd64': candidate.parent / descriptor['asset']},
-        output, 'source-store-release.json', client or publish_candidate.GitHub())
+        output, 'source-store-release.json', client or publish_candidate.GitHub(), qualification='source-only')
 
 
 if __name__ == '__main__':

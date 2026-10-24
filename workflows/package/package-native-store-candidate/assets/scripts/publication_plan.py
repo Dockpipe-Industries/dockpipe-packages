@@ -6,9 +6,10 @@ from pathlib import Path
 import re
 import tarfile
 import native_store
+import catalog_transaction
 
 
-def plan(candidate_paths, *, qualification="native"):
+def plan(candidate_paths, *, qualification):
     if qualification not in {"native", "source-only"}:
         raise ValueError("Unsupported publication qualification class")
     artifacts = {}
@@ -24,7 +25,8 @@ def plan(candidate_paths, *, qualification="native"):
                 or (qualification == 'source-only' and descriptor.get('source_only') is not True)
                 or descriptor.get('published') is not False
                 or descriptor.get('repository') != native_store.REPOSITORY
-                or descriptor.get('tag') != 'catalog-candidate-' + commit):
+                or descriptor.get('publication_mode') != qualification
+                or descriptor.get('tag') != catalog_transaction.release_tag(qualification, commit)):
             raise ValueError('Unsupported native candidate publication descriptor')
         if source is not None and (source != commit or owned != descriptor['owned']):
             raise ValueError('Publication candidates differ in source or ownership')
@@ -81,10 +83,11 @@ def plan(candidate_paths, *, qualification="native"):
             if sorted(actual_owned) != sorted(owned) or set(names) != referenced:
                 raise ValueError('Archive differs from exact package ownership/file set')
         artifacts[target] = {key: descriptor[key] for key in ('sha256', 'size_bytes', 'manifest_sha256')}
-        artifacts[target]['url'] = ('https://github.com/' + native_store.REPOSITORY + '/releases/download/catalog-candidate-' + source + '/' + archive.name)
+        artifacts[target]['url'] = ('https://github.com/' + native_store.REPOSITORY + '/releases/download/' + catalog_transaction.release_tag(qualification, source) + '/' + archive.name)
     if not artifacts:
         raise ValueError('At least one actually built native platform is required')
-    return {'schema': 1, 'repository': native_store.REPOSITORY, 'tag': 'catalog-candidate-' + source,
+    return {'schema': 1, 'repository': native_store.REPOSITORY, 'publication_mode': qualification,
+            'tag': catalog_transaction.release_tag(qualification, source),
             'source_commit': source, 'owned': owned, 'artifacts': artifacts,
             'publication': 'review required; create immutable prerelease, never overwrite existing assets or update latest',
             'core_lock_overlay': {'source_commit': source, 'owned': owned, 'artifacts': artifacts}}
@@ -94,7 +97,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--candidate', type=Path, action='append', required=True)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--qualification', choices=('native', 'source-only'), required=True)
     args = parser.parse_args()
     with args.output.open('x') as output:
-        json.dump(plan(args.candidate), output, indent=2)
+        json.dump(plan(args.candidate, qualification=args.qualification), output, indent=2)
         output.write('\n')

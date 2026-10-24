@@ -1,0 +1,2531 @@
+{
+  "schema": 1,
+  "source_commit": null,
+  "owned": [
+    [
+      "workflow",
+      "dockpipe.terraform.core"
+    ],
+    [
+      "workflow",
+      "dockpipe.cloudflare.r2infra"
+    ],
+    [
+      "workflow",
+      "secretstore-r2-publish-test"
+    ],
+    [
+      "resolver",
+      "qemu"
+    ],
+    [
+      "workflow",
+      "linux-vm"
+    ],
+    [
+      "workflow",
+      "windows-vm"
+    ],
+    [
+      "workflow",
+      "vm-manage"
+    ],
+    [
+      "workflow",
+      "vm-resolution"
+    ]
+  ],
+  "profiles": {
+    "linux-amd64": {
+      "cli_version": "0.6.26-staging.cli.sha49987891f4c3",
+      "guest_source_commit": "13ffe8ad8c59f1c8aa6ba75e2b229d9c26a34681",
+      "inputs": {
+        "source": {
+          "url": null,
+          "sha256": null,
+          "size_bytes": null,
+          "format": null,
+          "root": null
+        },
+        "cli": {
+          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/cli-candidate-0.6.26-staging.49987891f4c3b81f5ef871b1c4cffd333e3ce274/dockpipe_0.6.26-staging.cli.sha49987891f4c3_linux_amd64.tar.gz",
+          "sha256": "1c0aa2f55f8a32154def694544c083f3f9ed3dd7e0968cf33e6d3426ca21b794",
+          "size_bytes": 5240088,
+          "format": "tar.gz",
+          "root": ""
+        },
+        "display_sdk": {
+          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/display-sdk-1.0.0-linux-amd64-staging.79bb110c712e0d71d8bcde4cecff725f3c107a49/DockPipeDisplaySDK-1.0.0-linux-amd64.tar.gz",
+          "sha256": "f142d21d5d0ca8001d54aec4f35d9941d794255d21afe1aeb6d408e93af08713",
+          "size_bytes": 8524,
+          "format": "tar.gz",
+          "root": "DockPipeDisplaySDK-1.0.0-linux-amd64"
+        },
+        "go_sdk_archive": {
+          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/dockpipe-go-sdk-0.1.0-source.90db6efa41c56d31/dockpipe-go-sdk-90db6efa41c56d31.tar.gz",
+          "sha256": "91b8a7490d75ec7323d792d02e5e44026dc502afbfa491ae762d01f40528cd43",
+          "size_bytes": 292110,
+          "format": "file",
+          "root": ""
+        },
+        "go_sdk_manifest": {
+          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/dockpipe-go-sdk-0.1.0-source.90db6efa41c56d31/dockpipe-go-sdk-90db6efa41c56d31.json",
+          "sha256": "bdb299b23b5e2ac9e5d8d7d2c1637105eeeca50d42842de4724d6abf4ff6ec6d",
+          "size_bytes": 48906,
+          "format": "file",
+          "root": ""
+        },
+        "guest_tools": {
+          "url": "https://github.com/Dockpipe-Industries/dockpipe-packages/releases/download/guest-tools-candidate-13ffe8ad8c59f1c8aa6ba75e2b229d9c26a34681/dockpipe-guest-tools-1.0.0-windows-amd64.zip",
+          "sha256": "65f37b259a71ef271f624ff991f62dc594b52bfd8b5ad91633089c6ec8b3f29c",
+          "size_bytes": 14940754,
+          "format": "file",
+          "root": ""
+        },
+        "guest_descriptor": {
+          "url": "https://github.com/Dockpipe-Industries/dockpipe-packages/releases/download/guest-tools-candidate-13ffe8ad8c59f1c8aa6ba75e2b229d9c26a34681/guest-tools-release.json",
+          "sha256": "38753e46d55994164926c0c83a49b2f2de4327eeb23b1b4e856b83e4716e6be7",
+          "size_bytes": 649,
+          "format": "file",
+          "root": ""
+        },
+        "guest_release_manifest": {
+          "url": "https://github.com/Dockpipe-Industries/dockpipe-packages/releases/download/guest-tools-candidate-13ffe8ad8c59f1c8aa6ba75e2b229d9c26a34681/guest-tools-candidate-manifest.json",
+          "sha256": "cedd8adf546b6369de951f30e2cce07e9f8800de29da853b3859b3ca41f404c8",
+          "size_bytes": 2691,
+          "format": "file",
+          "root": ""
+        },
+        "runtime_core": {
+          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/v0.6.25-staging.39554459680.1.2a984e78d9da/dockpipe-core-0.6.25.tar.gz",
+          "sha256": "a141b4e2aeccc79d57f77ecdc542c3c2acb88dfbcda67f1520db5539cd193277",
+          "size_bytes": 2785294,
+          "format": "file",
+          "root": ""
+        }
+      },
+      "previous_artifacts": {
+        "dockpipe-core-0.6.16.tar.gz": "c02dd05129ce859cf532afce4ab9743e18bfe9afca1b93b83bcb44257a4d40a1",
+        "dockpipe-workflow-agent.cloud-lanes.doctor-0.6.1.tar.gz": "a03813809de9347e30ec9f4e468850ff6ce77f5d9dd23fe2c819b30dcc87f6c1",
+        "dockpipe-workflow-backlog.remote-0.6.2.tar.gz": "66616997db965883a36e73bec624ef13627a1f09c940b1a078c353476df1cdc5",
+        "dockpipe-workflow-cas.01.app-server-0.6.1.tar.gz": "70ca52ef29d766cbf4dfe76bef20dab2a0bc92c632c06be01ddcd1b7918a9e53",
+        "dockpipe-workflow-ci-emulate-0.6.16.tar.gz": "e7a37969f5abc0d183a64cfb6ee26286e67b514546d896725c3b66d2517a891f",
+        "dockpipe-workflow-claude-0.6.1.tar.gz": "dc5395c7d4b9a7318089ba950084748c17ea042b45dffd520044428aa3e09be8",
+        "dockpipe-workflow-codex-0.6.1.tar.gz": "dc5500fa047a7de4365f90514ab5580369dba33bfc0cc85e26bdee751316c238",
+        "dockpipe-workflow-codex-pav-0.6.16.tar.gz": "be1f1f556ae16e10e22f424f00257bfe241e5b52a06a444ba6697e8c2eb3564d",
+        "dockpipe-workflow-codex-security-0.6.16.tar.gz": "2a738b62d52ee412da58cfe1fb7ceb122dcca8f3fea43bda6eb874c070106e7a",
+        "dockpipe-workflow-codex.cli.update-0.6.1.tar.gz": "b10c84eb4b2f0f60aae0912777dd7c2c694747d76e59ff656d9ba7774dd0a191",
+        "dockpipe-workflow-compliance-handoff-0.6.2.tar.gz": "e63c472ac16d9f21823d1e096ca7b7ceab871706b29ffb82d621201f7ed11ea8",
+        "dockpipe-workflow-cursor-dev-0.6.1.tar.gz": "b749623b2804badaa1640af769d7f6cc70f405c9ef947947d39ad0df55564df6",
+        "dockpipe-workflow-devcontainer-0.6.1.tar.gz": "3a59dadd7480bcf5d33bfd76885d25e1935ec3defe44fe98a87c6f2f634d094e",
+        "dockpipe-workflow-dockpipe-repo-quality-0.6.16.tar.gz": "878ac3f053816439502e24b3c400cde68fbec58b8775305cb855d1160e7081c2",
+        "dockpipe-workflow-dockpipe.cloudflare.r2infra-0.6.3.tar.gz": "1d003759db261d221111f631fadada5a996395272bf21bea5aa28ef2c12062eb",
+        "dockpipe-workflow-dockpipe.cloudflare.r2upload-0.6.3.tar.gz": "bf795047f024df9308481a5e1473134e8a0db5c14e2915a9e7613d4d0adcf6ee",
+        "dockpipe-workflow-dockpipe.github.ghcrpush-0.6.1.tar.gz": "a1c978e729e0c551f628af81c7902d48cc224ed8e59081c3cb2e1aea30e22da9",
+        "dockpipe-workflow-dockpipe.terraform.core-0.6.2.tar.gz": "00bc490e55a2399a68d667b9857690aa5daf65360cb657ed221dfb63a11d9e2e",
+        "dockpipe-workflow-docs.optimize-orchestrate-0.6.1.tar.gz": "53beea5522a41d8a7f43fb65e4fa3695cbc87fd66aba8b1bc7fdc9043efdb683",
+        "dockpipe-workflow-docs.orchestrate-0.6.1.tar.gz": "f568a9033f5359fa5b0b492e30c896c9534247d6f33f348c851603ce1910775c",
+        "dockpipe-workflow-dorkpipe-0.6.2.tar.gz": "64b2195e09077e0f2dbff17bab682a8a06b6d48570f6e106f38553c50a3ef739",
+        "dockpipe-workflow-dorkpipe-orchestrator-0.6.2.tar.gz": "fe83a338d6e92b3cab71c51f52f706d09a3d02953d41316d62250f03ed219f64",
+        "dockpipe-workflow-dorkpipe-self-analysis-0.6.2.tar.gz": "ff988b8d61b0d57065b7edcfaf34effea49cd3ba9b102b82be148c431aa821a3",
+        "dockpipe-workflow-dorkpipe-self-analysis-host-0.6.2.tar.gz": "3d8615c6a105f467ce50d365f63578978f69fc9c7ea88f6401eba2ae1696b54d",
+        "dockpipe-workflow-dorkpipe-self-analysis-stack-0.6.2.tar.gz": "2e101fc69f3a93b40270ca6d0c772f4135ce62c851aae295cc696338a1850110",
+        "dockpipe-workflow-dorkpipe-self-analysis-stack-proxy-0.6.2.tar.gz": "ea50b06b41ab63461ac963e618ea3e405d7d00d0aa7e027462f36a91e5ee2f3f",
+        "dockpipe-workflow-example.brain-0.6.1.tar.gz": "8888c0291eafd30ce1759036ac8fe7beea4e8395233aea2d7f420c0085df10c0",
+        "dockpipe-workflow-linux-vm-1.3.5.tar.gz": "88858e4653d6fa316522b0f72351be535cc10c77e24efa25d43424337551bcd3",
+        "dockpipe-workflow-ollama-0.6.1.tar.gz": "6c88315661234ce2677e83cfd6a495024d1ccaa02b0f376aa57d14ab200e7015",
+        "dockpipe-workflow-orchestrate.stack-0.6.1.tar.gz": "c9d77cdd36e22c06e9200478930b149994690a2d3dcb89ffe44607a3f6be8ec8",
+        "dockpipe-workflow-orchestrator-0.6.1.tar.gz": "a1037e83a12995c6c803d19f97f8d6906d448068e9e56a35246e0454748b9cb5",
+        "dockpipe-workflow-package-release-setup-0.6.16.tar.gz": "282f195984235871baa7fcc4ebb5aa6d733dd167da81db9131884a4661e427fa",
+        "dockpipe-workflow-package-store-infra-0.6.16.tar.gz": "f392c419b7fce9417b3834c03c02341f2d4c05b832c3b76c5b8cd8dc105d55e8",
+        "dockpipe-workflow-package-store-publish-0.6.16.tar.gz": "d2467cd14604b75473a9ff801e01c682781e94cd54d566f15316d808d0823ac6",
+        "dockpipe-workflow-package-store-staging-infra-0.6.16.tar.gz": "f314a0a667011023ce365dd7f376a1bdf843725035a38a33f11f1d5b4bac0a5f",
+        "dockpipe-workflow-pipeon-0.6.3.tar.gz": "cc0abbacd1aeca8b824e781df1325cd3cc23e0cd6d89111a79dd1d44a225d91e",
+        "dockpipe-workflow-pipeon-dev-stack-0.6.3.tar.gz": "2bfd09bf2403b2f592de5f9a1a885f813c4df5a1f12b5c6ed6ea3692ebc02614",
+        "dockpipe-workflow-pipeon-dev-stack-status-0.6.3.tar.gz": "e837e68255f46f819480ffba8a8008fdf9db4bc55c3f033d4e748fc3702a37c5",
+        "dockpipe-workflow-pipeon-dev-stack-stop-0.6.3.tar.gz": "c9f4b315c7d7a4ed423113eb47dd82697b4ecccd52ed4448f3865193e6412c66",
+        "dockpipe-workflow-secretstore-onepassword-0.6.1.tar.gz": "2cdc72d091158d22d12c08e8dd3f3f89a10b3b1293da469428e323048a9824b6",
+        "dockpipe-workflow-secretstore-r2-publish-test-0.6.1.tar.gz": "61475c3688153d07d4feba78598cc4356e91ef0d04e966b803567641f9791b2e",
+        "dockpipe-workflow-skills.render-0.6.1.tar.gz": "b5979821cb4323638b6d61dd5eb085217badd5d0f187a51d4528fd302864402d",
+        "dockpipe-workflow-software.dev-0.6.1.tar.gz": "0f3f733be9b664e0f63e647a33cd0d19fb3bac8258b74e2b2be0f39c228fbf62",
+        "dockpipe-workflow-test-0.6.16.tar.gz": "7b5451af89cde1ec761de0e367345e2921435efb5b2fe5e562599fd16a990d72",
+        "dockpipe-workflow-user-insight-process-0.6.2.tar.gz": "50977772fdbf9634b0ee36b6d31cc4df03668ef5ca3b287f0771a105f29a022f",
+        "dockpipe-workflow-vscode-0.6.1.tar.gz": "bb46ab4fd0bcb81871e20d406ad2f25fc14db66f0f64fbde17a419c0d38aeea3",
+        "dockpipe-workflow-windows-vm-1.3.5.tar.gz": "4d7e3a158752e3c281106051173e4c4dc03cc357ed269312f16014b904a1dff0",
+        "dockpipe-resolver-aws-secretsmanager-0.6.0.tar.gz": "3105de5cad495552b14a475487bb3a55d0b59b13a478eaccb98073b83f4b75b8",
+        "dockpipe-resolver-azure-keyvault-0.6.0.tar.gz": "b7fe7fc480262c1f8ea52134804df164dac7905d71bb41b6eaf2639922eda06c",
+        "dockpipe-resolver-claude-0.6.1.tar.gz": "684a0645d1802216bfc2268f645e2dcfa7494c7c6c95379b45e5f8d55d2a21d0",
+        "dockpipe-resolver-codex-0.6.1.tar.gz": "5f3e755fb6d6d444563072d34d17e600edcba9776470a368b545efa24af7bcfc",
+        "dockpipe-resolver-cursor-dev-0.6.1.tar.gz": "aeed72059c3af93f603b9e6416ff843577a53170e4ebaf388b2e3a9aea66a14a",
+        "dockpipe-resolver-devcontainer-0.6.1.tar.gz": "ab13bb377cbb09471a38008c4534ac31d6ce8e2b613ebd9d780c3521eb8ac7dc",
+        "dockpipe-resolver-dockpipe.cloudflare.remote-edge-0.3.1.tar.gz": "6b9e51ef163ba1ea883482dcd7268411b5ba4facd4eb2121cac2a9f3e4bfc659",
+        "dockpipe-resolver-dotenv-0.6.16.tar.gz": "ab23c83a47eb8a48ed049f9901b37b4298debe503172cd83dad3d46b5fa91ea5",
+        "dockpipe-resolver-infisical-0.6.0.tar.gz": "8fc4b05f9f28c373c6a4594b8cbecf287b26839b04119e792c117ca37251454d",
+        "dockpipe-resolver-ollama-0.6.1.tar.gz": "452a3b8f8d3dab7477fc6ccbbd7402ac12403f5d1216ca2fe2ac669aeb79daec",
+        "dockpipe-resolver-onepassword-0.6.1.tar.gz": "6787c453852dba13b6c983f6f1928d3de931bd537c4087ff66c195c0649d86d3",
+        "dockpipe-resolver-pipeon-0.6.3.tar.gz": "94d413f55b916769a6bb7842d1c7fb4fe8193f7589e8ced0defa7d28a15e571d",
+        "dockpipe-resolver-pipeon-dev-stack-0.6.3.tar.gz": "33e0123f8ccd4263f3d3d9086bdcd37bf59c76e9dad0fbd4dd8c097e23bcd757",
+        "dockpipe-resolver-qemu-1.3.5.tar.gz": "2655ac7d4036d5132f42f5f71504cfc64c26bc9f1c53f718c58c07ab4c52df2d",
+        "dockpipe-resolver-vscode-0.6.1.tar.gz": "f686ac010b906b44ad25a9d710a354609f845b88c0f62c4266fa7dac8744f7cb",
+        "dockpipe-workflow-dockpipe.cloudflare.r2infra-0.6.4.tar.gz": "080a5abe13f103eaa0c473e02779f7cca3dc168d2b9a1c30b9a147263ff741da",
+        "dockpipe-workflow-dockpipe.terraform.core-0.6.3.tar.gz": "11ec627be4f31503af30d6c97a1b34f0043d7eeee018fdc4f4301db56c201c02",
+        "dockpipe-workflow-secretstore-r2-publish-test-0.6.2.tar.gz": "7a09c905f4184326e8674ebe4386d7ae9cc8f0490f46312410c92ff5422a5f7e"
+      },
+      "native_inputs": {
+        "schema": 1,
+        "platform": "linux-amd64",
+        "compiler": {
+          "id": "GNU",
+          "version": "11.4.0",
+          "os_id": "ubuntu",
+          "os_version": "22.04"
+        },
+        "archives": [
+          {
+            "id": "qt-qtbase",
+            "destination": "qt/6.10.3/gcc_64",
+            "asset": {
+              "url": "https://download.qt.io/online/qtsdkrepository/linux_x64/desktop/qt6_6103/qt6_6103/qt.qt6.6103.linux_gcc_64/6.10.3-0-202603310406qtbase-Linux-RHEL_9_4-GCC-Linux-RHEL_9_4-X86_64.7z",
+              "sha256": "3c12871c69f5350c82a9f04e9a064fc78953008dfa93278a58ebcc622cf401a8",
+              "size_bytes": 26106261,
+              "format": "7z",
+              "root": "",
+              "redirect_hosts": [
+                "download.qt.io",
+                "ftp.fau.de",
+                "ftp.jaist.ac.jp",
+                "mirror.aarnet.edu.au",
+                "mirror.accum.se",
+                "mirrors.20i.com",
+                "mirrors.ukfast.co.uk",
+                "qt.mirror.constant.com",
+                "qtproject.mirror.liquidtelecom.com",
+                "www.nic.funet.fi"
+              ]
+            },
+            "package": "qt-qtbase",
+            "version": "6.10.3"
+          },
+          {
+            "id": "qt-qttools",
+            "destination": "qt/6.10.3/gcc_64",
+            "asset": {
+              "url": "https://download.qt.io/online/qtsdkrepository/linux_x64/desktop/qt6_6103/qt6_6103/qt.qt6.6103.linux_gcc_64/6.10.3-0-202603310406qttools-Linux-RHEL_9_4-GCC-Linux-RHEL_9_4-X86_64.7z",
+              "sha256": "f32a53e2c1569246bffce542497aa44f3eb378ff911c6153cdfcfe22603b1bf5",
+              "size_bytes": 28516313,
+              "format": "7z",
+              "root": "",
+              "redirect_hosts": [
+                "download.qt.io",
+                "ftp.fau.de",
+                "ftp.jaist.ac.jp",
+                "mirror.aarnet.edu.au",
+                "mirror.accum.se",
+                "mirrors.20i.com",
+                "mirrors.ukfast.co.uk",
+                "qt.mirror.constant.com",
+                "qtproject.mirror.liquidtelecom.com",
+                "www.nic.funet.fi"
+              ]
+            },
+            "package": "qt-qttools",
+            "version": "6.10.3"
+          },
+          {
+            "id": "libblkid-dev-amd64",
+            "destination": "gio",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/u/util-linux/libblkid-dev_2.37.2-4ubuntu3.6_amd64.deb",
+              "sha256": "0e0732df8ea5801700ad4204130c974c543fa3eb7aecb3a823034e48d34817af",
+              "size_bytes": 185590,
+              "format": "deb",
+              "root": ""
+            },
+            "package": "libblkid-dev:amd64",
+            "version": "2.37.2-4ubuntu3.6"
+          },
+          {
+            "id": "libblkid1-amd64",
+            "destination": "gio",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/u/util-linux/libblkid1_2.37.2-4ubuntu3.6_amd64.deb",
+              "sha256": "bf9ab18457e0a10879951b01c87156bdf503bdeb0f87ae0f0f81ec62cb000279",
+              "size_bytes": 103456,
+              "format": "deb",
+              "root": ""
+            },
+            "package": "libblkid1:amd64",
+            "version": "2.37.2-4ubuntu3.6"
+          },
+          {
+            "id": "libexpat1-dev-amd64",
+            "destination": "gio",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/e/expat/libexpat1-dev_2.4.7-1ubuntu0.9_amd64.deb",
+              "sha256": "5ed152003cdb6e840985d41a5fbc72a72dfe2e92e187d57b66052de3ea8ee2cd",
+              "size_bytes": 151246,
+              "format": "deb",
+              "root": ""
+            },
+            "package": "libexpat1-dev:amd64",
+            "version": "2.4.7-1ubuntu0.9"
+          },
+          {
+            "id": "libexpat1-amd64",
+            "destination": "gio",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/e/expat/libexpat1_2.4.7-1ubuntu0.9_amd64.deb",
+              "sha256": "0ee31596316d2275ab351d11290c63e7547fff0ecd7f431e56855cb7c5f18588",
+              "size_bytes": 96926,
+              "format": "deb",
+              "root": ""
+            },
+            "package": "libexpat1:amd64",
+            "version": "2.4.7-1ubuntu0.9"
+          },
+          {
+            "id": "libffi-dev-amd64",
+            "destination": "gio",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/libf/libffi/libffi-dev_3.4.2-4_amd64.deb",
+              "sha256": "41995a2341a425d2bf74be3ade3a73e66922be181f7b60ae29d6762c37493fc2",
+              "size_bytes": 63712,
+              "format": "deb",
+              "root": ""
+            },
+            "package": "libffi-dev:amd64",
+            "version": "3.4.2-4"
+          },
+          {
+            "id": "libffi8-amd64",
+            "destination": "gio",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/libf/libffi/libffi8_3.4.2-4_amd64.deb",
+              "sha256": "b4f88c91fa6f4c942097be6abfc365fb133c5e147640168cbb7704fd855eac10",
+              "size_bytes": 22326,
+              "format": "deb",
+              "root": ""
+            },
+            "package": "libffi8:amd64",
+            "version": "3.4.2-4"
+          },
+          {
+            "id": "libglib2.0-0-amd64",
+            "destination": "gio",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/g/glib2.0/libglib2.0-0_2.72.4-0ubuntu2.10_amd64.deb",
+              "sha256": "b82973c5d9698e48297000e74d2dc7431e726db8f0f948ea56be7f9e4c9e66fb",
+              "size_bytes": 1468764,
+              "format": "deb",
+              "root": ""
+            },
+            "package": "libglib2.0-0:amd64",
+            "version": "2.72.4-0ubuntu2.10"
+          },
+          {
+            "id": "libglib2.0-bin",
+            "destination": "gio",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/g/glib2.0/libglib2.0-bin_2.72.4-0ubuntu2.10_amd64.deb",
+              "sha256": "cdfcf5d5ac27d0933d292e377efa763065e68afc09607e5fe054a0202da084dc",
+              "size_bytes": 80898,
+              "format": "deb",
+              "root": ""
+            },
+            "package": "libglib2.0-bin",
+            "version": "2.72.4-0ubuntu2.10"
+          },
+          {
+            "id": "libglib2.0-dev-bin",
+            "destination": "gio",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/g/glib2.0/libglib2.0-dev-bin_2.72.4-0ubuntu2.10_amd64.deb",
+              "sha256": "b2b61c46ddf5ae503dd420f3474573b9a558234fba7c7ab7636adbf2012dedf4",
+              "size_bytes": 116522,
+              "format": "deb",
+              "root": ""
+            },
+            "package": "libglib2.0-dev-bin",
+            "version": "2.72.4-0ubuntu2.10"
+          },
+          {
+            "id": "libglib2.0-dev-amd64",
+            "destination": "gio",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/g/glib2.0/libglib2.0-dev_2.72.4-0ubuntu2.10_amd64.deb",
+              "sha256": "67d6c9ff84841fcc1e5f83b8d8f8169291130dce4bac4f9d3287ccbec1dd2f61",
+              "size_bytes": 1744834,
+              "format": "deb",
+              "root": ""
+            },
+            "package": "libglib2.0-dev:amd64",
+            "version": "2.72.4-0ubuntu2.10"
+          },
+          {
+            "id": "libmount-dev-amd64",
+            "destination": "gio",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/u/util-linux/libmount-dev_2.37.2-4ubuntu3.6_amd64.deb",
+              "sha256": "62fe2150594a51cf97ab960dfa10bd4d8118e782411cc70a24f94adf61684270",
+              "size_bytes": 14556,
+              "format": "deb",
+              "root": ""
+            },
+            "package": "libmount-dev:amd64",
+            "version": "2.37.2-4ubuntu3.6"
+          },
+          {
+            "id": "libmount1-amd64",
+            "destination": "gio",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/u/util-linux/libmount1_2.37.2-4ubuntu3.6_amd64.deb",
+              "sha256": "9f69b37420731477105d94c6bf2139437be04bef7c46ba7ffcaf3741e301bdba",
+              "size_bytes": 122186,
+              "format": "deb",
+              "root": ""
+            },
+            "package": "libmount1:amd64",
+            "version": "2.37.2-4ubuntu3.6"
+          },
+          {
+            "id": "libpcre2-8-0-amd64",
+            "destination": "gio",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/p/pcre2/libpcre2-8-0_10.39-3ubuntu0.1_amd64.deb",
+              "sha256": "01a5a74f3d305cad32fffffdc200c2a92fd8e5a01bff97de76ac598fb444d53e",
+              "size_bytes": 220512,
+              "format": "deb",
+              "root": ""
+            },
+            "package": "libpcre2-8-0:amd64",
+            "version": "10.39-3ubuntu0.1"
+          },
+          {
+            "id": "libpcre3-dev-amd64",
+            "destination": "gio",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/p/pcre3/libpcre3-dev_8.39-13ubuntu0.22.04.1_amd64.deb",
+              "sha256": "79762f3fcd3a29ee9c9c0faf61c0d0292b83b9d07e0bd37566401f0e2109ca87",
+              "size_bytes": 578728,
+              "format": "deb",
+              "root": ""
+            },
+            "package": "libpcre3-dev:amd64",
+            "version": "2:8.39-13ubuntu0.22.04.1"
+          },
+          {
+            "id": "libpcre3-amd64",
+            "destination": "gio",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/p/pcre3/libpcre3_8.39-13ubuntu0.22.04.1_amd64.deb",
+              "sha256": "0d1eb051047eb0c637c893f618f45e1d419863bfa3bc821897ee05ad418ba22e",
+              "size_bytes": 245530,
+              "format": "deb",
+              "root": ""
+            },
+            "package": "libpcre3:amd64",
+            "version": "2:8.39-13ubuntu0.22.04.1"
+          },
+          {
+            "id": "libselinux1-dev-amd64",
+            "destination": "gio",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/libs/libselinux/libselinux1-dev_3.3-1build2_amd64.deb",
+              "sha256": "d51bc5aef46b1db16d78756794b626ad81a7fe4139f259571d0e285ef2cfa451",
+              "size_bytes": 157890,
+              "format": "deb",
+              "root": ""
+            },
+            "package": "libselinux1-dev:amd64",
+            "version": "3.3-1build2"
+          },
+          {
+            "id": "libselinux1-amd64",
+            "destination": "gio",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/libs/libselinux/libselinux1_3.3-1build2_amd64.deb",
+              "sha256": "b96c6b40ee2388bd51341cb11c0f1d5bcca29b9180b6e3a77a06b881f2913f7e",
+              "size_bytes": 74578,
+              "format": "deb",
+              "root": ""
+            },
+            "package": "libselinux1:amd64",
+            "version": "3.3-1build2"
+          },
+          {
+            "id": "libsepol-dev-amd64",
+            "destination": "gio",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/libs/libsepol/libsepol-dev_3.3-1build1_amd64.deb",
+              "sha256": "6ebd75ee85f2bf59bd0337edadd33108306bae0f0123c117cc4772acdd9f6bc0",
+              "size_bytes": 378462,
+              "format": "deb",
+              "root": ""
+            },
+            "package": "libsepol-dev:amd64",
+            "version": "3.3-1build1"
+          },
+          {
+            "id": "libsepol2-amd64",
+            "destination": "gio",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/libs/libsepol/libsepol2_3.3-1build1_amd64.deb",
+              "sha256": "d47b019f21865a9692e361d260e96a3234fd934cee37026dad8f41228d9363d8",
+              "size_bytes": 281694,
+              "format": "deb",
+              "root": ""
+            },
+            "package": "libsepol2:amd64",
+            "version": "3.3-1build1"
+          },
+          {
+            "id": "libuuid1-amd64",
+            "destination": "gio",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/u/util-linux/libuuid1_2.37.2-4ubuntu3.6_amd64.deb",
+              "sha256": "97eaa1090c2e7ddaad55d58f9d0d7907d64b70f89228405d68a7ce7d56a89d67",
+              "size_bytes": 23978,
+              "format": "deb",
+              "root": ""
+            },
+            "package": "libuuid1:amd64",
+            "version": "2.37.2-4ubuntu3.6"
+          },
+          {
+            "id": "pkg-config-amd64",
+            "destination": "gio",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/p/pkg-config/pkg-config_0.29.2-1ubuntu3_amd64.deb",
+              "sha256": "69da4190d948d0bf7444ead040791b7924bd1a08a10ec13cd7f0bb9baab09c53",
+              "size_bytes": 48218,
+              "format": "deb",
+              "root": ""
+            },
+            "package": "pkg-config:amd64",
+            "version": "0.29.2-1ubuntu3"
+          },
+          {
+            "id": "uuid-dev-amd64",
+            "destination": "gio",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/u/util-linux/uuid-dev_2.37.2-4ubuntu3.6_amd64.deb",
+              "sha256": "bca1cd5ca6b3be8b5d6498fe80b2cb7e2b63040adda7ff40b9ca26eecb825f58",
+              "size_bytes": 33094,
+              "format": "deb",
+              "root": ""
+            },
+            "package": "uuid-dev:amd64",
+            "version": "2.37.2-4ubuntu3.6"
+          },
+          {
+            "id": "zlib1g-dev-amd64",
+            "destination": "gio",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/z/zlib/zlib1g-dev_1.2.11.dfsg-2ubuntu9.2_amd64.deb",
+              "sha256": "679f94589586a433c31fa9f705a6fd2e3bfa2407542ba06227ce14f821647764",
+              "size_bytes": 164060,
+              "format": "deb",
+              "root": ""
+            },
+            "package": "zlib1g-dev:amd64",
+            "version": "1:1.2.11.dfsg-2ubuntu9.2"
+          },
+          {
+            "id": "zlib1g-amd64",
+            "destination": "gio",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/z/zlib/zlib1g_1.2.11.dfsg-2ubuntu9.2_amd64.deb",
+              "sha256": "9dc17e51a1be2d9ed63b7b84ef0e4e29c5abe6f1bc62cb03e7181483cce8a2f2",
+              "size_bytes": 58406,
+              "format": "deb",
+              "root": ""
+            },
+            "package": "zlib1g:amd64",
+            "version": "1:1.2.11.dfsg-2ubuntu9.2"
+          },
+          {
+            "id": "dbus-source",
+            "destination": "broker-source",
+            "asset": {
+              "url": "https://dbus.freedesktop.org/releases/dbus/dbus-1.16.2.tar.xz",
+              "sha256": "0ba2a1a4b16afe7bceb2c07e9ce99a8c2c3508e5dec290dbb643384bd6beb7e2",
+              "size_bytes": 1115644,
+              "format": "tar.xz",
+              "root": "dbus-1.16.2"
+            },
+            "package": "dbus-source",
+            "version": "1.16.2"
+          },
+          {
+            "id": "qt-icu",
+            "destination": "qt/6.10.3/gcc_64/lib",
+            "asset": {
+              "url": "https://download.qt.io/online/qtsdkrepository/linux_x64/desktop/qt6_6103/qt6_6103/qt.qt6.6103.linux_gcc_64/6.10.3-0-202603310406icu-linux-Rhel8.6-x86_64.7z",
+              "sha256": "513830e56495b5a5d4b74e7b9ec861906cf0938fa5a8b79d08e097d41011eb6c",
+              "size_bytes": 9660627,
+              "format": "7z",
+              "root": "",
+              "redirect_hosts": [
+                "download.qt.io",
+                "ftp.fau.de",
+                "ftp.jaist.ac.jp",
+                "mirror.aarnet.edu.au",
+                "mirror.accum.se",
+                "mirrors.20i.com",
+                "mirrors.ukfast.co.uk",
+                "qt.mirror.constant.com",
+                "qtproject.mirror.liquidtelecom.com",
+                "www.nic.funet.fi"
+              ]
+            },
+            "package": "qt-icu",
+            "version": "6.10.3"
+          },
+          {
+            "id": "libpcre16-3-amd64",
+            "destination": "gio",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/p/pcre3/libpcre16-3_8.39-13ubuntu0.22.04.1_amd64.deb",
+              "sha256": "8b451e59c499e62aa43d605aa0cbc804e3b70fee27487c5560b1fef0fa48232b",
+              "size_bytes": 164242,
+              "format": "deb",
+              "root": ""
+            },
+            "package": "libpcre16-3:amd64",
+            "version": "2:8.39-13ubuntu0.22.04.1"
+          },
+          {
+            "id": "libpcre32-3-amd64",
+            "destination": "gio",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/p/pcre3/libpcre32-3_8.39-13ubuntu0.22.04.1_amd64.deb",
+              "sha256": "340b89bf29fc565c72769b5d38dba92848caf6af5c217a1e154174a165108bdc",
+              "size_bytes": 154808,
+              "format": "deb",
+              "root": ""
+            },
+            "package": "libpcre32-3:amd64",
+            "version": "2:8.39-13ubuntu0.22.04.1"
+          },
+          {
+            "id": "libpcrecpp0v5-amd64",
+            "destination": "gio",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/p/pcre3/libpcrecpp0v5_8.39-13ubuntu0.22.04.1_amd64.deb",
+              "sha256": "e5c1bcd56fa663e56ceefaafcf7e0da355ead45c3ef52d1f35bbfcd3d8655840",
+              "size_bytes": 16482,
+              "format": "deb",
+              "root": ""
+            },
+            "package": "libpcrecpp0v5:amd64",
+            "version": "2:8.39-13ubuntu0.22.04.1"
+          }
+        ],
+        "licenses": [
+          {
+            "path": "gio/usr/share/doc/libblkid-dev/copyright",
+            "sha256": "2c447817698777e3b2365a5afe2a58ececb85367dfdf0ea2c0df49add90e93eb",
+            "size_bytes": 23045,
+            "package": "libblkid-dev:amd64",
+            "version": "2.37.2-4ubuntu3.6",
+            "archive_id": "libblkid-dev-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libblkid1/copyright",
+            "sha256": "2c447817698777e3b2365a5afe2a58ececb85367dfdf0ea2c0df49add90e93eb",
+            "size_bytes": 23045,
+            "package": "libblkid1:amd64",
+            "version": "2.37.2-4ubuntu3.6",
+            "archive_id": "libblkid1-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libexpat1-dev/copyright",
+            "sha256": "60919fe1a156395ff14511bb6ff79756c50ade2fff59ac60c9bae1d8a7fe6292",
+            "size_bytes": 1756,
+            "package": "libexpat1-dev:amd64",
+            "version": "2.4.7-1ubuntu0.9",
+            "archive_id": "libexpat1-dev-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libexpat1/copyright",
+            "sha256": "60919fe1a156395ff14511bb6ff79756c50ade2fff59ac60c9bae1d8a7fe6292",
+            "size_bytes": 1756,
+            "package": "libexpat1:amd64",
+            "version": "2.4.7-1ubuntu0.9",
+            "archive_id": "libexpat1-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libffi-dev/copyright",
+            "sha256": "7258c8acc378030d8dbe1fcdf394e915769fa31dcbaf3d2991d9a79891f3bcdc",
+            "size_bytes": 3440,
+            "package": "libffi-dev:amd64",
+            "version": "3.4.2-4",
+            "archive_id": "libffi-dev-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libffi8/copyright",
+            "sha256": "7258c8acc378030d8dbe1fcdf394e915769fa31dcbaf3d2991d9a79891f3bcdc",
+            "size_bytes": 3440,
+            "package": "libffi8:amd64",
+            "version": "3.4.2-4",
+            "archive_id": "libffi8-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libglib2.0-0/copyright",
+            "sha256": "607a2dbcf41b82733bc93345da5470995a7f80515774fbabc4689158fae956c2",
+            "size_bytes": 4119,
+            "package": "libglib2.0-0:amd64",
+            "version": "2.72.4-0ubuntu2.10",
+            "archive_id": "libglib2.0-0-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libglib2.0-bin/copyright",
+            "sha256": "607a2dbcf41b82733bc93345da5470995a7f80515774fbabc4689158fae956c2",
+            "size_bytes": 4119,
+            "package": "libglib2.0-bin",
+            "version": "2.72.4-0ubuntu2.10",
+            "archive_id": "libglib2.0-bin"
+          },
+          {
+            "path": "gio/usr/share/doc/libglib2.0-dev-bin/copyright",
+            "sha256": "607a2dbcf41b82733bc93345da5470995a7f80515774fbabc4689158fae956c2",
+            "size_bytes": 4119,
+            "package": "libglib2.0-dev-bin",
+            "version": "2.72.4-0ubuntu2.10",
+            "archive_id": "libglib2.0-dev-bin"
+          },
+          {
+            "path": "gio/usr/share/doc/libglib2.0-dev/copyright",
+            "sha256": "607a2dbcf41b82733bc93345da5470995a7f80515774fbabc4689158fae956c2",
+            "size_bytes": 4119,
+            "package": "libglib2.0-dev:amd64",
+            "version": "2.72.4-0ubuntu2.10",
+            "archive_id": "libglib2.0-dev-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libmount-dev/copyright",
+            "sha256": "2c447817698777e3b2365a5afe2a58ececb85367dfdf0ea2c0df49add90e93eb",
+            "size_bytes": 23045,
+            "package": "libmount-dev:amd64",
+            "version": "2.37.2-4ubuntu3.6",
+            "archive_id": "libmount-dev-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libmount1/copyright",
+            "sha256": "2c447817698777e3b2365a5afe2a58ececb85367dfdf0ea2c0df49add90e93eb",
+            "size_bytes": 23045,
+            "package": "libmount1:amd64",
+            "version": "2.37.2-4ubuntu3.6",
+            "archive_id": "libmount1-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libpcre2-8-0/copyright",
+            "sha256": "f65dae37239e4d61a1bdeaf2ded76b8569d012a054aa042233b78615e7a83210",
+            "size_bytes": 3123,
+            "package": "libpcre2-8-0:amd64",
+            "version": "10.39-3ubuntu0.1",
+            "archive_id": "libpcre2-8-0-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libpcre3-dev/copyright",
+            "sha256": "ac9276490d2fa167442ae1aae33926514ad10c8886baa40046c5e367fccc5938",
+            "size_bytes": 2765,
+            "package": "libpcre3-dev:amd64",
+            "version": "2:8.39-13ubuntu0.22.04.1",
+            "archive_id": "libpcre3-dev-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libpcre3/copyright",
+            "sha256": "ac9276490d2fa167442ae1aae33926514ad10c8886baa40046c5e367fccc5938",
+            "size_bytes": 2765,
+            "package": "libpcre3:amd64",
+            "version": "2:8.39-13ubuntu0.22.04.1",
+            "archive_id": "libpcre3-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libselinux1-dev/copyright",
+            "sha256": "641806738b0c6a3d03168c2649e6b94205198bb66cd557e6bae3a20b71c9bb0b",
+            "size_bytes": 3131,
+            "package": "libselinux1-dev:amd64",
+            "version": "3.3-1build2",
+            "archive_id": "libselinux1-dev-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libselinux1/copyright",
+            "sha256": "641806738b0c6a3d03168c2649e6b94205198bb66cd557e6bae3a20b71c9bb0b",
+            "size_bytes": 3131,
+            "package": "libselinux1:amd64",
+            "version": "3.3-1build2",
+            "archive_id": "libselinux1-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libsepol-dev/copyright",
+            "sha256": "34414ad829fcea0064729c14f1f900632bfa7d38061b13a9797eec320c372d9e",
+            "size_bytes": 2073,
+            "package": "libsepol-dev:amd64",
+            "version": "3.3-1build1",
+            "archive_id": "libsepol-dev-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libsepol2/copyright",
+            "sha256": "34414ad829fcea0064729c14f1f900632bfa7d38061b13a9797eec320c372d9e",
+            "size_bytes": 2073,
+            "package": "libsepol2:amd64",
+            "version": "3.3-1build1",
+            "archive_id": "libsepol2-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libuuid1/copyright",
+            "sha256": "2c447817698777e3b2365a5afe2a58ececb85367dfdf0ea2c0df49add90e93eb",
+            "size_bytes": 23045,
+            "package": "libuuid1:amd64",
+            "version": "2.37.2-4ubuntu3.6",
+            "archive_id": "libuuid1-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/pkg-config/copyright",
+            "sha256": "63fe1208b513c023da32c8480a1e9d6bc82a43f217afcf9cbc1b2211c63bf880",
+            "size_bytes": 772,
+            "package": "pkg-config:amd64",
+            "version": "0.29.2-1ubuntu3",
+            "archive_id": "pkg-config-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/uuid-dev/copyright",
+            "sha256": "2c447817698777e3b2365a5afe2a58ececb85367dfdf0ea2c0df49add90e93eb",
+            "size_bytes": 23045,
+            "package": "uuid-dev:amd64",
+            "version": "2.37.2-4ubuntu3.6",
+            "archive_id": "uuid-dev-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/zlib1g-dev/copyright",
+            "sha256": "d77204eee882807240f6351c4f5ae2a4bcdb5b773ff77d10647b9b66b826b2fb",
+            "size_bytes": 2920,
+            "package": "zlib1g-dev:amd64",
+            "version": "1:1.2.11.dfsg-2ubuntu9.2",
+            "archive_id": "zlib1g-dev-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/zlib1g/copyright",
+            "sha256": "d77204eee882807240f6351c4f5ae2a4bcdb5b773ff77d10647b9b66b826b2fb",
+            "size_bytes": 2920,
+            "package": "zlib1g:amd64",
+            "version": "1:1.2.11.dfsg-2ubuntu9.2",
+            "archive_id": "zlib1g-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libpcre16-3/copyright",
+            "sha256": "ac9276490d2fa167442ae1aae33926514ad10c8886baa40046c5e367fccc5938",
+            "size_bytes": 2765,
+            "package": "libpcre16-3:amd64",
+            "version": "2:8.39-13ubuntu0.22.04.1",
+            "archive_id": "libpcre16-3-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libpcre32-3/copyright",
+            "sha256": "ac9276490d2fa167442ae1aae33926514ad10c8886baa40046c5e367fccc5938",
+            "size_bytes": 2765,
+            "package": "libpcre32-3:amd64",
+            "version": "2:8.39-13ubuntu0.22.04.1",
+            "archive_id": "libpcre32-3-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libpcrecpp0v5/copyright",
+            "sha256": "ac9276490d2fa167442ae1aae33926514ad10c8886baa40046c5e367fccc5938",
+            "size_bytes": 2765,
+            "package": "libpcrecpp0v5:amd64",
+            "version": "2:8.39-13ubuntu0.22.04.1",
+            "archive_id": "libpcrecpp0v5-amd64"
+          }
+        ],
+        "libraries": [
+          {
+            "path": "gio/usr/lib/x86_64-linux-gnu/libblkid.so.1",
+            "sha256": "0aa92efdef9d9419f49b784c9377e3fa09c6e4247162ff8b581934b891fcfa0f",
+            "size_bytes": 220208,
+            "package": "libblkid1:amd64",
+            "version": "2.37.2-4ubuntu3.6",
+            "archive_id": "libblkid1-amd64"
+          },
+          {
+            "path": "gio/usr/lib/x86_64-linux-gnu/libffi.so.8",
+            "sha256": "247da4d5d34a91cadcdd6282be4c4644fcb8af001334d2b8a82ecda435418cbf",
+            "size_bytes": 47688,
+            "package": "libffi8:amd64",
+            "version": "3.4.2-4",
+            "archive_id": "libffi8-amd64"
+          },
+          {
+            "path": "gio/usr/lib/x86_64-linux-gnu/libgio-2.0.so.0",
+            "sha256": "b63a477916c1f95de4b2c80bb4f5940a59ebc5860793d93b271448e90edbfe52",
+            "size_bytes": 1932688,
+            "package": "libglib2.0-0:amd64",
+            "version": "2.72.4-0ubuntu2.10",
+            "archive_id": "libglib2.0-0-amd64"
+          },
+          {
+            "path": "gio/usr/lib/x86_64-linux-gnu/libglib-2.0.so.0",
+            "sha256": "86acf2c843bcfaf5e8c24ab959737960c797da53b41658dc8ec6f257c786048c",
+            "size_bytes": 1281808,
+            "package": "libglib2.0-0:amd64",
+            "version": "2.72.4-0ubuntu2.10",
+            "archive_id": "libglib2.0-0-amd64"
+          },
+          {
+            "path": "gio/usr/lib/x86_64-linux-gnu/libgmodule-2.0.so.0",
+            "sha256": "1019fc28ced6829f22b446a091ecb5b76b9fa3b3c458bc6ea936c1d328302cb5",
+            "size_bytes": 22736,
+            "package": "libglib2.0-0:amd64",
+            "version": "2.72.4-0ubuntu2.10",
+            "archive_id": "libglib2.0-0-amd64"
+          },
+          {
+            "path": "gio/usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0",
+            "sha256": "05a94d6be0a50dba15a579f3ad1f5c6ec12c8d303f3b715a665fd27824ca523e",
+            "size_bytes": 387464,
+            "package": "libglib2.0-0:amd64",
+            "version": "2.72.4-0ubuntu2.10",
+            "archive_id": "libglib2.0-0-amd64"
+          },
+          {
+            "path": "gio/usr/lib/x86_64-linux-gnu/libmount.so.1",
+            "sha256": "b6e4a8ddc851b58e7f8c93945f875439d2a14a8809efde17b028c4e2db6af328",
+            "size_bytes": 273064,
+            "package": "libmount1:amd64",
+            "version": "2.37.2-4ubuntu3.6",
+            "archive_id": "libmount1-amd64"
+          },
+          {
+            "path": "gio/usr/lib/x86_64-linux-gnu/libpcre.so.3",
+            "sha256": "baae995e98223eee1afe6c640f21bdbba91b9c170584ce766418b59810d98a93",
+            "size_bytes": 477296,
+            "package": "libpcre3:amd64",
+            "version": "2:8.39-13ubuntu0.22.04.1",
+            "archive_id": "libpcre3-amd64"
+          },
+          {
+            "path": "gio/usr/lib/x86_64-linux-gnu/libpcre2-8.so.0",
+            "sha256": "f887eed7d0df7073f3d8bdc9e60d35082453b10165cf45359b5019e33ba2b9ec",
+            "size_bytes": 613064,
+            "package": "libpcre2-8-0:amd64",
+            "version": "10.39-3ubuntu0.1",
+            "archive_id": "libpcre2-8-0-amd64"
+          },
+          {
+            "path": "gio/usr/lib/x86_64-linux-gnu/libselinux.so.1",
+            "sha256": "624eb1e6a7510e0983e9caa1bbf3e1966acb64fd6d3ad4db94528addbe1e7224",
+            "size_bytes": 166280,
+            "package": "libselinux1:amd64",
+            "version": "3.3-1build2",
+            "archive_id": "libselinux1-amd64"
+          },
+          {
+            "path": "gio/usr/lib/x86_64-linux-gnu/libz.so.1",
+            "sha256": "64c206f0146cc58bbddc4f22054436f4ff278f5a554aa3ce6921ddf7e9133370",
+            "size_bytes": 108936,
+            "package": "zlib1g:amd64",
+            "version": "1:1.2.11.dfsg-2ubuntu9.2",
+            "archive_id": "zlib1g-amd64"
+          },
+          {
+            "path": "gio/usr/lib/x86_64-linux-gnu/libexpat.so.1",
+            "sha256": "683e2e41db14581194bf1f6616e95a8f02cd4ab599f0fba807e46325ec01d21f",
+            "size_bytes": 198968,
+            "package": "libexpat1:amd64",
+            "version": "2.4.7-1ubuntu0.9",
+            "archive_id": "libexpat1-amd64"
+          }
+        ]
+      },
+      "toolchain_recipe": {
+        "path": "release/native-toolchain/linux-amd64.json",
+        "sha256": "f99c1b9466c0251a87e6c2b49e047eb8d901beaeb75691f8e78be9f8cae43c26"
+      },
+      "compatibility_overlay": {
+        "source_commit": "30859228a77ba20a23a4b69ab81aae133d6ccfe9",
+        "owned": [
+          [
+            "workflow",
+            "dockpipe.terraform.core"
+          ],
+          [
+            "workflow",
+            "dockpipe.cloudflare.r2infra"
+          ],
+          [
+            "workflow",
+            "secretstore-r2-publish-test"
+          ]
+        ],
+        "asset": {
+          "url": "https://github.com/Dockpipe-Industries/dockpipe-packages/releases/download/catalog-candidate-30859228a77ba20a23a4b69ab81aae133d6ccfe9/dockpipe-catalog-linux-amd64.tar.gz",
+          "sha256": "515263b7563b5207f5beb2f543a316b96338ddb82178f8d5835375774e3183cc",
+          "size_bytes": 28977,
+          "format": "tar.gz",
+          "root": ""
+        }
+      }
+    },
+    "windows-amd64": {
+      "cli_version": "0.6.26-staging.cli.sha49987891f4c3",
+      "guest_source_commit": "13ffe8ad8c59f1c8aa6ba75e2b229d9c26a34681",
+      "inputs": {
+        "source": {
+          "url": null,
+          "sha256": null,
+          "size_bytes": null,
+          "format": null,
+          "root": null
+        },
+        "cli": {
+          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/cli-candidate-0.6.26-staging.49987891f4c3b81f5ef871b1c4cffd333e3ce274/dockpipe_0.6.26-staging.cli.sha49987891f4c3_windows_amd64.zip",
+          "sha256": "a0450281f7ba646bf5a115fb77c3fe8166364526dc11559f837bbedb9efc9ff4",
+          "size_bytes": 5192055,
+          "format": "zip",
+          "root": ""
+        },
+        "display_sdk": {
+          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/display-sdk-1.0.0-windows-amd64-staging.79bb110c712e0d71d8bcde4cecff725f3c107a49/DockPipeDisplaySDK-1.0.0-windows-amd64.tar.gz",
+          "sha256": "1bfff278ac8a9abc448c7a097b7711fb0f4964fbd42604b950e72b4875c5c597",
+          "size_bytes": 8590,
+          "format": "tar.gz",
+          "root": "DockPipeDisplaySDK-1.0.0-windows-amd64"
+        },
+        "go_sdk_archive": {
+          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/dockpipe-go-sdk-0.1.0-source.90db6efa41c56d31/dockpipe-go-sdk-90db6efa41c56d31.tar.gz",
+          "sha256": "91b8a7490d75ec7323d792d02e5e44026dc502afbfa491ae762d01f40528cd43",
+          "size_bytes": 292110,
+          "format": "file",
+          "root": ""
+        },
+        "go_sdk_manifest": {
+          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/dockpipe-go-sdk-0.1.0-source.90db6efa41c56d31/dockpipe-go-sdk-90db6efa41c56d31.json",
+          "sha256": "bdb299b23b5e2ac9e5d8d7d2c1637105eeeca50d42842de4724d6abf4ff6ec6d",
+          "size_bytes": 48906,
+          "format": "file",
+          "root": ""
+        },
+        "guest_tools": {
+          "url": "https://github.com/Dockpipe-Industries/dockpipe-packages/releases/download/guest-tools-candidate-13ffe8ad8c59f1c8aa6ba75e2b229d9c26a34681/dockpipe-guest-tools-1.0.0-windows-amd64.zip",
+          "sha256": "65f37b259a71ef271f624ff991f62dc594b52bfd8b5ad91633089c6ec8b3f29c",
+          "size_bytes": 14940754,
+          "format": "file",
+          "root": ""
+        },
+        "guest_descriptor": {
+          "url": "https://github.com/Dockpipe-Industries/dockpipe-packages/releases/download/guest-tools-candidate-13ffe8ad8c59f1c8aa6ba75e2b229d9c26a34681/guest-tools-release.json",
+          "sha256": "38753e46d55994164926c0c83a49b2f2de4327eeb23b1b4e856b83e4716e6be7",
+          "size_bytes": 649,
+          "format": "file",
+          "root": ""
+        },
+        "guest_release_manifest": {
+          "url": "https://github.com/Dockpipe-Industries/dockpipe-packages/releases/download/guest-tools-candidate-13ffe8ad8c59f1c8aa6ba75e2b229d9c26a34681/guest-tools-candidate-manifest.json",
+          "sha256": "cedd8adf546b6369de951f30e2cce07e9f8800de29da853b3859b3ca41f404c8",
+          "size_bytes": 2691,
+          "format": "file",
+          "root": ""
+        },
+        "runtime_core": {
+          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/v0.6.25-staging.39554459680.1.2a984e78d9da/dockpipe-core-0.6.25.tar.gz",
+          "sha256": "a141b4e2aeccc79d57f77ecdc542c3c2acb88dfbcda67f1520db5539cd193277",
+          "size_bytes": 2785294,
+          "format": "file",
+          "root": ""
+        }
+      },
+      "previous_artifacts": {
+        "dockpipe-core-0.6.16.tar.gz": "c2773554b6e65d3f5880fb78bc0416ca81d99165d5c557b10b3b2d8fe68ee5c9",
+        "dockpipe-workflow-agent.cloud-lanes.doctor-0.6.1.tar.gz": "d9e0a88b15c3272f108898d92f1f37b38d19de96a266e81b66fadf3cf003aa26",
+        "dockpipe-workflow-backlog.remote-0.6.2.tar.gz": "46fe46c9a9bc11e337ce78c018ea674c59b59293e792d9e6c6ac09ccfb52edaa",
+        "dockpipe-workflow-cas.01.app-server-0.6.1.tar.gz": "d250fd1d5a4e40778cefc00d25aa06d24f1296f0a060249c1fce757b691f9d31",
+        "dockpipe-workflow-ci-emulate-0.6.16.tar.gz": "4475c8effcf4b9ad00eac2ab5642fef602c481a4ece4e6edd5163dccf03c897a",
+        "dockpipe-workflow-claude-0.6.1.tar.gz": "ef151193f42401a2e23beef294f79ebba71990e2f783fe40f6c50a5ab75ec2ce",
+        "dockpipe-workflow-codex-0.6.1.tar.gz": "115614178322ffafe50fde51ca097c86a6937718715ece2e648be42f001acb72",
+        "dockpipe-workflow-codex-pav-0.6.16.tar.gz": "d67e9527316b1e2912579a8af819a7c5423325af5b7878440c91932523e17cfa",
+        "dockpipe-workflow-codex-security-0.6.16.tar.gz": "41ba0218451f071bb9aab450660cb59e36a7a29a3a0e361f9fe9a690c3da799d",
+        "dockpipe-workflow-codex.cli.update-0.6.1.tar.gz": "3e77c22984b1243af12cfccd4d8bfc33b70a2ae8b01be917c910781c5b33b441",
+        "dockpipe-workflow-compliance-handoff-0.6.2.tar.gz": "60cb57ea858144db0cb5b512dfafbbaa458650e680cd36df1ba6004fe2499b6e",
+        "dockpipe-workflow-cursor-dev-0.6.1.tar.gz": "61ad73e7d3dccba51d53dca5de7b7a8d23cb96de883882e0d0333c85d7eb9bd3",
+        "dockpipe-workflow-devcontainer-0.6.1.tar.gz": "195d945fe2fda04e6ae9fb24cdb3056276b54255faddfb64958013483f5286c4",
+        "dockpipe-workflow-dockpipe-repo-quality-0.6.16.tar.gz": "95d73c24d5f8f026631ffbe78152050552786f8e0f7af88b85744527d21f59a4",
+        "dockpipe-workflow-dockpipe.cloudflare.r2infra-0.6.3.tar.gz": "a9ff35f6a117d4a9612d9c396600531569feb87b8a1e59d824040320056ee859",
+        "dockpipe-workflow-dockpipe.cloudflare.r2upload-0.6.3.tar.gz": "0992b86746a7fa8e6ec856ad5fc1ed6f9b29aa3478701cadbcf0aa41e6606b5e",
+        "dockpipe-workflow-dockpipe.github.ghcrpush-0.6.1.tar.gz": "4e7b25efa98e702c7e45f31b5813f3457c20a620f300080684ce8fa3903b6b77",
+        "dockpipe-workflow-dockpipe.terraform.core-0.6.2.tar.gz": "72fc3b9fca00de1e4e83f6627eb4fc97bcc8e2efab100c15c334ab569ae5c5ce",
+        "dockpipe-workflow-docs.optimize-orchestrate-0.6.1.tar.gz": "a5d8a6b1b8a3731bf57dd3de157b767c5a1dcbd561e4f394e1bc0e5eb1af2841",
+        "dockpipe-workflow-docs.orchestrate-0.6.1.tar.gz": "5f1e15477d6475d6fa116251372185f8ded398d0cbe9fe55440919edf9d62d0f",
+        "dockpipe-workflow-dorkpipe-0.6.2.tar.gz": "faf16752a018249b0ee4a7c2f3c8cf0df9f824e018a30c3fbdd24a7346f49287",
+        "dockpipe-workflow-dorkpipe-orchestrator-0.6.2.tar.gz": "b84aaf43f17498ff48620be97c7b3362fda5ffadf207a7b450b6db8685914b1a",
+        "dockpipe-workflow-dorkpipe-self-analysis-0.6.2.tar.gz": "5e2b7dfdc7a715b797bf74ec7ab93f5c9fb59bf4c923af29a63d2b97cfa2adf2",
+        "dockpipe-workflow-dorkpipe-self-analysis-host-0.6.2.tar.gz": "11bb2fd3e9fb325b4acc288babc4b98625b7f92918760f734122f1f5d006b9cb",
+        "dockpipe-workflow-dorkpipe-self-analysis-stack-0.6.2.tar.gz": "c62dabe181bbba7996a01da15901b81f99ee6bafe6e33a0c687d3d94c7e598eb",
+        "dockpipe-workflow-dorkpipe-self-analysis-stack-proxy-0.6.2.tar.gz": "f2c80db5da80078aaa735d3dd265c44767689a8226f79fabb3e4d967ed308c77",
+        "dockpipe-workflow-example.brain-0.6.1.tar.gz": "3651f42b8fe0d858c794acf5644182c2c81eebab1c47d47224d711c884f250d7",
+        "dockpipe-workflow-linux-vm-1.3.5.tar.gz": "49f9ec5503e458b8189d939e6e0ae1778054047b5c2a0e726504909637a1c6aa",
+        "dockpipe-workflow-ollama-0.6.1.tar.gz": "da678214aa8ea161b4bdcae040fc6ea7285211a5e2504934354f133b67276769",
+        "dockpipe-workflow-orchestrate.stack-0.6.1.tar.gz": "01966afe2b6c94ae6ee02475cf22ff793f92464a4a20aa848f5c9a1fb0475e6c",
+        "dockpipe-workflow-orchestrator-0.6.1.tar.gz": "030221ddeb0ae7bc807a6002fab120b5c97f7f41ff914bdc2b5492492c9beab6",
+        "dockpipe-workflow-package-release-setup-0.6.16.tar.gz": "6fc4fd788e02bb438375504d750a9f86cedd18db1f5f28d227b7b3e9348015a4",
+        "dockpipe-workflow-package-store-infra-0.6.16.tar.gz": "97c3d11545f54eadb80677df82e532fd741acddf2dd7324dbae01c8ab54f170f",
+        "dockpipe-workflow-package-store-publish-0.6.16.tar.gz": "533989bd2ea605ee1cedb836b032af21c80d14377e54de341f5dbbd152660274",
+        "dockpipe-workflow-package-store-staging-infra-0.6.16.tar.gz": "c27b2a8d4d16316c14ebb01e302cca9029ebb12b7f0f0f7aebd173a7d3cf3107",
+        "dockpipe-workflow-pipeon-0.6.3.tar.gz": "b284d44769ab16f78ba0aa6dc8278894ce1547cb7ffb8d99820791348b3df17b",
+        "dockpipe-workflow-pipeon-dev-stack-0.6.3.tar.gz": "9aa61fa39df5ab7fc8f72d99aa79f2ebce926d5d40eb5b833125386ee8a20dc9",
+        "dockpipe-workflow-pipeon-dev-stack-status-0.6.3.tar.gz": "0788de17e1c1de4f8a314284990f522addf14dfb731a5d02f6100850a5490b70",
+        "dockpipe-workflow-pipeon-dev-stack-stop-0.6.3.tar.gz": "0b21f60501b1705a5d5d5e4fc7088240427f4ff5be9eb4dd09a175d4be417d3f",
+        "dockpipe-workflow-secretstore-onepassword-0.6.1.tar.gz": "8cb405f260bd6c35e3fffce7d750e2484273ccae1a3c31b19cb6070458423f81",
+        "dockpipe-workflow-secretstore-r2-publish-test-0.6.1.tar.gz": "dd66c8db9144379381090913471c8b067016350d3ea984d27b121e2f58150abb",
+        "dockpipe-workflow-skills.render-0.6.1.tar.gz": "2993106d440e7f004de1b1cecad2b187b43da95f7caef8d593441ab5e32d96f8",
+        "dockpipe-workflow-software.dev-0.6.1.tar.gz": "6a496dad3a3c74d9cc2db061f88bd72a24b7235d32829de308781532fe73d509",
+        "dockpipe-workflow-test-0.6.16.tar.gz": "6682c8f4931470506edd9cc7636a3fff73120f6e040e50146c4e1c6f098534c7",
+        "dockpipe-workflow-user-insight-process-0.6.2.tar.gz": "a0ccbdd407ef3c8ef8638cb8bf55985c39acf9e337e95ecf377cca13af9e3c0e",
+        "dockpipe-workflow-vscode-0.6.1.tar.gz": "93a53d6bd43bf23f0a6e5e714e33e824442de468e10e32cf090780251306cc02",
+        "dockpipe-workflow-windows-vm-1.3.5.tar.gz": "06e6a86529dfed198aef06aab0119d6924aeaed72dbbf02b08bd1325b7f56f98",
+        "dockpipe-resolver-aws-secretsmanager-0.6.0.tar.gz": "352fe048050493e69502b534f4b0861203dd7741de5af492ab24d4455642600c",
+        "dockpipe-resolver-azure-keyvault-0.6.0.tar.gz": "0acd67a463aec3c8b6eb6742e8b13322949b143560a3f279b2b5794d5b8a1000",
+        "dockpipe-resolver-claude-0.6.1.tar.gz": "0e1fe4225522711b0b7d7731d0b2277dd815a8f2fe3fe711f3d654128f4ec276",
+        "dockpipe-resolver-codex-0.6.1.tar.gz": "8ac4ea96c3a2a54c6d78d8f718fff7a3e8d750a6c45913f739971d63072891b3",
+        "dockpipe-resolver-cursor-dev-0.6.1.tar.gz": "1601e398757dc9ade392d63a225faff6fea8123a0b9f08facd2a67475d077e36",
+        "dockpipe-resolver-devcontainer-0.6.1.tar.gz": "a205e52ed4010b1e87017f6d89775eb1ebb68ef767e933aec5f80de10bd47e28",
+        "dockpipe-resolver-dockpipe.cloudflare.remote-edge-0.3.1.tar.gz": "5a9b59c240caa18fc954854ec45e055a134b157a0c6bc3699dae8d5e8a83c078",
+        "dockpipe-resolver-dotenv-0.6.16.tar.gz": "9b03eec144fa75322bfb898b5ba3c28fb6a3c18be5f969dc488c8f97d265473e",
+        "dockpipe-resolver-infisical-0.6.0.tar.gz": "000dcca79a77e53dcd1e8b9541ac5037432680edf66561bdaa5a461b438eb3af",
+        "dockpipe-resolver-ollama-0.6.1.tar.gz": "11df395dceab772dd3f02784db3490ed9491cab80dedfd770681a6ed585e1862",
+        "dockpipe-resolver-onepassword-0.6.1.tar.gz": "5b7f9983736c77680bbbe2c3a8f6050220c4363b9a448a0ad9f5bbfbeb56bc98",
+        "dockpipe-resolver-pipeon-0.6.3.tar.gz": "b2dc81ff0af04d44ec7fc613e10b06b427b6130678dfbd38b697f8fa225de256",
+        "dockpipe-resolver-pipeon-dev-stack-0.6.3.tar.gz": "e4d6eadfc9e78c96ac438cea151f631f6bbd2390f239b7385953c3ca38d8a99f",
+        "dockpipe-resolver-qemu-1.3.5.tar.gz": "158867a1156a1ce2608f04ac89632507ddd06a3c312ea746e6bda5930e516ed0",
+        "dockpipe-resolver-vscode-0.6.1.tar.gz": "6ca2ccb59104a3ccd0224921735debc59f3c158d7ebc8311870ec2fe848e5be6",
+        "dockpipe-workflow-dockpipe.cloudflare.r2infra-0.6.4.tar.gz": "080a5abe13f103eaa0c473e02779f7cca3dc168d2b9a1c30b9a147263ff741da",
+        "dockpipe-workflow-dockpipe.terraform.core-0.6.3.tar.gz": "11ec627be4f31503af30d6c97a1b34f0043d7eeee018fdc4f4301db56c201c02",
+        "dockpipe-workflow-secretstore-r2-publish-test-0.6.2.tar.gz": "7a09c905f4184326e8674ebe4386d7ae9cc8f0490f46312410c92ff5422a5f7e"
+      },
+      "native_inputs": {
+        "schema": 1,
+        "platform": "windows-amd64",
+        "compiler": {
+          "id": "MSVC",
+          "version": "19.51.36260.0",
+          "os_id": "windows",
+          "os_version": "2025",
+          "acquisition_sha256": "e02640c0b61524f3c9d7db87ebd4d87dbf485ef0cd06c1688e10deebb684d593",
+          "acquisition_mode": "hosted-exact"
+        },
+        "archives": [
+          {
+            "id": "qt-qtbase",
+            "destination": "qt",
+            "asset": {
+              "url": "https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/qt6_6103/qt6_6103/qt.qt6.6103.win64_msvc2022_64/6.10.3-0-202603310407qtbase-Windows-Windows_11_24H2-MSVC2022-Windows-Windows_11_24H2-X86_64.7z",
+              "sha256": "4db84dee7fe3c558f242bef0a88852613af76580dc6d2b24596479f47004dad7",
+              "size_bytes": 42748757,
+              "format": "7z",
+              "root": "",
+              "redirect_hosts": [
+                "download.qt.io",
+                "ftp.fau.de",
+                "ftp.jaist.ac.jp",
+                "mirror.aarnet.edu.au",
+                "mirror.accum.se",
+                "mirrors.20i.com",
+                "mirrors.ukfast.co.uk",
+                "qt.mirror.constant.com",
+                "qtproject.mirror.liquidtelecom.com",
+                "www.nic.funet.fi"
+              ]
+            },
+            "package": "qt-qtbase",
+            "version": "6.10.3"
+          },
+          {
+            "id": "qt-qttools",
+            "destination": "qt",
+            "asset": {
+              "url": "https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/qt6_6103/qt6_6103/qt.qt6.6103.win64_msvc2022_64/6.10.3-0-202603310407qttools-Windows-Windows_11_24H2-MSVC2022-Windows-Windows_11_24H2-X86_64.7z",
+              "sha256": "4d51cd446ff438845c706600aef6bf7349490c358bf7bb27abd32cb5ea3afcb8",
+              "size_bytes": 26902888,
+              "format": "7z",
+              "root": "",
+              "redirect_hosts": [
+                "download.qt.io",
+                "ftp.fau.de",
+                "ftp.jaist.ac.jp",
+                "mirror.aarnet.edu.au",
+                "mirror.accum.se",
+                "mirrors.20i.com",
+                "mirrors.ukfast.co.uk",
+                "qt.mirror.constant.com",
+                "qtproject.mirror.liquidtelecom.com",
+                "www.nic.funet.fi"
+              ]
+            },
+            "package": "qt-qttools",
+            "version": "6.10.3"
+          },
+          {
+            "id": "mingw-w64-x86_64-bzip2",
+            "destination": "gio",
+            "asset": {
+              "url": "https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-bzip2-1.0.8-4-any.pkg.tar.zst",
+              "sha256": "123768f30ae14ba654a6feb70f8526146a331bc85f831a91a549ffb3f6cbffc7",
+              "size_bytes": 95428,
+              "format": "pkg.tar.zst",
+              "root": "mingw64"
+            },
+            "package": "mingw-w64-x86_64-bzip2",
+            "version": "1.0.8-4"
+          },
+          {
+            "id": "mingw-w64-x86_64-cc-libs",
+            "destination": "gio",
+            "asset": {
+              "url": "https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-cc-libs-16.2.0-6-any.pkg.tar.zst",
+              "sha256": "0128c6f7fc227e5862351e970e52d42370c72c896db87b8413c2699c6337a13a",
+              "size_bytes": 2339,
+              "format": "pkg.tar.zst",
+              "root": "mingw64"
+            },
+            "package": "mingw-w64-x86_64-cc-libs",
+            "version": "16.2.0-6"
+          },
+          {
+            "id": "mingw-w64-x86_64-dbus",
+            "destination": "gio",
+            "asset": {
+              "url": "https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-dbus-1.16.2-4-any.pkg.tar.zst",
+              "sha256": "23ca4fd21683f7e482a4f6a950eb05c9d68fc923c4691880bc0afbe5ddf2bd68",
+              "size_bytes": 643718,
+              "format": "pkg.tar.zst",
+              "root": "mingw64"
+            },
+            "package": "mingw-w64-x86_64-dbus",
+            "version": "1.16.2-4"
+          },
+          {
+            "id": "mingw-w64-x86_64-expat",
+            "destination": "gio",
+            "asset": {
+              "url": "https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-expat-2.9.0-1-any.pkg.tar.zst",
+              "sha256": "d81be70f6e22b988f00564bb16a2769347a6321964c99042d8ed8a7ed72b4829",
+              "size_bytes": 198437,
+              "format": "pkg.tar.zst",
+              "root": "mingw64"
+            },
+            "package": "mingw-w64-x86_64-expat",
+            "version": "2.9.0-1"
+          },
+          {
+            "id": "mingw-w64-x86_64-gettext-runtime",
+            "destination": "gio",
+            "asset": {
+              "url": "https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-gettext-runtime-1.0-1-any.pkg.tar.zst",
+              "sha256": "be68d7f260633284b910c588c6d82ee304a81c8817a686d2cd9df83f872c27af",
+              "size_bytes": 427276,
+              "format": "pkg.tar.zst",
+              "root": "mingw64"
+            },
+            "package": "mingw-w64-x86_64-gettext-runtime",
+            "version": "1.0-1"
+          },
+          {
+            "id": "mingw-w64-x86_64-glib2",
+            "destination": "gio",
+            "asset": {
+              "url": "https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-glib2-2.90.1-1-any.pkg.tar.zst",
+              "sha256": "152ba3b2cfb35feebc0fcb690889b16a6f0c2b89ced52e65aea45d089f86d219",
+              "size_bytes": 5471610,
+              "format": "pkg.tar.zst",
+              "root": "mingw64"
+            },
+            "package": "mingw-w64-x86_64-glib2",
+            "version": "2.90.1-1"
+          },
+          {
+            "id": "mingw-w64-x86_64-libb2",
+            "destination": "gio",
+            "asset": {
+              "url": "https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-libb2-0.98.1-3-any.pkg.tar.zst",
+              "sha256": "3c898f08c5f19e25dc6d7e39aa36b6f323141f0e62c5c50f089cd3f89711854c",
+              "size_bytes": 24731,
+              "format": "pkg.tar.zst",
+              "root": "mingw64"
+            },
+            "package": "mingw-w64-x86_64-libb2",
+            "version": "0.98.1-3"
+          },
+          {
+            "id": "mingw-w64-x86_64-libffi",
+            "destination": "gio",
+            "asset": {
+              "url": "https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-libffi-3.8.0-1-any.pkg.tar.zst",
+              "sha256": "6dad7f3c6c900d3c64a4fe0c2764b405e678b22df3521d2284ffaeff0198b84b",
+              "size_bytes": 51683,
+              "format": "pkg.tar.zst",
+              "root": "mingw64"
+            },
+            "package": "mingw-w64-x86_64-libffi",
+            "version": "3.8.0-1"
+          },
+          {
+            "id": "mingw-w64-x86_64-libgcc",
+            "destination": "gio",
+            "asset": {
+              "url": "https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-libgcc-16.2.0-6-any.pkg.tar.zst",
+              "sha256": "e0815432c4225892b0eef57055fe507fa0b9a036436f046605f6629696bd1b88",
+              "size_bytes": 77153,
+              "format": "pkg.tar.zst",
+              "root": "mingw64"
+            },
+            "package": "mingw-w64-x86_64-libgcc",
+            "version": "16.2.0-6"
+          },
+          {
+            "id": "mingw-w64-x86_64-libiconv",
+            "destination": "gio",
+            "asset": {
+              "url": "https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-libiconv-1.19-1-any.pkg.tar.zst",
+              "sha256": "21e334d0911f25de75d3e18e0697648bcecfa9658256d600cad0827d719c2f35",
+              "size_bytes": 745957,
+              "format": "pkg.tar.zst",
+              "root": "mingw64"
+            },
+            "package": "mingw-w64-x86_64-libiconv",
+            "version": "1.19-1"
+          },
+          {
+            "id": "mingw-w64-x86_64-libstdc++",
+            "destination": "gio",
+            "asset": {
+              "url": "https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-libstdc++-16.2.0-6-any.pkg.tar.zst",
+              "sha256": "924b47e8c3e20b6448e29d3333acc638a4f4783c1c45230e09673532f9c4f198",
+              "size_bytes": 797366,
+              "format": "pkg.tar.zst",
+              "root": "mingw64"
+            },
+            "package": "mingw-w64-x86_64-libstdc++",
+            "version": "16.2.0-6"
+          },
+          {
+            "id": "mingw-w64-x86_64-libsystre",
+            "destination": "gio",
+            "asset": {
+              "url": "https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-libsystre-1.0.2-3-any.pkg.tar.zst",
+              "sha256": "ea20a54127fe2a606ef0f2bef62b1abef77710840b661b832a933b4020bfe316",
+              "size_bytes": 8655,
+              "format": "pkg.tar.zst",
+              "root": "mingw64"
+            },
+            "package": "mingw-w64-x86_64-libsystre",
+            "version": "1.0.2-3"
+          },
+          {
+            "id": "mingw-w64-x86_64-libtre",
+            "destination": "gio",
+            "asset": {
+              "url": "https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-libtre-0.9.0-2-any.pkg.tar.zst",
+              "sha256": "c4051508d063258e1e02dd29615edb7d73c5c5f582ae42795fdd92e7ddce506b",
+              "size_bytes": 83058,
+              "format": "pkg.tar.zst",
+              "root": "mingw64"
+            },
+            "package": "mingw-w64-x86_64-libtre",
+            "version": "0.9.0-2"
+          },
+          {
+            "id": "mingw-w64-x86_64-libwinpthread",
+            "destination": "gio",
+            "asset": {
+              "url": "https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-libwinpthread-14.0.0.r495.g63ebe6cdb-2-any.pkg.tar.zst",
+              "sha256": "e657ade501916ef2f0ff8b5f5d93dc65d39f1a0ec66cfee8206026b240f60518",
+              "size_bytes": 32972,
+              "format": "pkg.tar.zst",
+              "root": "mingw64"
+            },
+            "package": "mingw-w64-x86_64-libwinpthread",
+            "version": "14.0.0.r495.g63ebe6cdb-2"
+          },
+          {
+            "id": "mingw-w64-x86_64-mpdecimal",
+            "destination": "gio",
+            "asset": {
+              "url": "https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-mpdecimal-4.0.1-3-any.pkg.tar.zst",
+              "sha256": "8da7e7f78434f188664c4d2779c03ea7a80f7f5837a115834ab734b352a613e5",
+              "size_bytes": 159685,
+              "format": "pkg.tar.zst",
+              "root": "mingw64"
+            },
+            "package": "mingw-w64-x86_64-mpdecimal",
+            "version": "4.0.1-3"
+          },
+          {
+            "id": "mingw-w64-x86_64-ncurses",
+            "destination": "gio",
+            "asset": {
+              "url": "https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-ncurses-6.6-4-any.pkg.tar.zst",
+              "sha256": "7bf5159441d00262085d2619f6c26877ea7595d4dafc6840637c6c5fccda5cf5",
+              "size_bytes": 1608838,
+              "format": "pkg.tar.zst",
+              "root": "mingw64"
+            },
+            "package": "mingw-w64-x86_64-ncurses",
+            "version": "6.6-4"
+          },
+          {
+            "id": "mingw-w64-x86_64-openssl",
+            "destination": "gio",
+            "asset": {
+              "url": "https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-openssl-3.6.5-1-any.pkg.tar.zst",
+              "sha256": "389d1af21e99223d9e2cd32d4c073131b276da85be7636bd8d23571f6938864f",
+              "size_bytes": 8301542,
+              "format": "pkg.tar.zst",
+              "root": "mingw64"
+            },
+            "package": "mingw-w64-x86_64-openssl",
+            "version": "3.6.5-1"
+          },
+          {
+            "id": "mingw-w64-x86_64-pcre2",
+            "destination": "gio",
+            "asset": {
+              "url": "https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-pcre2-10.49-1-any.pkg.tar.zst",
+              "sha256": "0abc5313085a0f9b4a77a1580d92b09761371cb3a1f31d01051a94a289fb9413",
+              "size_bytes": 1446280,
+              "format": "pkg.tar.zst",
+              "root": "mingw64"
+            },
+            "package": "mingw-w64-x86_64-pcre2",
+            "version": "10.49-1"
+          },
+          {
+            "id": "mingw-w64-x86_64-pkgconf",
+            "destination": "gio",
+            "asset": {
+              "url": "https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-pkgconf-1~3.0.10-1-any.pkg.tar.zst",
+              "sha256": "430c96143ec00912cab2bdb257dd84baf2d583e38681a0d6b552d07b43c95ce1",
+              "size_bytes": 150258,
+              "format": "pkg.tar.zst",
+              "root": "mingw64"
+            },
+            "package": "mingw-w64-x86_64-pkgconf",
+            "version": "1~3.0.10-1"
+          },
+          {
+            "id": "mingw-w64-x86_64-python",
+            "destination": "gio",
+            "asset": {
+              "url": "https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-python-3.14.8-1-any.pkg.tar.zst",
+              "sha256": "0b575caea0d7ce833c943b9658b6464ef1af1b97c338d870ef721ffa26548c58",
+              "size_bytes": 27773401,
+              "format": "pkg.tar.zst",
+              "root": "mingw64"
+            },
+            "package": "mingw-w64-x86_64-python",
+            "version": "3.14.8-1"
+          },
+          {
+            "id": "mingw-w64-x86_64-python-packaging",
+            "destination": "gio",
+            "asset": {
+              "url": "https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-python-packaging-26.3-1-any.pkg.tar.zst",
+              "sha256": "69e6eff5c623ebd1cc3cfca13d8bbc6c70b0ca1dfbc3704b251478a30a25b20e",
+              "size_bytes": 263474,
+              "format": "pkg.tar.zst",
+              "root": "mingw64"
+            },
+            "package": "mingw-w64-x86_64-python-packaging",
+            "version": "26.3-1"
+          },
+          {
+            "id": "mingw-w64-x86_64-sqlite3",
+            "destination": "gio",
+            "asset": {
+              "url": "https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-sqlite3-3.54.0-1-any.pkg.tar.zst",
+              "sha256": "c139c0b99e79a45fbfb563457838d42bc4904dd877ebed2360b9f909914e7546",
+              "size_bytes": 2506580,
+              "format": "pkg.tar.zst",
+              "root": "mingw64"
+            },
+            "package": "mingw-w64-x86_64-sqlite3",
+            "version": "3.54.0-1"
+          },
+          {
+            "id": "mingw-w64-x86_64-tcl",
+            "destination": "gio",
+            "asset": {
+              "url": "https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-tcl-8.6.18-1-any.pkg.tar.zst",
+              "sha256": "d95289300fd8e16bd5cb241b9928a256695aeebeca2885deef3326cd4a4d5ba8",
+              "size_bytes": 2809165,
+              "format": "pkg.tar.zst",
+              "root": "mingw64"
+            },
+            "package": "mingw-w64-x86_64-tcl",
+            "version": "8.6.18-1"
+          },
+          {
+            "id": "mingw-w64-x86_64-tk",
+            "destination": "gio",
+            "asset": {
+              "url": "https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-tk-8.6.18-1-any.pkg.tar.zst",
+              "sha256": "42aa79962e1679dd55e93f79a25dc1e50c7235f143ab501b3ec68debd0d32a3e",
+              "size_bytes": 2124557,
+              "format": "pkg.tar.zst",
+              "root": "mingw64"
+            },
+            "package": "mingw-w64-x86_64-tk",
+            "version": "8.6.18-1"
+          },
+          {
+            "id": "mingw-w64-x86_64-tzdata",
+            "destination": "gio",
+            "asset": {
+              "url": "https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-tzdata-2026e-1-any.pkg.tar.zst",
+              "sha256": "6d28805f8fb6517011cc309aa452111565afa1bc9188ad784cb5f62df98f0988",
+              "size_bytes": 225999,
+              "format": "pkg.tar.zst",
+              "root": "mingw64"
+            },
+            "package": "mingw-w64-x86_64-tzdata",
+            "version": "2026e-1"
+          },
+          {
+            "id": "mingw-w64-x86_64-wineditline",
+            "destination": "gio",
+            "asset": {
+              "url": "https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-wineditline-2.208-1-any.pkg.tar.zst",
+              "sha256": "dfe7fab66632eececc73d84053eae2be8dd2146ecefe0fc2133277706084d7ea",
+              "size_bytes": 61435,
+              "format": "pkg.tar.zst",
+              "root": "mingw64"
+            },
+            "package": "mingw-w64-x86_64-wineditline",
+            "version": "2.208-1"
+          },
+          {
+            "id": "mingw-w64-x86_64-xz",
+            "destination": "gio",
+            "asset": {
+              "url": "https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-xz-5.8.4-1-any.pkg.tar.zst",
+              "sha256": "2de0f26da60b7ff7aa192a226330d7de6b1099cb9b9f9de4145affb80146bbc8",
+              "size_bytes": 433655,
+              "format": "pkg.tar.zst",
+              "root": "mingw64"
+            },
+            "package": "mingw-w64-x86_64-xz",
+            "version": "5.8.4-1"
+          },
+          {
+            "id": "mingw-w64-x86_64-zlib",
+            "destination": "gio",
+            "asset": {
+              "url": "https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-zlib-1.3.2-2-any.pkg.tar.zst",
+              "sha256": "9e75842a070ba648e986e12424e1c92c9d7d77200e85f6a34eeb600819f2e694",
+              "size_bytes": 112476,
+              "format": "pkg.tar.zst",
+              "root": "mingw64"
+            },
+            "package": "mingw-w64-x86_64-zlib",
+            "version": "1.3.2-2"
+          }
+        ],
+        "licenses": [
+          {
+            "path": "gio/share/licenses/bzip2/LICENSE",
+            "sha256": "c6dbbf828498be844a89eaa3b84adbab3199e342eb5cb2ed2f0d4ba7ec0f38a3",
+            "size_bytes": 1896,
+            "package": "mingw-w64-x86_64-bzip2",
+            "version": "1.0.8-4",
+            "archive_id": "mingw-w64-x86_64-bzip2"
+          },
+          {
+            "path": "gio/share/licenses/dbus/AFL-2.1.txt",
+            "sha256": "93bb4f7417aa775bab9026cc3d0af28aeb64451fc5a8ec651876785edd8eaf9b",
+            "size_bytes": 8948,
+            "package": "mingw-w64-x86_64-dbus",
+            "version": "1.16.2-4",
+            "archive_id": "mingw-w64-x86_64-dbus"
+          },
+          {
+            "path": "gio/share/licenses/dbus/COPYING",
+            "sha256": "150e5d08e1cb5e62b65967d7931acad2c42d98ec1bbb584bebb01921cbc853c2",
+            "size_bytes": 1134,
+            "package": "mingw-w64-x86_64-dbus",
+            "version": "1.16.2-4",
+            "archive_id": "mingw-w64-x86_64-dbus"
+          },
+          {
+            "path": "gio/share/licenses/dbus/GPL-2.0-or-later.txt",
+            "sha256": "aaf135472f81c5b4a0dca9367e5bb5e9750032b5bebe5442b36e4c0a47430df3",
+            "size_bytes": 17337,
+            "package": "mingw-w64-x86_64-dbus",
+            "version": "1.16.2-4",
+            "archive_id": "mingw-w64-x86_64-dbus"
+          },
+          {
+            "path": "gio/share/licenses/expat/COPYING",
+            "sha256": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87",
+            "size_bytes": 1144,
+            "package": "mingw-w64-x86_64-expat",
+            "version": "2.9.0-1",
+            "archive_id": "mingw-w64-x86_64-expat"
+          },
+          {
+            "path": "gio/share/licenses/gettext-runtime/COPYING",
+            "sha256": "7ef2cdfe58e0c0460657b6598b49af29d4e03c1e41cbaf0e1da1eb8ad74b95d0",
+            "size_bytes": 495,
+            "package": "mingw-w64-x86_64-gettext-runtime",
+            "version": "1.0-1",
+            "archive_id": "mingw-w64-x86_64-gettext-runtime"
+          },
+          {
+            "path": "gio/share/licenses/gettext-runtime/intl/COPYING.LIB",
+            "sha256": "20e50fe7aae3e56378ebf0417d9de904f55a0e61e4df315333e632a4d3555d95",
+            "size_bytes": 26419,
+            "package": "mingw-w64-x86_64-gettext-runtime",
+            "version": "1.0-1",
+            "archive_id": "mingw-w64-x86_64-gettext-runtime"
+          },
+          {
+            "path": "gio/share/licenses/gettext-runtime/libasprintf/COPYING",
+            "sha256": "03133addae5b99a6148c538300e6d97074453089be1423b741bd081f18e2b298",
+            "size_bytes": 65,
+            "package": "mingw-w64-x86_64-gettext-runtime",
+            "version": "1.0-1",
+            "archive_id": "mingw-w64-x86_64-gettext-runtime"
+          },
+          {
+            "path": "gio/share/licenses/gettext-runtime/libasprintf/COPYING.LIB",
+            "sha256": "20e50fe7aae3e56378ebf0417d9de904f55a0e61e4df315333e632a4d3555d95",
+            "size_bytes": 26419,
+            "package": "mingw-w64-x86_64-gettext-runtime",
+            "version": "1.0-1",
+            "archive_id": "mingw-w64-x86_64-gettext-runtime"
+          },
+          {
+            "path": "gio/share/licenses/glib2/COPYING",
+            "sha256": "fa6f36630bb1e0c571d34b2bbdf188d08495c9dbf58f28cac112f303fc1f58fb",
+            "size_bytes": 25967,
+            "package": "mingw-w64-x86_64-glib2",
+            "version": "2.90.1-1",
+            "archive_id": "mingw-w64-x86_64-glib2"
+          },
+          {
+            "path": "gio/share/licenses/libb2/LICENSE",
+            "sha256": "6a1ee543e5282cd9061881edf462e6fdab181f328da71fc2c9a6950a80e94d01",
+            "size_bytes": 6556,
+            "package": "mingw-w64-x86_64-libb2",
+            "version": "0.98.1-3",
+            "archive_id": "mingw-w64-x86_64-libb2"
+          },
+          {
+            "path": "gio/share/licenses/libffi/LICENSE",
+            "sha256": "17b64dc60f3b6897a60f971e288b973f655c2edcdf08b25f3c3dd5549857881c",
+            "size_bytes": 1132,
+            "package": "mingw-w64-x86_64-libffi",
+            "version": "3.8.0-1",
+            "archive_id": "mingw-w64-x86_64-libffi"
+          },
+          {
+            "path": "gio/share/licenses/libgcc/COPYING.RUNTIME",
+            "sha256": "9d6b43ce4d8de0c878bf16b54d8e7a10d9bd42b75178153e3af6a815bdc90f74",
+            "size_bytes": 3324,
+            "package": "mingw-w64-x86_64-libgcc",
+            "version": "16.2.0-6",
+            "archive_id": "mingw-w64-x86_64-libgcc"
+          },
+          {
+            "path": "gio/share/licenses/libgcc/COPYING3",
+            "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903",
+            "size_bytes": 35147,
+            "package": "mingw-w64-x86_64-libgcc",
+            "version": "16.2.0-6",
+            "archive_id": "mingw-w64-x86_64-libgcc"
+          },
+          {
+            "path": "gio/share/licenses/libiconv/COPYING",
+            "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903",
+            "size_bytes": 35147,
+            "package": "mingw-w64-x86_64-libiconv",
+            "version": "1.19-1",
+            "archive_id": "mingw-w64-x86_64-libiconv"
+          },
+          {
+            "path": "gio/share/licenses/libiconv/COPYING.LIB",
+            "sha256": "20e50fe7aae3e56378ebf0417d9de904f55a0e61e4df315333e632a4d3555d95",
+            "size_bytes": 26419,
+            "package": "mingw-w64-x86_64-libiconv",
+            "version": "1.19-1",
+            "archive_id": "mingw-w64-x86_64-libiconv"
+          },
+          {
+            "path": "gio/share/licenses/libiconv/README",
+            "sha256": "4ae66e61d1c6593c84c47105b368d579bcee1af566dbb959ec63a0c48425dcf4",
+            "size_bytes": 5741,
+            "package": "mingw-w64-x86_64-libiconv",
+            "version": "1.19-1",
+            "archive_id": "mingw-w64-x86_64-libiconv"
+          },
+          {
+            "path": "gio/share/licenses/libiconv/libcharset/COPYING.LIB",
+            "sha256": "20e50fe7aae3e56378ebf0417d9de904f55a0e61e4df315333e632a4d3555d95",
+            "size_bytes": 26419,
+            "package": "mingw-w64-x86_64-libiconv",
+            "version": "1.19-1",
+            "archive_id": "mingw-w64-x86_64-libiconv"
+          },
+          {
+            "path": "gio/share/licenses/libstdc++/COPYING.RUNTIME",
+            "sha256": "9d6b43ce4d8de0c878bf16b54d8e7a10d9bd42b75178153e3af6a815bdc90f74",
+            "size_bytes": 3324,
+            "package": "mingw-w64-x86_64-libstdc++",
+            "version": "16.2.0-6",
+            "archive_id": "mingw-w64-x86_64-libstdc++"
+          },
+          {
+            "path": "gio/share/licenses/libstdc++/COPYING3",
+            "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903",
+            "size_bytes": 35147,
+            "package": "mingw-w64-x86_64-libstdc++",
+            "version": "16.2.0-6",
+            "archive_id": "mingw-w64-x86_64-libstdc++"
+          },
+          {
+            "path": "gio/share/licenses/libsystre/LICENSE",
+            "sha256": "3200024286eb0a33c22da3a31c470df07c7b8cfbead2b9528195d67d107264ec",
+            "size_bytes": 1445,
+            "package": "mingw-w64-x86_64-libsystre",
+            "version": "1.0.2-3",
+            "archive_id": "mingw-w64-x86_64-libsystre"
+          },
+          {
+            "path": "gio/share/licenses/libtre/LICENSE",
+            "sha256": "6a50ab50d856b30c965cf2dd899e577ec108c938242fd3a2e7a7a25eed996200",
+            "size_bytes": 1479,
+            "package": "mingw-w64-x86_64-libtre",
+            "version": "0.9.0-2",
+            "archive_id": "mingw-w64-x86_64-libtre"
+          },
+          {
+            "path": "gio/share/licenses/libwinpthread/COPYING",
+            "sha256": "63263614cdd29f2f93cba85e992f041b31f9fc7b4033692f31269489a8a1b177",
+            "size_bytes": 2883,
+            "package": "mingw-w64-x86_64-libwinpthread",
+            "version": "14.0.0.r495.g63ebe6cdb-2",
+            "archive_id": "mingw-w64-x86_64-libwinpthread"
+          },
+          {
+            "path": "gio/share/licenses/mpdecimal/LICENSE",
+            "sha256": "dba079e24a0286052f9f36a5e0b4f6cc95bc83ada657eb26bef8c0b6473f6512",
+            "size_bytes": 1285,
+            "package": "mingw-w64-x86_64-mpdecimal",
+            "version": "4.0.1-3",
+            "archive_id": "mingw-w64-x86_64-mpdecimal"
+          },
+          {
+            "path": "gio/share/licenses/ncurses/LICENSE",
+            "sha256": "708999f95527e1ffa670c6fce288c6c600cb477dd04afcc1171422b3dd4ee226",
+            "size_bytes": 1447,
+            "package": "mingw-w64-x86_64-ncurses",
+            "version": "6.6-4",
+            "archive_id": "mingw-w64-x86_64-ncurses"
+          },
+          {
+            "path": "gio/share/licenses/openssl/LICENSE",
+            "sha256": "7d5450cb2d142651b8afa315b5f238efc805dad827d91ba367d8516bc9d49e7a",
+            "size_bytes": 10175,
+            "package": "mingw-w64-x86_64-openssl",
+            "version": "3.6.5-1",
+            "archive_id": "mingw-w64-x86_64-openssl"
+          },
+          {
+            "path": "gio/share/licenses/pcre2/COPYING",
+            "sha256": "99272c55f3dcfa07a8a7e15a5c1a33096e4727de74241d65fa049fccfdd59507",
+            "size_bytes": 97,
+            "package": "mingw-w64-x86_64-pcre2",
+            "version": "10.49-1",
+            "archive_id": "mingw-w64-x86_64-pcre2"
+          },
+          {
+            "path": "gio/share/licenses/pcre2/LICENCE.md",
+            "sha256": "197d8a73ffee0d6b09adba2f9c677b5f5aede24edf89258a68e48248d010d811",
+            "size_bytes": 4011,
+            "package": "mingw-w64-x86_64-pcre2",
+            "version": "10.49-1",
+            "archive_id": "mingw-w64-x86_64-pcre2"
+          },
+          {
+            "path": "gio/share/licenses/python-packaging/LICENSE",
+            "sha256": "cad1ef5bd340d73e074ba614d26f7deaca5c7940c3d8c34852e65c4909686c48",
+            "size_bytes": 197,
+            "package": "mingw-w64-x86_64-python-packaging",
+            "version": "26.3-1",
+            "archive_id": "mingw-w64-x86_64-python-packaging"
+          },
+          {
+            "path": "gio/share/licenses/python-packaging/LICENSE.APACHE",
+            "sha256": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594",
+            "size_bytes": 10174,
+            "package": "mingw-w64-x86_64-python-packaging",
+            "version": "26.3-1",
+            "archive_id": "mingw-w64-x86_64-python-packaging"
+          },
+          {
+            "path": "gio/share/licenses/python-packaging/LICENSE.BSD",
+            "sha256": "b70e7e9b742f1cc6f948b34c16aa39ffece94196364bc88ff0d2180f0028fac5",
+            "size_bytes": 1344,
+            "package": "mingw-w64-x86_64-python-packaging",
+            "version": "26.3-1",
+            "archive_id": "mingw-w64-x86_64-python-packaging"
+          },
+          {
+            "path": "gio/share/licenses/python3.14/LICENSE",
+            "sha256": "b0e25a78cffb43f4d92de8b61ccfa1f1f98ecbc22330b54b5251e7b6ba010231",
+            "size_bytes": 13804,
+            "package": "mingw-w64-x86_64-python",
+            "version": "3.14.8-1",
+            "archive_id": "mingw-w64-x86_64-python"
+          },
+          {
+            "path": "gio/share/licenses/sqlite3/LICENSE",
+            "sha256": "0b76663a90e034f3d7f2af5bfada4cedec5ebc275361899eccc5c18e6f01ff1f",
+            "size_bytes": 1528,
+            "package": "mingw-w64-x86_64-sqlite3",
+            "version": "3.54.0-1",
+            "archive_id": "mingw-w64-x86_64-sqlite3"
+          },
+          {
+            "path": "gio/share/licenses/tzdata/LICENSE",
+            "sha256": "0613408568889f5739e5ae252b722a2659c02002839ad970a63dc5e9174b27cf",
+            "size_bytes": 252,
+            "package": "mingw-w64-x86_64-tzdata",
+            "version": "2026e-1",
+            "archive_id": "mingw-w64-x86_64-tzdata"
+          },
+          {
+            "path": "gio/share/licenses/wineditline/LICENSE",
+            "sha256": "e1a9520a9b3143ad64adb356c5d2fca6bb09a3ad3950cf1f7213946543582440",
+            "size_bytes": 1588,
+            "package": "mingw-w64-x86_64-wineditline",
+            "version": "2.208-1",
+            "archive_id": "mingw-w64-x86_64-wineditline"
+          },
+          {
+            "path": "gio/share/licenses/xz/COPYING",
+            "sha256": "616a3ad264ce29b8f1cb97e53037b139d406899ca8d1f799651e17bfa09830b8",
+            "size_bytes": 3119,
+            "package": "mingw-w64-x86_64-xz",
+            "version": "5.8.4-1",
+            "archive_id": "mingw-w64-x86_64-xz"
+          },
+          {
+            "path": "gio/share/licenses/xz/COPYING.0BSD",
+            "sha256": "0b01625d853911cd0e2e088dcfb743261034a091bb379246cb25a14cc4c74bf1",
+            "size_bytes": 607,
+            "package": "mingw-w64-x86_64-xz",
+            "version": "5.8.4-1",
+            "archive_id": "mingw-w64-x86_64-xz"
+          },
+          {
+            "path": "gio/share/licenses/xz/COPYING.GPLv2",
+            "sha256": "edaef632cbb643e4e7a221717a6c441a4c1a7c918e6e4d56debc3d8739b233f6",
+            "size_bytes": 17984,
+            "package": "mingw-w64-x86_64-xz",
+            "version": "5.8.4-1",
+            "archive_id": "mingw-w64-x86_64-xz"
+          },
+          {
+            "path": "gio/share/licenses/xz/COPYING.GPLv3",
+            "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+            "size_bytes": 35149,
+            "package": "mingw-w64-x86_64-xz",
+            "version": "5.8.4-1",
+            "archive_id": "mingw-w64-x86_64-xz"
+          },
+          {
+            "path": "gio/share/licenses/xz/COPYING.LGPLv2.1",
+            "sha256": "20e50fe7aae3e56378ebf0417d9de904f55a0e61e4df315333e632a4d3555d95",
+            "size_bytes": 26419,
+            "package": "mingw-w64-x86_64-xz",
+            "version": "5.8.4-1",
+            "archive_id": "mingw-w64-x86_64-xz"
+          },
+          {
+            "path": "gio/share/licenses/zlib/LICENSE",
+            "sha256": "e32ff4e00d9d94930537635291da39e7e612703334bf6fde8c7f1686fe8a45a2",
+            "size_bytes": 1002,
+            "package": "mingw-w64-x86_64-zlib",
+            "version": "1.3.2-2",
+            "archive_id": "mingw-w64-x86_64-zlib"
+          }
+        ],
+        "libraries": [
+          {
+            "path": "gio/bin/libgio-2.0-0.dll",
+            "sha256": "eef35a18138b7afefaf5ade36b07b3b3ec25d21080a1c2c5eccefad383482016",
+            "size_bytes": 1918835,
+            "package": "mingw-w64-x86_64-glib2",
+            "version": "2.90.1-1",
+            "archive_id": "mingw-w64-x86_64-glib2"
+          },
+          {
+            "path": "gio/bin/libgobject-2.0-0.dll",
+            "sha256": "a417864358cbe7a1da74b7cfcc61f7d49b03772b02f29fa611b01a67d5b99632",
+            "size_bytes": 357682,
+            "package": "mingw-w64-x86_64-glib2",
+            "version": "2.90.1-1",
+            "archive_id": "mingw-w64-x86_64-glib2"
+          },
+          {
+            "path": "gio/bin/libglib-2.0-0.dll",
+            "sha256": "84b15dc907fd1d3bb1cd799fc034d2edcbc3946c8c4acd6a8dd3ace381f9e568",
+            "size_bytes": 1570710,
+            "package": "mingw-w64-x86_64-glib2",
+            "version": "2.90.1-1",
+            "archive_id": "mingw-w64-x86_64-glib2"
+          },
+          {
+            "path": "gio/bin/libintl-8.dll",
+            "sha256": "0537c3dd2378218508ebe3cc416d72a99ee2d24ae1c5525e23458f32544ef861",
+            "size_bytes": 298731,
+            "package": "mingw-w64-x86_64-gettext-runtime",
+            "version": "1.0-1",
+            "archive_id": "mingw-w64-x86_64-gettext-runtime"
+          },
+          {
+            "path": "gio/bin/libpcre2-8-0.dll",
+            "sha256": "68a7cee2acc36d6a61d73f78825d17dfd32f8580f4bb1bc399134719518213d5",
+            "size_bytes": 706915,
+            "package": "mingw-w64-x86_64-pcre2",
+            "version": "10.49-1",
+            "archive_id": "mingw-w64-x86_64-pcre2"
+          },
+          {
+            "path": "gio/bin/libiconv-2.dll",
+            "sha256": "7a282a854e01be726c6cccfe46f548c716aa45b3014818468253aaa4efbcd067",
+            "size_bytes": 1143148,
+            "package": "mingw-w64-x86_64-libiconv",
+            "version": "1.19-1",
+            "archive_id": "mingw-w64-x86_64-libiconv"
+          },
+          {
+            "path": "gio/bin/libffi-8.dll",
+            "sha256": "b649c515907436a3299326f83aea0e8d75c61853eb1609602603bbcb9b00b4db",
+            "size_bytes": 39699,
+            "package": "mingw-w64-x86_64-libffi",
+            "version": "3.8.0-1",
+            "archive_id": "mingw-w64-x86_64-libffi"
+          },
+          {
+            "path": "gio/bin/zlib1.dll",
+            "sha256": "93e9243a44c29200eeacaf9658efe2558581770e4b11ca4b500e18e424a6e3b5",
+            "size_bytes": 128488,
+            "package": "mingw-w64-x86_64-zlib",
+            "version": "1.3.2-2",
+            "archive_id": "mingw-w64-x86_64-zlib"
+          },
+          {
+            "path": "gio/bin/libgmodule-2.0-0.dll",
+            "sha256": "79a7646945b520966dcd2541d40c109f26c42979b47bed9aabec796a8cbe20d0",
+            "size_bytes": 23387,
+            "package": "mingw-w64-x86_64-glib2",
+            "version": "2.90.1-1",
+            "archive_id": "mingw-w64-x86_64-glib2"
+          },
+          {
+            "path": "gio/bin/dbus-daemon.exe",
+            "sha256": "e3fa25e4168c84196baff93b22b1f15c9e0e413419fd56156ca356c84dd53e16",
+            "size_bytes": 571044,
+            "package": "mingw-w64-x86_64-dbus",
+            "version": "1.16.2-4",
+            "archive_id": "mingw-w64-x86_64-dbus"
+          }
+        ]
+      },
+      "toolchain_recipe": {
+        "path": "release/native-toolchain/windows-amd64.json",
+        "sha256": "3d4da1af344444205d5dfbc08ada820221d348b7540945a713e4826907134e2f"
+      },
+      "compatibility_overlay": {
+        "source_commit": "30859228a77ba20a23a4b69ab81aae133d6ccfe9",
+        "owned": [
+          [
+            "workflow",
+            "dockpipe.terraform.core"
+          ],
+          [
+            "workflow",
+            "dockpipe.cloudflare.r2infra"
+          ],
+          [
+            "workflow",
+            "secretstore-r2-publish-test"
+          ]
+        ],
+        "asset": {
+          "url": "https://github.com/Dockpipe-Industries/dockpipe-packages/releases/download/catalog-candidate-30859228a77ba20a23a4b69ab81aae133d6ccfe9/dockpipe-catalog-linux-amd64.tar.gz",
+          "sha256": "515263b7563b5207f5beb2f543a316b96338ddb82178f8d5835375774e3183cc",
+          "size_bytes": 28977,
+          "format": "tar.gz",
+          "root": ""
+        }
+      }
+    },
+    "darwin-arm64": {
+      "cli_version": "0.6.26-staging.cli.sha49987891f4c3",
+      "guest_source_commit": "13ffe8ad8c59f1c8aa6ba75e2b229d9c26a34681",
+      "inputs": {
+        "source": {
+          "url": null,
+          "sha256": null,
+          "size_bytes": null,
+          "format": null,
+          "root": null
+        },
+        "cli": {
+          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/cli-candidate-0.6.26-staging.49987891f4c3b81f5ef871b1c4cffd333e3ce274/dockpipe_0.6.26-staging.cli.sha49987891f4c3_darwin_arm64.tar.gz",
+          "sha256": "f2b8a6c26667e0e154c5e8fa7e59e559df1d2e474bc6298f11dfff2f1f742db0",
+          "size_bytes": 4847575,
+          "format": "tar.gz",
+          "root": ""
+        },
+        "display_sdk": {
+          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/display-sdk-1.0.0-darwin-arm64-staging.79bb110c712e0d71d8bcde4cecff725f3c107a49/DockPipeDisplaySDK-1.0.0-darwin-arm64.tar.gz",
+          "sha256": "0d9bbc44758c68af8b86c0855293b090eec7ca66a0b3d18cf2552282107610ae",
+          "size_bytes": 8553,
+          "format": "tar.gz",
+          "root": "DockPipeDisplaySDK-1.0.0-darwin-arm64"
+        },
+        "go_sdk_archive": {
+          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/dockpipe-go-sdk-0.1.0-source.90db6efa41c56d31/dockpipe-go-sdk-90db6efa41c56d31.tar.gz",
+          "sha256": "91b8a7490d75ec7323d792d02e5e44026dc502afbfa491ae762d01f40528cd43",
+          "size_bytes": 292110,
+          "format": "file",
+          "root": ""
+        },
+        "go_sdk_manifest": {
+          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/dockpipe-go-sdk-0.1.0-source.90db6efa41c56d31/dockpipe-go-sdk-90db6efa41c56d31.json",
+          "sha256": "bdb299b23b5e2ac9e5d8d7d2c1637105eeeca50d42842de4724d6abf4ff6ec6d",
+          "size_bytes": 48906,
+          "format": "file",
+          "root": ""
+        },
+        "guest_tools": {
+          "url": "https://github.com/Dockpipe-Industries/dockpipe-packages/releases/download/guest-tools-candidate-13ffe8ad8c59f1c8aa6ba75e2b229d9c26a34681/dockpipe-guest-tools-1.0.0-windows-amd64.zip",
+          "sha256": "65f37b259a71ef271f624ff991f62dc594b52bfd8b5ad91633089c6ec8b3f29c",
+          "size_bytes": 14940754,
+          "format": "file",
+          "root": ""
+        },
+        "guest_descriptor": {
+          "url": "https://github.com/Dockpipe-Industries/dockpipe-packages/releases/download/guest-tools-candidate-13ffe8ad8c59f1c8aa6ba75e2b229d9c26a34681/guest-tools-release.json",
+          "sha256": "38753e46d55994164926c0c83a49b2f2de4327eeb23b1b4e856b83e4716e6be7",
+          "size_bytes": 649,
+          "format": "file",
+          "root": ""
+        },
+        "guest_release_manifest": {
+          "url": "https://github.com/Dockpipe-Industries/dockpipe-packages/releases/download/guest-tools-candidate-13ffe8ad8c59f1c8aa6ba75e2b229d9c26a34681/guest-tools-candidate-manifest.json",
+          "sha256": "cedd8adf546b6369de951f30e2cce07e9f8800de29da853b3859b3ca41f404c8",
+          "size_bytes": 2691,
+          "format": "file",
+          "root": ""
+        },
+        "runtime_core": {
+          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/v0.6.25-staging.39554459680.1.2a984e78d9da/dockpipe-core-0.6.25.tar.gz",
+          "sha256": "a141b4e2aeccc79d57f77ecdc542c3c2acb88dfbcda67f1520db5539cd193277",
+          "size_bytes": 2785294,
+          "format": "file",
+          "root": ""
+        }
+      },
+      "previous_artifacts": {
+        "dockpipe-core-0.6.16.tar.gz": "aa99042e0606c971081e80147e85f8ce104cf62232ed569d8b34dae11f0cdfb5",
+        "dockpipe-workflow-agent.cloud-lanes.doctor-0.6.1.tar.gz": "06a0d6516a2b0446329b246994770a92bd6e9a91353c157a907dcc87224516eb",
+        "dockpipe-workflow-backlog.remote-0.6.2.tar.gz": "384df4cc55f4f21d57df989159bb3d1c86a6620e1dc0fb93646a68b66c4fca17",
+        "dockpipe-workflow-cas.01.app-server-0.6.1.tar.gz": "13d1df93af324bded4d9c52ebb718d773b2be25caa8795480d56b7e1d080ac76",
+        "dockpipe-workflow-ci-emulate-0.6.16.tar.gz": "c77af9a0ecf8b67b1b05add94c318adbdd41b4eeed7654a1cc6dfaf4a69f426d",
+        "dockpipe-workflow-claude-0.6.1.tar.gz": "9a3e3abca4180dd207830ba60c01b055f0578c7d65eb996079529ff8d3f65ee9",
+        "dockpipe-workflow-codex-0.6.1.tar.gz": "889ef1148588b35830f51185ef2eed83521fb7017fd880a1c842c8d3d4b6a870",
+        "dockpipe-workflow-codex-pav-0.6.16.tar.gz": "1fe52a7807fbc185c996cc5543ed4a06be8713679c3ba61096286289bbb7a837",
+        "dockpipe-workflow-codex-security-0.6.16.tar.gz": "97b3b9974f7a68ac4e6eda205afe5576f51a01e8f4b2a268ed897befd65709fb",
+        "dockpipe-workflow-codex.cli.update-0.6.1.tar.gz": "708d67c780dfee9b2b8bb386a225c579fe6d4b3ac2c8091c085d17d2fee6345b",
+        "dockpipe-workflow-compliance-handoff-0.6.2.tar.gz": "4e57a8aa84408710a0efa3afba7efe80c8f2384258672e2734c0d944fc7d546c",
+        "dockpipe-workflow-cursor-dev-0.6.1.tar.gz": "b894238cf8a1777e19971d7e283f984dd58bd2ac16991aab8827d239c289f1a7",
+        "dockpipe-workflow-devcontainer-0.6.1.tar.gz": "4969a0b7c9943806343efe699529a73315d447311e770d2957eb3e7f41035f85",
+        "dockpipe-workflow-dockpipe-repo-quality-0.6.16.tar.gz": "258ac9f3eaeb80f4bf8c924aeaabe2f60d1b8d59a680e65f597542157dc99529",
+        "dockpipe-workflow-dockpipe.cloudflare.r2infra-0.6.3.tar.gz": "ef41e32e77fe5a153c09e6fda071943bd9bb7394290e3564d2c8e011465a9f0e",
+        "dockpipe-workflow-dockpipe.cloudflare.r2upload-0.6.3.tar.gz": "90bc9978f60ffe798fd60757f143dc4a8200cb9ef05f243c5aa547b5082a88b6",
+        "dockpipe-workflow-dockpipe.github.ghcrpush-0.6.1.tar.gz": "2518dbe2bff6105f3a4a38a8d638621fd8014550437c14b60f454b026b9e6f51",
+        "dockpipe-workflow-dockpipe.terraform.core-0.6.2.tar.gz": "9dcf87b0dbe2154e6e7708c1ff35acc5d8d92c685281ade38fd7e74147545c75",
+        "dockpipe-workflow-docs.optimize-orchestrate-0.6.1.tar.gz": "53efd875a48613b9eb9b7f9b013f54f283013dac01d65f8df98dad61689b71c1",
+        "dockpipe-workflow-docs.orchestrate-0.6.1.tar.gz": "71c4adbd14e96e33e7861e70ec9741bb69540b4b2a5294f7e964da3252525f00",
+        "dockpipe-workflow-dorkpipe-0.6.2.tar.gz": "3c260421e0987328d2b1c8d2a49abeb1c62c1150dd43cb3963eca345fced4d48",
+        "dockpipe-workflow-dorkpipe-orchestrator-0.6.2.tar.gz": "51502b0ed146be29a24fe9630cd3a062c16c3383c4f8cb0b43f0792c6722ea51",
+        "dockpipe-workflow-dorkpipe-self-analysis-0.6.2.tar.gz": "170bec29b5ad20020815bbdde8c0fc5acb82900787f8eda1bd6473603db3f5b9",
+        "dockpipe-workflow-dorkpipe-self-analysis-host-0.6.2.tar.gz": "2e4e5de58c3c04fd095f18992e992959889bdaf1b1a7e95568bfe917861a79f7",
+        "dockpipe-workflow-dorkpipe-self-analysis-stack-0.6.2.tar.gz": "70d879899b461b92d2bb3146fe19f112fb9406b76b12be0c58f920e98b03e5bd",
+        "dockpipe-workflow-dorkpipe-self-analysis-stack-proxy-0.6.2.tar.gz": "182dde153e5f93686d10dfea4e0fd043e2e265da1bd05478f65675708070661d",
+        "dockpipe-workflow-example.brain-0.6.1.tar.gz": "5371165e48f92db0c51fe3ad3919650845ce21fc6d2c3cc48daf70b93c698cbf",
+        "dockpipe-workflow-linux-vm-1.3.5.tar.gz": "6f1917bfd832ef0d6fd123dfecdc326eb3b323f5dacc04994cf19d23f5a606f4",
+        "dockpipe-workflow-ollama-0.6.1.tar.gz": "23372fbef41f4788c04cba55a7b329893dc9c4f0b8acccbb7744e7ced668edac",
+        "dockpipe-workflow-orchestrate.stack-0.6.1.tar.gz": "76df4fd5d2af4045ce56028fa5acafc71a9b9ea16181c32193885abdca7d438f",
+        "dockpipe-workflow-orchestrator-0.6.1.tar.gz": "a7d5342c5b25a690d631dc997c33219b245bffdc1c1938b418bc25bef4bde5c4",
+        "dockpipe-workflow-package-release-setup-0.6.16.tar.gz": "73ba1b95ac839fa9d4ac3224bc36db4ef6eb653d7cc27d8eb3c66e7fcc218eca",
+        "dockpipe-workflow-package-store-infra-0.6.16.tar.gz": "12e62185a21e2e6799e02a859fad113bb673addf61e4c1532c930113dd95bcaa",
+        "dockpipe-workflow-package-store-publish-0.6.16.tar.gz": "308d1e7afa6b97d2966301e8df3aaab674af0b6e93749181f7f2df270105c4ad",
+        "dockpipe-workflow-package-store-staging-infra-0.6.16.tar.gz": "1274d2770f87f167d7788d86c029db11a889a29b4dcc6ede669d4032f22760ef",
+        "dockpipe-workflow-pipeon-0.6.3.tar.gz": "83766086c123f378ff8891f484fe0239bb12a652906b8e971a0c68e9de757bb4",
+        "dockpipe-workflow-pipeon-dev-stack-0.6.3.tar.gz": "e626168dd71725d0a13b72a701293c85530c3c0b8efb847b70dab0c20011d89b",
+        "dockpipe-workflow-pipeon-dev-stack-status-0.6.3.tar.gz": "7b6e4ddace95b4888f4fd393740fe7814a01083cd1e3036c8ecf9cbf872bdfc6",
+        "dockpipe-workflow-pipeon-dev-stack-stop-0.6.3.tar.gz": "c2e4882df74f1a731e90c90ad9d2b9d3e37cf78fef4709daa30df222a7d8d439",
+        "dockpipe-workflow-secretstore-onepassword-0.6.1.tar.gz": "d52aaf2f1d76f85edcbb2eea778f57160c67dba38cd5daf5caba1672a14002df",
+        "dockpipe-workflow-secretstore-r2-publish-test-0.6.1.tar.gz": "3d7a93502b65209071bf1992e6769c0a01d429e09686f024a8e5ea23628e8589",
+        "dockpipe-workflow-skills.render-0.6.1.tar.gz": "d914b29e74fcd441cdd28bce3362c9120bdeb78652c625a71a05520c6f865325",
+        "dockpipe-workflow-software.dev-0.6.1.tar.gz": "50288c911138c991b0f0df8b69afd3b25efe0b118112895fcd40cc791f8ea252",
+        "dockpipe-workflow-test-0.6.16.tar.gz": "2dcec80b8dc0a3267592ec7581fd706cbb4470ce5c8736f534a17c3f72ccb05c",
+        "dockpipe-workflow-user-insight-process-0.6.2.tar.gz": "a48f2c9d9eae9d48f13389e84955e772c5cf5882aa4bc02603b703919bd70393",
+        "dockpipe-workflow-vscode-0.6.1.tar.gz": "4fb8794a72add2ed568cd55912827fd2b39a932baf6e0e0e97a9e54adb42f081",
+        "dockpipe-workflow-windows-vm-1.3.5.tar.gz": "31aae05dca19fdab6912cba89a879c6f6c6f89a86f56653df975b8fecc923e70",
+        "dockpipe-resolver-aws-secretsmanager-0.6.0.tar.gz": "b6619b608c9628f71ff70ba604400ac5cc002747e8d095bda6941f628fe031d7",
+        "dockpipe-resolver-azure-keyvault-0.6.0.tar.gz": "8f38050f1c2db4f34883ad13ba2ebcbb3e6bb73308f509d3d113d5af2344885a",
+        "dockpipe-resolver-claude-0.6.1.tar.gz": "16da81fec8f7b11a8754991840c4295d70cb2839900f761186f21bc440b14d05",
+        "dockpipe-resolver-codex-0.6.1.tar.gz": "225e435cdc205600d115d08e74f91ef28be5ab7b9f0b4d8fbc9b9cfa4dcb34f1",
+        "dockpipe-resolver-cursor-dev-0.6.1.tar.gz": "ca15dad8fb2d51c7b2cd2dc757069bbcf19aa0d6f62d34e719340913ebc80b54",
+        "dockpipe-resolver-devcontainer-0.6.1.tar.gz": "1bc30753501d4da4259c4d09960dbfb97bdbf18ac9acbda29064940b8a980c65",
+        "dockpipe-resolver-dockpipe.cloudflare.remote-edge-0.3.1.tar.gz": "9164ba54d905309febddf5cc3aa71275cbb0dbcf0b553abd47e51eed6b7f3527",
+        "dockpipe-resolver-dotenv-0.6.16.tar.gz": "aec7b4ed3b36ecb999b3723fe6f063d77942142ed64d9c6464707c66705ba428",
+        "dockpipe-resolver-infisical-0.6.0.tar.gz": "8accb5743fb8ed5f621134cdd5e85c754307b6b636cb834e24e37b6c5d64cec7",
+        "dockpipe-resolver-ollama-0.6.1.tar.gz": "81dacd432d2d0fdda67579d1067d492703f746726e55934ce7dd32ea6e42cfdc",
+        "dockpipe-resolver-onepassword-0.6.1.tar.gz": "652f973a817e7a9a9810159c40d90a65714c09d2d207a92f28f8a49b9bcf7aed",
+        "dockpipe-resolver-pipeon-0.6.3.tar.gz": "f2f6099631adac3bb62c2f3eca3982ad68161afc90e546d879926ea5dbee305f",
+        "dockpipe-resolver-pipeon-dev-stack-0.6.3.tar.gz": "cb4d9c60358356ac79dc36a0f8a6e6c3297688afb0172f0a8e15c25eb482f0a1",
+        "dockpipe-resolver-qemu-1.3.5.tar.gz": "1db4514bd91cec4fa3fb58b7c6e7c5ea4e21c17540374cba59384aa6b7137a9e",
+        "dockpipe-resolver-vscode-0.6.1.tar.gz": "e48b5191018dcd2705755b66cad01fe4e0874aa2cfb6defb1fe4706805e0994f",
+        "dockpipe-workflow-dockpipe.cloudflare.r2infra-0.6.4.tar.gz": "080a5abe13f103eaa0c473e02779f7cca3dc168d2b9a1c30b9a147263ff741da",
+        "dockpipe-workflow-dockpipe.terraform.core-0.6.3.tar.gz": "11ec627be4f31503af30d6c97a1b34f0043d7eeee018fdc4f4301db56c201c02",
+        "dockpipe-workflow-secretstore-r2-publish-test-0.6.2.tar.gz": "7a09c905f4184326e8674ebe4386d7ae9cc8f0490f46312410c92ff5422a5f7e"
+      },
+      "native_inputs": {
+        "schema": 1,
+        "platform": "darwin-arm64",
+        "compiler": {
+          "id": "AppleClang",
+          "version": "17.0.0.17000013",
+          "os_id": "macos",
+          "os_version": "15.0"
+        },
+        "archives": [
+          {
+            "id": "qtbase",
+            "destination": "qt/6.10.3/macos",
+            "asset": {
+              "url": "https://download.qt.io/online/qtsdkrepository/mac_x64/desktop/qt6_6103/qt6_6103/qt.qt6.6103.clang_64/6.10.3-0-202603310405qtbase-MacOS-MacOS_15-Clang-MacOS-MacOS_15-X86_64-ARM64.7z",
+              "sha256": "998227b59cfa2c59b063bbfddeefff312d74fa99da1647544df87a14ffa4bb77",
+              "size_bytes": 34841740,
+              "format": "7z",
+              "root": "",
+              "redirect_hosts": [
+                "ftp.fau.de",
+                "ftp.jaist.ac.jp",
+                "mirror.aarnet.edu.au",
+                "mirror.accum.se",
+                "mirrors.20i.com",
+                "mirrors.ukfast.co.uk",
+                "qt.mirror.constant.com",
+                "qtproject.mirror.liquidtelecom.com",
+                "www.nic.funet.fi"
+              ]
+            },
+            "package": "qt-qtbase",
+            "version": "6.10.3"
+          },
+          {
+            "id": "qttools",
+            "destination": "qt/6.10.3/macos",
+            "asset": {
+              "url": "https://download.qt.io/online/qtsdkrepository/mac_x64/desktop/qt6_6103/qt6_6103/qt.qt6.6103.clang_64/6.10.3-0-202603310405qttools-MacOS-MacOS_15-Clang-MacOS-MacOS_15-X86_64-ARM64.7z",
+              "sha256": "1e2ed4fb7257caf9301c712c76e52075307c8302be2398ab60e36d56dab90f7b",
+              "size_bytes": 42928873,
+              "format": "7z",
+              "root": "",
+              "redirect_hosts": [
+                "ftp.fau.de",
+                "ftp.jaist.ac.jp",
+                "mirror.aarnet.edu.au",
+                "mirror.accum.se",
+                "mirrors.20i.com",
+                "mirrors.ukfast.co.uk",
+                "qt.mirror.constant.com",
+                "qtproject.mirror.liquidtelecom.com",
+                "www.nic.funet.fi"
+              ]
+            },
+            "package": "qt-qttools",
+            "version": "6.10.3"
+          },
+          {
+            "id": "glib",
+            "destination": "gio/Cellar",
+            "asset": {
+              "url": "https://ghcr.io/v2/homebrew/core/glib/blobs/sha256:ce9568a335281cb6bd12c48fd89d7a118a046f9df16761c120826fdae116e468",
+              "sha256": "ce9568a335281cb6bd12c48fd89d7a118a046f9df16761c120826fdae116e468",
+              "size_bytes": 9479231,
+              "format": "tar.gz",
+              "root": ""
+            },
+            "package": "glib",
+            "version": "2.90.1"
+          },
+          {
+            "id": "gettext",
+            "destination": "gio/Cellar",
+            "asset": {
+              "url": "https://ghcr.io/v2/homebrew/core/gettext/blobs/sha256:98a116d35792ccd730360ffc8c0d8fc5799b2282b96bb7696192c573f064a331",
+              "sha256": "98a116d35792ccd730360ffc8c0d8fc5799b2282b96bb7696192c573f064a331",
+              "size_bytes": 10296282,
+              "format": "tar.gz",
+              "root": ""
+            },
+            "package": "gettext",
+            "version": "1.0"
+          },
+          {
+            "id": "pcre2",
+            "destination": "gio/Cellar",
+            "asset": {
+              "url": "https://ghcr.io/v2/homebrew/core/pcre2/blobs/sha256:0ec47d18c50f5770db2b3f07b5b85644284cc6ee8e07e23b11d2727e95932b77",
+              "sha256": "0ec47d18c50f5770db2b3f07b5b85644284cc6ee8e07e23b11d2727e95932b77",
+              "size_bytes": 2465167,
+              "format": "tar.gz",
+              "root": ""
+            },
+            "package": "pcre2",
+            "version": "10.49"
+          },
+          {
+            "id": "json-c",
+            "destination": "gio/Cellar",
+            "asset": {
+              "url": "https://ghcr.io/v2/homebrew/core/json-c/blobs/sha256:5624048dbb067f1a6d3784081029c3d738edeefd57188ce6724bb93d01aa53aa",
+              "sha256": "5624048dbb067f1a6d3784081029c3d738edeefd57188ce6724bb93d01aa53aa",
+              "size_bytes": 106627,
+              "format": "tar.gz",
+              "root": ""
+            },
+            "package": "json-c",
+            "version": "0.19"
+          },
+          {
+            "id": "libunistring",
+            "destination": "gio/Cellar",
+            "asset": {
+              "url": "https://ghcr.io/v2/homebrew/core/libunistring/blobs/sha256:5001abe192babcfaf0f97ad322e2e59958d0d991de3da9f2e941b24924b8a2b8",
+              "sha256": "5001abe192babcfaf0f97ad322e2e59958d0d991de3da9f2e941b24924b8a2b8",
+              "size_bytes": 1901828,
+              "format": "tar.gz",
+              "root": ""
+            },
+            "package": "libunistring",
+            "version": "1.5"
+          },
+          {
+            "id": "glib-source",
+            "destination": "gio/license-source",
+            "asset": {
+              "url": "https://download.gnome.org/sources/glib/2.90/glib-2.90.1.tar.xz",
+              "sha256": "93c941aa17d5eb1d53fe838365f29a8b4e539c222a256d974ec8f30fc413e396",
+              "size_bytes": 5871112,
+              "format": "tar.xz",
+              "root": "glib-2.90.1"
+            },
+            "package": "glib",
+            "version": "2.90.1"
+          },
+          {
+            "id": "dbus-source",
+            "destination": "broker-source",
+            "asset": {
+              "url": "https://dbus.freedesktop.org/releases/dbus/dbus-1.16.2.tar.xz",
+              "sha256": "0ba2a1a4b16afe7bceb2c07e9ce99a8c2c3508e5dec290dbb643384bd6beb7e2",
+              "size_bytes": 1115644,
+              "format": "tar.xz",
+              "root": "dbus-1.16.2"
+            },
+            "package": "dbus",
+            "version": "1.16.2"
+          }
+        ],
+        "licenses": [
+          {
+            "path": "gio/Cellar/glib/2.90.1/LGPL-2.1-or-later.txt",
+            "sha256": "fa6f36630bb1e0c571d34b2bbdf188d08495c9dbf58f28cac112f303fc1f58fb",
+            "size_bytes": 25967,
+            "package": "glib",
+            "version": "2.90.1",
+            "archive_id": "glib"
+          },
+          {
+            "path": "gio/Cellar/gettext/1.0/COPYING",
+            "sha256": "e79e9c8a0c85d735ff98185918ec94ed7d175efc377012787aebcf3b80f0d90b",
+            "size_bytes": 35151,
+            "package": "gettext",
+            "version": "1.0",
+            "archive_id": "gettext"
+          },
+          {
+            "path": "gio/Cellar/pcre2/10.49/COPYING",
+            "sha256": "99272c55f3dcfa07a8a7e15a5c1a33096e4727de74241d65fa049fccfdd59507",
+            "size_bytes": 97,
+            "package": "pcre2",
+            "version": "10.49",
+            "archive_id": "pcre2"
+          },
+          {
+            "path": "gio/Cellar/pcre2/10.49/LICENCE.md",
+            "sha256": "197d8a73ffee0d6b09adba2f9c677b5f5aede24edf89258a68e48248d010d811",
+            "size_bytes": 4011,
+            "package": "pcre2",
+            "version": "10.49",
+            "archive_id": "pcre2"
+          },
+          {
+            "path": "gio/Cellar/pcre2/10.49/share/doc/pcre2/COPYING",
+            "sha256": "99272c55f3dcfa07a8a7e15a5c1a33096e4727de74241d65fa049fccfdd59507",
+            "size_bytes": 97,
+            "package": "pcre2",
+            "version": "10.49",
+            "archive_id": "pcre2"
+          },
+          {
+            "path": "gio/Cellar/pcre2/10.49/share/doc/pcre2/LICENCE.md",
+            "sha256": "197d8a73ffee0d6b09adba2f9c677b5f5aede24edf89258a68e48248d010d811",
+            "size_bytes": 4011,
+            "package": "pcre2",
+            "version": "10.49",
+            "archive_id": "pcre2"
+          },
+          {
+            "path": "gio/Cellar/json-c/0.19/COPYING",
+            "sha256": "74c1e6ca5eba76b54d0ad00d4815c8315c1b3bc45ff99de61d103dc92486284c",
+            "size_bytes": 2205,
+            "package": "json-c",
+            "version": "0.19",
+            "archive_id": "json-c"
+          },
+          {
+            "path": "gio/Cellar/libunistring/1.5/COPYING",
+            "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+            "size_bytes": 35149,
+            "package": "libunistring",
+            "version": "1.5",
+            "archive_id": "libunistring"
+          },
+          {
+            "path": "gio/Cellar/libunistring/1.5/COPYING.LIB",
+            "sha256": "a853c2ffec17057872340eee242ae4d96cbf2b520ae27d903e1b2fef1a5f9d1c",
+            "size_bytes": 7639,
+            "package": "libunistring",
+            "version": "1.5",
+            "archive_id": "libunistring"
+          },
+          {
+            "path": "gio/Cellar/glib/2.90.1/COPYING-source-AFL-2.0.txt",
+            "sha256": "7ecc7db84298adb05d2cf10339c63a5315a1c5c270a68d97d7d40a53b508ccde",
+            "size_bytes": 8987,
+            "package": "glib",
+            "version": "2.90.1",
+            "archive_id": "glib-source"
+          },
+          {
+            "path": "gio/Cellar/glib/2.90.1/COPYING-source-Apache-2.0.txt",
+            "sha256": "074e6e32c86a4c0ef8b3ed25b721ca23aca83df277cd88106ef7177c354615ff",
+            "size_bytes": 10280,
+            "package": "glib",
+            "version": "2.90.1",
+            "archive_id": "glib-source"
+          },
+          {
+            "path": "gio/Cellar/glib/2.90.1/COPYING-source-CC-BY-SA-3.0.txt",
+            "sha256": "3f941b3b89cf7b8370ceb83cc76d2120d471b58735d8ca60238a751a48d7f72f",
+            "size_bytes": 22240,
+            "package": "glib",
+            "version": "2.90.1",
+            "archive_id": "glib-source"
+          },
+          {
+            "path": "gio/Cellar/glib/2.90.1/COPYING-source-CC0-1.0.txt",
+            "sha256": "a2010f343487d3f7618affe54f789f5487602331c0a8d03f49e9a7c547cf0499",
+            "size_bytes": 7048,
+            "package": "glib",
+            "version": "2.90.1",
+            "archive_id": "glib-source"
+          },
+          {
+            "path": "gio/Cellar/glib/2.90.1/COPYING-source-GPL-2.0-or-later.txt",
+            "sha256": "aaf135472f81c5b4a0dca9367e5bb5e9750032b5bebe5442b36e4c0a47430df3",
+            "size_bytes": 17337,
+            "package": "glib",
+            "version": "2.90.1",
+            "archive_id": "glib-source"
+          },
+          {
+            "path": "gio/Cellar/glib/2.90.1/COPYING-source-LGPL-2.1-only.txt",
+            "sha256": "fa6f36630bb1e0c571d34b2bbdf188d08495c9dbf58f28cac112f303fc1f58fb",
+            "size_bytes": 25967,
+            "package": "glib",
+            "version": "2.90.1",
+            "archive_id": "glib-source"
+          },
+          {
+            "path": "gio/Cellar/glib/2.90.1/COPYING-source-LGPL-2.1-or-later.txt",
+            "sha256": "fa6f36630bb1e0c571d34b2bbdf188d08495c9dbf58f28cac112f303fc1f58fb",
+            "size_bytes": 25967,
+            "package": "glib",
+            "version": "2.90.1",
+            "archive_id": "glib-source"
+          },
+          {
+            "path": "gio/Cellar/glib/2.90.1/COPYING-source-LLVM-exception.txt",
+            "sha256": "e34c58338bd89d43e709e226610d8f32b3e3c47f4ad9a99a8dc1d4ac7842488e",
+            "size_bytes": 919,
+            "package": "glib",
+            "version": "2.90.1",
+            "archive_id": "glib-source"
+          },
+          {
+            "path": "gio/Cellar/glib/2.90.1/COPYING-source-LicenseRef-old-glib-tests.txt",
+            "sha256": "fb261b2d5dbe76c4850f90da763210bc385e52428df6bbfd7b06295ac8a32914",
+            "size_bytes": 841,
+            "package": "glib",
+            "version": "2.90.1",
+            "archive_id": "glib-source"
+          },
+          {
+            "path": "gio/Cellar/glib/2.90.1/COPYING-source-MIT.txt",
+            "sha256": "b85dcd3e453d05982552c52b5fc9e0bdd6d23c6f8e844b984a88af32570b0cc0",
+            "size_bytes": 1078,
+            "package": "glib",
+            "version": "2.90.1",
+            "archive_id": "glib-source"
+          },
+          {
+            "path": "gio/Cellar/glib/2.90.1/COPYING-source-MPL-1.1.txt",
+            "sha256": "6214f8b1300bb9f37b16ebc146f8f61af0187e0025042ff95c8b3030744a8795",
+            "size_bytes": 23669,
+            "package": "glib",
+            "version": "2.90.1",
+            "archive_id": "glib-source"
+          },
+          {
+            "path": "broker-source/COPYING",
+            "sha256": "150e5d08e1cb5e62b65967d7931acad2c42d98ec1bbb584bebb01921cbc853c2",
+            "size_bytes": 1134,
+            "package": "dbus",
+            "version": "1.16.2",
+            "archive_id": "dbus-source"
+          },
+          {
+            "path": "broker-source/LICENSES/AFL-2.1.txt",
+            "sha256": "93bb4f7417aa775bab9026cc3d0af28aeb64451fc5a8ec651876785edd8eaf9b",
+            "size_bytes": 8948,
+            "package": "dbus",
+            "version": "1.16.2",
+            "archive_id": "dbus-source"
+          },
+          {
+            "path": "broker-source/LICENSES/GPL-2.0-or-later.txt",
+            "sha256": "aaf135472f81c5b4a0dca9367e5bb5e9750032b5bebe5442b36e4c0a47430df3",
+            "size_bytes": 17337,
+            "package": "dbus",
+            "version": "1.16.2",
+            "archive_id": "dbus-source"
+          }
+        ],
+        "libraries": [
+          {
+            "path": "gio/Cellar/glib/2.90.1/lib/libgio-2.0.0.dylib",
+            "sha256": "7a802f168c2187f3bd96cca9e3b5d2b23afb1b027ff85bccec5aff9b4b60c3c9",
+            "size_bytes": 2040160,
+            "package": "glib",
+            "version": "2.90.1",
+            "archive_id": "glib"
+          },
+          {
+            "path": "gio/Cellar/glib/2.90.1/lib/libgobject-2.0.0.dylib",
+            "sha256": "8abd4629077f4930fef1635e5b4b1fab55d6393bc440670c028d21420fc66e99",
+            "size_bytes": 411264,
+            "package": "glib",
+            "version": "2.90.1",
+            "archive_id": "glib"
+          },
+          {
+            "path": "gio/Cellar/glib/2.90.1/lib/libglib-2.0.0.dylib",
+            "sha256": "4a33f59fdb0fa96266c452043e53e10629b3c6d786f191120b0a330fa6ed0c59",
+            "size_bytes": 1366832,
+            "package": "glib",
+            "version": "2.90.1",
+            "archive_id": "glib"
+          },
+          {
+            "path": "gio/Cellar/glib/2.90.1/lib/libgmodule-2.0.0.dylib",
+            "sha256": "61ef6161603f3d63f28a5e4aad0b890ff2238144e6c546486a1cb7d99ca29529",
+            "size_bytes": 53568,
+            "package": "glib",
+            "version": "2.90.1",
+            "archive_id": "glib"
+          },
+          {
+            "path": "gio/Cellar/gettext/1.0/lib/libintl.8.dylib",
+            "sha256": "6b7eb0dbb34ec9ee01b542f1f7770469791d792b6c7b2a2ca91b0bc39ea007ec",
+            "size_bytes": 212048,
+            "package": "gettext",
+            "version": "1.0",
+            "archive_id": "gettext"
+          },
+          {
+            "path": "gio/Cellar/pcre2/10.49/lib/libpcre2-8.0.dylib",
+            "sha256": "56bc0ef73d8b270e074b163795abeb02b3809d83b68c50ee8d29b148d0b2e5d4",
+            "size_bytes": 573984,
+            "package": "pcre2",
+            "version": "10.49",
+            "archive_id": "pcre2"
+          }
+        ]
+      },
+      "toolchain_recipe": {
+        "path": "release/native-toolchain/darwin-arm64.json",
+        "sha256": "fbba0da9f9744e60030704b2b79a5d7e1c93e877b10a43acca842a0be87a4f55"
+      },
+      "compatibility_overlay": {
+        "source_commit": "30859228a77ba20a23a4b69ab81aae133d6ccfe9",
+        "owned": [
+          [
+            "workflow",
+            "dockpipe.terraform.core"
+          ],
+          [
+            "workflow",
+            "dockpipe.cloudflare.r2infra"
+          ],
+          [
+            "workflow",
+            "secretstore-r2-publish-test"
+          ]
+        ],
+        "asset": {
+          "url": "https://github.com/Dockpipe-Industries/dockpipe-packages/releases/download/catalog-candidate-30859228a77ba20a23a4b69ab81aae133d6ccfe9/dockpipe-catalog-linux-amd64.tar.gz",
+          "sha256": "515263b7563b5207f5beb2f543a316b96338ddb82178f8d5835375774e3183cc",
+          "size_bytes": 28977,
+          "format": "tar.gz",
+          "root": ""
+        }
+      }
+    }
+  },
+  "accepted_platforms": [
+    "linux-amd64",
+    "windows-amd64",
+    "darwin-arm64"
+  ]
+}

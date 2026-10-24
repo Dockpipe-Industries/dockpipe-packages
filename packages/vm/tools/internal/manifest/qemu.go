@@ -73,11 +73,13 @@ func PlanQEMU(m Manifest, runtimeDir string) (QEMUPlan, error) {
 	}
 	qmpSocket := filepath.Join(runtimeDir, m.RunID+".qmp")
 	agentSocket := filepath.Join(runtimeDir, m.RunID+".agent")
+	inputSocket := filepath.Join(runtimeDir, m.RunID+".input.qmp")
 	for _, socket := range []struct {
 		name string
 		path string
 	}{
 		{"QMP", qmpSocket},
+		{"display input QMP", inputSocket},
 		{"agent", agentSocket},
 	} {
 		if err := ValidateLinuxUnixSocketPath(socket.name, socket.path); err != nil {
@@ -100,6 +102,8 @@ func PlanQEMU(m Manifest, runtimeDir string) (QEMUPlan, error) {
 		"-uuid", m.MachineUUID,
 		"-nodefaults", "-no-reboot", "-nographic", "-nic", "none",
 		"-qmp", "unix:" + qmpSocket + ",server=on,wait=off",
+		"-chardev", "socket,id=dockpipe-display-input-qmp,path=" + inputSocket + ",server=on,wait=off",
+		"-mon", "chardev=dockpipe-display-input-qmp,mode=control",
 		"-chardev", "socket,id=dockpipe-agent,path=" + agentSocket + ",server=on,wait=off",
 		"-device", "virtio-serial-pci",
 		"-device", "virtserialport,chardev=dockpipe-agent,name=org.dockpipe.agent.1",

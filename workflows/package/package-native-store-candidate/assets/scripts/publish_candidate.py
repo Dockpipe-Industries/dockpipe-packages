@@ -10,6 +10,7 @@ import tempfile
 import urllib.parse
 
 import native_store
+import toolchain_inputs
 import publication_plan
 import catalog_transaction
 from catalog_transaction import inventory, verify_reference
@@ -140,7 +141,7 @@ def accepted_push(environment):
 
 def publish(candidate_paths, lock_path, output, client=None, environment=None):
     source = accepted_push(os.environ if environment is None else environment)
-    plan = publication_plan.plan(candidate_paths)
+    plan = publication_plan.plan(candidate_paths, qualification='native')
     document = native_store.read_json(lock_path)
     accepted = document.get('accepted_platforms')
     if (plan['source_commit'] != source or not isinstance(accepted, list)
@@ -148,6 +149,7 @@ def publish(candidate_paths, lock_path, output, client=None, environment=None):
         raise ValueError('Actual candidates differ from the accepted source/platform/ownership set')
     lock_hash = native_store.sha256(lock_path)
     by_platform = {}
+    toolchain_preparation = {}
     for path in candidate_paths:
         descriptor = native_store.read_json(path)
         target = descriptor['platform']
@@ -158,13 +160,27 @@ def publish(candidate_paths, lock_path, output, client=None, environment=None):
                 or descriptor.get('checks') != CHECKS):
             raise ValueError('Candidate lacks its exact committed-source/native-build input binding')
         by_platform[target] = path.parent / descriptor['asset']
+        if 'toolchain_recipe' in profile:
+            receipt_path = path.parent / ('toolchain-receipt-' + target + '.json')
+            if (receipt_path.is_symlink() or not receipt_path.is_file() or receipt_path.stat().st_size > 32 << 20
+                    or native_store.sha256(receipt_path) != descriptor.get('toolchain_receipt_sha256')):
+                raise ValueError('Native candidate lacks its bound toolchain preparation receipt')
+            receipt = json.loads(receipt_path.read_bytes(), object_pairs_hook=toolchain_inputs.native_inputs.unique_fields)
+            toolchain_inputs.validate_receipt(receipt, target, profile['toolchain_recipe'])
+            by_platform[target + '/toolchain'] = receipt_path
+            toolchain_preparation[target] = {'sha256': native_store.sha256(receipt_path),
+                'size_bytes': receipt_path.stat().st_size, 'profile': profile['toolchain_recipe'],
+                'url': 'https://github.com/' + REPOSITORY + '/releases/download/' + plan['tag'] + '/' + receipt_path.name}
     release_document = {
         'schema': 1, 'product': 'DockpipeCatalogCandidate', 'artifact_class': 'native-store-overlay',
+        'publication_mode': 'native', 'native_build': True,
         'source_repository': REPOSITORY, 'source_commit': source, 'source_state': 'committed-snapshot',
         'tag': plan['tag'], 'owned': plan['owned'], 'platforms': sorted(accepted),
         'artifacts': plan['artifacts'], 'inputs_lock_sha256': lock_hash,
     }
-    return catalog_transaction.publish_assets(release_document, by_platform, output, METADATA_NAME, client or GitHub())
+    if toolchain_preparation:
+        release_document['toolchain_preparation'] = toolchain_preparation
+    return catalog_transaction.publish_assets(release_document, by_platform, output, METADATA_NAME, client or GitHub(), qualification='native')
 
 
 if __name__ == '__main__':
