@@ -1,0 +1,9 @@
+name: package-catalog-staging-promote
+title: Optional staging Marketplace catalog promotion
+description: Admit an exact independently qualified native candidate, verify real consumers and conditionally advance only the optional staging catalog pointer.
+platforms: [deb, windows, macos]
+docker_preflight: false
+steps:
+  - id: promote-optional-catalog
+    kind: host
+    run: assets/scripts/workflow_entry.py

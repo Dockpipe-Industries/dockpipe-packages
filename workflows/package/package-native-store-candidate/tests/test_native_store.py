@@ -248,9 +248,9 @@ class NativeStoreTest(unittest.TestCase):
             for kind, name in sorted(native_store.VM_FAMILY):
                 if kind + 's' != group:
                     continue
-                artifact_name = 'dockpipe-' + kind + '-' + name + '-1.3.6.tar.gz'
+                artifact_name = 'dockpipe-' + kind + '-' + name + '-1.3.7.tar.gz'
                 (destination / artifact_name).write_bytes(b'compiled fixture')
-                entries.append(dict(name=name, version='1.3.6', min_dockpipe_version='0.6.26-0',
+                entries.append(dict(name=name, version='1.3.7', min_dockpipe_version='0.6.28-0',
                                     tarball=artifact_name, size_bytes=16,
                                     sha256=hashlib.sha256(b'compiled fixture').hexdigest()))
             (destination / 'packages-store-manifest.json').write_text(json.dumps(
