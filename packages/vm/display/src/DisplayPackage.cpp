@@ -28,7 +28,7 @@ public:
         widget_ = new DisplayWidget(frames_, this);
         layout->addWidget(widget_, 1);
         transport_ = std::make_unique<QemuDisplayTransport>(frames_, endpoint_.busAddress,
-            endpoint_.consoleId, endpoint_.qemuPid, endpoint_.qemuStartToken);
+            endpoint_.consoleId, endpoint_.qemuPid, endpoint_.qemuStartToken, true, endpoint_.inputAddress);
         widget_->sendInput = [this](DisplayInput input) {
             if (active_ && transport_)
                 transport_->submit(input);

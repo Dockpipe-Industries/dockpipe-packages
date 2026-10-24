@@ -17,7 +17,8 @@ DERIVED_ROLES = {'qt', 'gio', 'broker', 'broker_provenance'}
 PREFIXES = {'download.qt.io': '/online/qtsdkrepository/',
             'repo.msys2.org': '/mingw/mingw64/',
             'archive.ubuntu.com': '/ubuntu/pool/',
-            'dbus.freedesktop.org': '/releases/dbus/'}
+            'dbus.freedesktop.org': '/releases/dbus/',
+            'download.gnome.org': '/sources/glib/'}
 MAX_FILES = 50000
 MAX_EXPANDED = 4 << 30
 MAX_FILE = 256 << 20
@@ -77,11 +78,14 @@ def validate_asset(asset):
 
 
 def validate(recipe, target):
+    if target == 'darwin-arm64':
+        import native_inputs_macos
+        return native_inputs_macos.validate(recipe)
     if (not isinstance(recipe, dict) or set(recipe) != {'schema', 'platform', 'compiler', 'archives', 'licenses', 'libraries'}
             or type(recipe['schema']) is not int or recipe['schema'] != 1 or recipe['platform'] != target):
         raise ValueError('Unsupported native multiarchive recipe')
     expected = ({'id': 'GNU', 'version': '11.4.0', 'os_id': 'ubuntu', 'os_version': '22.04'}
-                if target == 'linux-amd64' else {'id': 'MSVC', 'version': '19.44.35229.0', 'os_id': 'windows', 'os_version': 'native'})
+                if target == 'linux-amd64' else {'id': 'MSVC', 'version': '19.51.36260.0', 'os_id': 'windows', 'os_version': '2025', 'acquisition_mode': 'hosted-exact'})
     compiler = dict(recipe['compiler']) if isinstance(recipe['compiler'], dict) else {}
     if target == 'windows-amd64':
         acquisition = compiler.pop('acquisition_sha256', '')
@@ -441,6 +445,10 @@ def compiler_environment(recipe, toolchain, environment):
             raise ValueError('Native recipe compiler differs from qualified GNU11.4')
         result.update(CC=str(toolchain / 'bin/gcc'), CXX=str(compiler))
     else:
+        if (expected.get('acquisition_mode') != 'hosted-exact' or result.get('GITHUB_ACTIONS') != 'true'
+                or result.get('RUNNER_ENVIRONMENT') != 'github-hosted'):
+            raise ValueError('This compiler profile requires explicit GitHub-hosted exact admission')
+        import windows_runtime
         selected_root = result.get('DOCKPIPE_NATIVE_MSVC_ROOT', '')
         receipt_path = result.get('DOCKPIPE_NATIVE_MSVC_RECEIPT', '')
         if not selected_root or not receipt_path or not Path(selected_root).is_absolute() or not Path(receipt_path).is_absolute():
@@ -450,34 +458,79 @@ def compiler_environment(recipe, toolchain, environment):
         if path.is_symlink() or not path.is_file() or path.stat().st_size > 65536:
             raise ValueError('Native MSVC receipt is missing or unbounded')
         receipt = json.loads(path.read_bytes(), object_pairs_hook=unique_fields)
-        if (not isinstance(receipt, dict) or set(receipt) != {'schema', 'compiler_id', 'compiler_version', 'windows_sdk_version',
-                             'acquisition_sha256', 'channel_sha256', 'bootstrapper_sha256', 'tools'}
+        if (not isinstance(receipt, dict) or set(receipt) != {'schema', 'acquisition_mode', 'compiler_id', 'compiler_version', 'windows_sdk_version',
+                             'acquisition_sha256', 'installation', 'observed_image', 'tools', 'sdk_tools', 'host_runtime'}
                 or type(receipt['schema']) is not int or receipt['schema'] != 1
                 or receipt['compiler_id'] != 'MSVC' or receipt['compiler_version'] != expected['version']
                 or receipt['windows_sdk_version'] != '10.0.26100.0'
                 or receipt['acquisition_sha256'] != expected['acquisition_sha256']
-                or receipt['channel_sha256'] != '4f0f290bb4d58a061a49a2fa893357a8c9e7e2b49fc91873f533ab8f791e4fa0'
-                or receipt['bootstrapper_sha256'] != '68978bb28916156802e60e04c5ee50b94348d802fe151a3ca24433f27984187b'
-                or not isinstance(receipt['tools'], dict) or set(receipt['tools']) != {'cl', 'dumpbin', 'lib'}):
-            raise ValueError('Native MSVC preparation differs from its source-bound ABI/channel')
+                or receipt['acquisition_mode'] != 'hosted-exact'
+                or receipt['installation'] != str(installation)
+                or not isinstance(receipt['observed_image'], dict)
+                or set(receipt['observed_image']) != {'image_os', 'image_version'}
+                or any(not isinstance(value, str) or len(value) > 128 for value in receipt['observed_image'].values())
+                or not isinstance(receipt['tools'], dict) or set(receipt['tools']) != {'cl', 'dumpbin', 'lib', 'link'}
+                or not isinstance(receipt['sdk_tools'], dict) or set(receipt['sdk_tools']) != {'rc', 'mt'}):
+            raise ValueError('Native MSVC preparation differs from its source-bound hosted ABI')
+        acquisition = Path(__file__).resolve().parents[5] / 'release/native-compiler/windows-hosted-19.51.json'
+        if digest(acquisition) != expected['acquisition_sha256']:
+            raise ValueError('Hosted compiler descriptor differs from its source-bound digest')
+        acquisition_descriptor = json.loads(acquisition.read_bytes(), object_pairs_hook=unique_fields)
+        if acquisition_descriptor['acquisition_mode'] != expected['acquisition_mode']:
+            raise ValueError('Hosted compiler acquisition mode differs')
+        program_files = result.get('PROGRAMFILES') or result.get('ProgramFiles', '')
+        expected_installation = Path(program_files) / acquisition_descriptor['installation_relative_to_program_files']
+        if not program_files or installation != expected_installation:
+            raise ValueError('Hosted compiler root differs from the explicit image installation')
+        toolset = installation / 'VC/Tools/MSVC' / acquisition_descriptor['toolset_version']
+        selected_toolset = result.get('VCTOOLSINSTALLDIR') or result.get('VCToolsInstallDir', '')
+        selected_version = result.get('VCTOOLSVERSION') or result.get('VCToolsVersion', '')
+        if Path(selected_toolset) != toolset or selected_version.rstrip('\\/') != acquisition_descriptor['toolset_version']:
+            raise ValueError('Hosted compiler environment selected a different toolset')
         tools = {}
         for name, record in receipt['tools'].items():
             if not isinstance(record, dict) or set(record) != {'path', 'sha256'}:
                 raise ValueError('Invalid native compiler tool receipt')
+            expected_path = 'VC/Tools/MSVC/' + acquisition_descriptor['toolset_version'] + '/bin/Hostx64/x64/' + name + '.exe'
+            if record['path'] != expected_path:
+                raise ValueError('Hosted compiler tool differs from the exact selected toolset')
             tool = installation / relative(record['path'])
-            if (any(parent.is_symlink() for parent in (tool, *tool.parents)) or not tool.is_file()
+            if (any(windows_runtime.is_link_or_reparse(parent) for parent in (tool, *tool.parents)) or not tool.is_file()
                     or tool.stat().st_size > 128 << 20 or digest(tool) != record['sha256']):
                 raise ValueError('Native compiler tool differs from prepared signed installation')
             tools[name] = tool
+        expected_runtime = acquisition_descriptor['desktop_runtime']
+        runtime = windows_runtime.validate_runtime(installation, receipt['host_runtime'], expected_runtime)
+        result['DOCKPIPE_NATIVE_CRT_DIR'] = str(runtime)
         compiler = tools['cl']
-        result['PATH'] = str(compiler.parent) + os.pathsep + result['PATH']
+        if digest(compiler) != acquisition_descriptor['compiler_payload']['compiler_sha256']:
+            raise ValueError('Prepared compiler differs from the source-bound official payload')
+        sdk_root = result.get('WINDOWSSDKDIR') or result.get('WindowsSdkDir', '')
+        sdk_version = result.get('WINDOWSSDKVERSION') or result.get('WindowsSDKVersion', '')
+        if not sdk_root or not Path(sdk_root).is_absolute() or sdk_version.rstrip('\\/') != '10.0.26100.0':
+            raise ValueError('Exact prepared Windows SDK environment is required')
+        program_files_x86 = result.get('PROGRAMFILES(X86)') or result.get('ProgramFiles(x86)', '')
+        expected_sdk = Path(program_files_x86) / acquisition_descriptor['windows_sdk_relative_to_program_files_x86']
+        if not program_files_x86 or Path(sdk_root) != expected_sdk:
+            raise ValueError('Hosted Windows SDK root differs from the explicit image installation')
+        sdk_bin = Path(sdk_root) / 'bin/10.0.26100.0/x64'
+        for name in ('rc', 'mt'):
+            tool = sdk_bin / (name + '.exe')
+            record = receipt['sdk_tools'][name]
+            if (not isinstance(record, dict) or set(record) != {'path', 'sha256'}
+                    or record['path'] != 'bin/10.0.26100.0/x64/' + name + '.exe'
+                    or not tool.is_file() or any(windows_runtime.is_link_or_reparse(item) for item in (tool, *tool.parents))
+                    or digest(tool) != record['sha256']):
+                raise ValueError('Prepared Windows SDK resource/manifest tools differ from admission')
+            result['DOCKPIPE_NATIVE_' + name.upper()] = str(tool)
+        result['PATH'] = os.pathsep.join((str(compiler.parent), str(sdk_bin), result['PATH']))
         result_process = subprocess.run([str(compiler), '/Bv'], capture_output=True, text=True, timeout=15)
         if not re.search(r'Compiler Version ' + re.escape(expected['version'].removesuffix('.0')) + r'\b', result_process.stdout + result_process.stderr):
-            raise ValueError('Native recipe compiler differs from qualified MSVC19.44')
+            raise ValueError('Native recipe compiler differs from qualified MSVC19.51')
         if not result.get('INCLUDE') or not result.get('LIB'):
             raise ValueError('Explicit approved MSVC environment is required; no compiler installer fallback')
-        result.update(CC=str(compiler), CXX=str(compiler),
-                      DOCKPIPE_NATIVE_DUMPBIN=str(tools['dumpbin']), DOCKPIPE_NATIVE_LIB=str(tools['lib']),
+        result.update(CC=str(compiler), CXX=str(compiler), CMAKE_GENERATOR='Ninja',
+                      DOCKPIPE_NATIVE_DUMPBIN=str(tools['dumpbin']), DOCKPIPE_NATIVE_LIB=str(tools['lib']), DOCKPIPE_NATIVE_LINK=str(tools['link']),
                       DOCKPIPE_VM_DISPLAY_INSPECTOR=str(tools['dumpbin']))
     return result
 
@@ -515,6 +568,9 @@ def write_linux_receipt(recipe, root):
 
 
 def prepare(recipe, root, toolchain, cache, fetch, acquire, environment):
+    if recipe.get('platform') == 'darwin-arm64':
+        import native_inputs_macos
+        return native_inputs_macos.prepare(recipe, root, toolchain, cache, fetch, acquire, environment)
     validate(recipe, recipe['platform'])
     environment = compiler_environment(recipe, toolchain, environment)
     root.mkdir(exist_ok=False)

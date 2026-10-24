@@ -120,7 +120,7 @@ func TestQEMUPlanHasExactIsolationAndBlockPolicy(t *testing.T) {
 
 func TestQEMUPlanEnforcesLinuxUnixSocketPathLimit(t *testing.T) {
 	m := sample(t)
-	agentName := m.RunID + ".agent"
+	agentName := m.RunID + ".input.qmp"
 	runtimeLength := LinuxUnixSocketPathMaxBytes - 1 - len(agentName)
 	volumeRoot := filepath.VolumeName(t.TempDir()) + string(filepath.Separator)
 	runtime := filepath.Join(volumeRoot, strings.Repeat("r", runtimeLength-len(volumeRoot)))
@@ -131,7 +131,7 @@ func TestQEMUPlanEnforcesLinuxUnixSocketPathLimit(t *testing.T) {
 	if _, err := PlanQEMU(m, runtime); err != nil {
 		t.Fatalf("exact %d-byte Unix socket path was rejected: %v", LinuxUnixSocketPathMaxBytes, err)
 	}
-	if _, err := PlanQEMU(m, runtime+"r"); err == nil || !strings.Contains(err.Error(), "agent Unix socket path is 108 bytes") {
+	if _, err := PlanQEMU(m, runtime+"r"); err == nil || !strings.Contains(err.Error(), "display input QMP Unix socket path is 108 bytes") {
 		t.Fatalf("expected deterministic overlength agent-socket rejection, got %v", err)
 	}
 }
@@ -174,5 +174,36 @@ func TestCleanupIsExactAndPreservesCompletedCohorts(t *testing.T) {
 	layout.Failed = true
 	if _, err := layout.CleanupPlan(layout.RunID, resources); err == nil {
 		t.Fatal("expected failed cohort preservation")
+	}
+}
+
+func TestQEMUPlanKeepsSeparateManagementAndDisplayInputMonitors(t *testing.T) {
+	manifest := sample(t)
+	runtime := shortRuntimeRoot(t, "dp-input-plan")
+	plan, err := PlanQEMU(manifest, runtime)
+	if err != nil {
+		t.Fatal(err)
+	}
+	management := "unix:" + filepath.Join(runtime, manifest.RunID+".qmp") + ",server=on,wait=off"
+	input := "socket,id=dockpipe-display-input-qmp,path=" + filepath.Join(runtime, manifest.RunID+".input.qmp") + ",server=on,wait=off"
+	counts := map[string]int{}
+	for index, argument := range plan.Args {
+		if index+1 >= len(plan.Args) {
+			continue
+		}
+		if argument == "-qmp" && plan.Args[index+1] == management {
+			counts["management"]++
+		}
+		if argument == "-chardev" && plan.Args[index+1] == input {
+			counts["input"]++
+		}
+		if argument == "-mon" && plan.Args[index+1] == "chardev=dockpipe-display-input-qmp,mode=control" {
+			counts["monitor"]++
+		}
+	}
+	for _, name := range []string{"management", "input", "monitor"} {
+		if counts[name] != 1 {
+			t.Fatalf("expected exactly one independent %s channel: %q", name, plan.Args)
+		}
 	}
 }

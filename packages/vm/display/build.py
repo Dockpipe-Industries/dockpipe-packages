@@ -137,6 +137,15 @@ def elf_dependencies(binary):
 
 
 def gio_closure():
+    from tooling.linux_prefix import selected
+    prefix = selected()
+    if prefix is not None:
+        gio = next((path for path in prefix.libraries if path.name == "libgio-2.0.so.0"), None)
+        if gio is None:
+            raise ValueError("Declared Linux prefix lacks GIO")
+        libraries = elf_dependencies(gio)
+        libraries[gio.name] = gio
+        return prefix.closure(libraries)
     library_directory = Path(subprocess.check_output(
         ["pkg-config", "--variable=libdir", "gio-2.0"], text=True).strip())
     gio = library_directory / "libgio-2.0.so.0"
@@ -161,6 +170,10 @@ def owning_package(path):
 
 
 def package_license(path):
+    from tooling.linux_prefix import selected
+    prefix = selected()
+    if prefix is not None:
+        return prefix.package_license(path)
     package = owning_package(path)
     source = Path("/usr/share/doc") / package.split(":", 1)[0] / "copyright"
     if not source.is_file():
@@ -245,12 +258,8 @@ def main():
         provenance = []
         for name, source in sorted(libraries.items()):
             shutil.copyfile(source, runtime / name)
-            package = owning_package(source)
-            license_source = Path("/usr/share/doc") / package.split(":", 1)[0] / "copyright"
-            if not license_source.is_file():
-                raise ValueError("Runtime dependency copyright file is missing: " + package)
+            package, version, license_source = package_license(source)
             shutil.copyfile(license_source, licenses / (package.replace(":", "-") + ".copyright"))
-            version = subprocess.check_output(["dpkg-query", "-W", "-f=${Version}", package], text=True)
             provenance.append({"name": name, "sha256": sha256(runtime / name),
                                "package": package, "version": version.strip()})
     bundle_broker(broker_binary, broker_provenance, destination, system, gio, qt,

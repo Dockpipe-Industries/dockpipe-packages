@@ -1,0 +1,53 @@
+--- a/dbus/dbus-sysdeps-unix.c
++++ b/dbus/dbus-sysdeps-unix.c
+@@ -2449,6 +2449,30 @@
+     if (ucred != NULL)
+       ucred_free (ucred);
+ 
++#elif defined(__APPLE__) && defined(HAVE_GETPEEREID) && defined(LOCAL_PEERPID)
++    {
++      uid_t euid;
++      gid_t egid;
++      pid_t peer_pid = 0;
++      socklen_t peer_pid_size = sizeof (peer_pid);
++
++      if (getpeereid (client_fd.fd, &euid, &egid) == 0)
++        uid_read = euid;
++      else
++        _dbus_verbose ("Failed to getpeereid() credentials: %s\n",
++                       _dbus_strerror (errno));
++
++      /* The kernel reports the connected socket peer, not a PID claimed in
++       * the authentication stream. Leave PID unset on any unsupported result.
++       */
++      if (getsockopt (client_fd.fd, SOL_LOCAL, LOCAL_PEERPID,
++                      &peer_pid, &peer_pid_size) == 0 &&
++          peer_pid_size == sizeof (peer_pid) && peer_pid > 0)
++        pid_read = peer_pid;
++      else
++        _dbus_verbose ("Failed to acquire valid LOCAL_PEERPID credentials\n");
++    }
++
+     /* ----------------------------------------------------------------
+      * When adding new mechanisms, please add them above this point
+      * if they support passing the process ID through, or below if not.
+--- a/cmake/ConfigureChecks.cmake
++++ b/cmake/ConfigureChecks.cmake
+@@ -51,6 +51,7 @@
+ check_symbol_exists(environ      "unistd.h"                  HAVE_DECL_ENVIRON)
+ check_symbol_exists(fstatfs      "sys/vfs.h"                 HAVE_FSTATFS)
+ check_symbol_exists(getgrouplist "grp.h"            HAVE_GETGROUPLIST)       #  dbus-sysdeps.c
++check_symbol_exists(getpeereid "sys/types.h;unistd.h" HAVE_GETPEEREID)
+ check_symbol_exists(getpeerucred "ucred.h"          HAVE_GETPEERUCRED)       #  dbus-sysdeps.c, dbus-sysdeps-win.c
+ check_symbol_exists(getpwnam_r   "errno.h;pwd.h"    HAVE_GETPWNAM_R)         #  dbus-sysdeps-util-unix.c
+ check_symbol_exists(getrandom    "sys/random.h"             HAVE_GETRANDOM)
+--- a/cmake/config.h.cmake
++++ b/cmake/config.h.cmake
+@@ -145,6 +145,7 @@
+ #cmakedefine   HAVE_GETGROUPLIST 1
+ 
+ /* Define to 1 if you have getpeerucred */
++#cmakedefine   HAVE_GETPEEREID 1
+ #cmakedefine   HAVE_GETPEERUCRED 1
+ 
+ /* Define to 1 if you have nanosleep */

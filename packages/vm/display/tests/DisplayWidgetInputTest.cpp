@@ -41,6 +41,7 @@ private slots:
         sendMouse(widget, QEvent::MouseMove, {319.5, 239.5});
         QCOMPARE(input.size(), size_t(5));
         QCOMPARE(input[0].kind, DisplayInput::Kind::Absolute);
+        QCOMPARE(input[0].frameSize, QSize(1920, 1080));
         QCOMPARE(input[0].first, 0);
         QCOMPARE(input[0].second, 0);
         QCOMPARE(input[1].first, 1919);
@@ -54,6 +55,11 @@ private slots:
         sendMouse(widget, QEvent::MouseMove, {320, 10});
         sendMouse(widget, QEvent::MouseMove, {640, 300});
         QCOMPARE(input.size(), size_t(5));
+        QVERIFY(installFrame(frames, 1280, 800));
+        sendMouse(widget, QEvent::MouseMove, {0, 40});
+        QCOMPARE(input.size(), size_t(6));
+        QCOMPARE(input[0].frameSize, QSize(1920, 1080));
+        QCOMPARE(input.back().frameSize, QSize(1280, 800));
     }
 
     void clickPositionsPrecedeButtonsAndDragReleaseClamps()

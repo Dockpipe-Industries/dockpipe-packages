@@ -1,0 +1,387 @@
+{
+  "schema": 1,
+  "platform": "darwin-arm64",
+  "compiler": {
+    "id": "AppleClang",
+    "version": "17.0.0.17000013",
+    "os_id": "macos",
+    "os_version": "15.0"
+  },
+  "archives": [
+    {
+      "id": "qtbase",
+      "destination": "qt/6.10.3/macos",
+      "asset": {
+        "url": "https://download.qt.io/online/qtsdkrepository/mac_x64/desktop/qt6_6103/qt6_6103/qt.qt6.6103.clang_64/6.10.3-0-202603310405qtbase-MacOS-MacOS_15-Clang-MacOS-MacOS_15-X86_64-ARM64.7z",
+        "sha256": "998227b59cfa2c59b063bbfddeefff312d74fa99da1647544df87a14ffa4bb77",
+        "size_bytes": 34841740,
+        "format": "7z",
+        "root": "",
+        "redirect_hosts": [
+          "ftp.fau.de",
+          "ftp.jaist.ac.jp",
+          "mirror.aarnet.edu.au",
+          "mirror.accum.se",
+          "mirrors.20i.com",
+          "mirrors.ukfast.co.uk",
+          "qt.mirror.constant.com",
+          "qtproject.mirror.liquidtelecom.com",
+          "www.nic.funet.fi"
+        ]
+      },
+      "package": "qt-qtbase",
+      "version": "6.10.3"
+    },
+    {
+      "id": "qttools",
+      "destination": "qt/6.10.3/macos",
+      "asset": {
+        "url": "https://download.qt.io/online/qtsdkrepository/mac_x64/desktop/qt6_6103/qt6_6103/qt.qt6.6103.clang_64/6.10.3-0-202603310405qttools-MacOS-MacOS_15-Clang-MacOS-MacOS_15-X86_64-ARM64.7z",
+        "sha256": "1e2ed4fb7257caf9301c712c76e52075307c8302be2398ab60e36d56dab90f7b",
+        "size_bytes": 42928873,
+        "format": "7z",
+        "root": "",
+        "redirect_hosts": [
+          "ftp.fau.de",
+          "ftp.jaist.ac.jp",
+          "mirror.aarnet.edu.au",
+          "mirror.accum.se",
+          "mirrors.20i.com",
+          "mirrors.ukfast.co.uk",
+          "qt.mirror.constant.com",
+          "qtproject.mirror.liquidtelecom.com",
+          "www.nic.funet.fi"
+        ]
+      },
+      "package": "qt-qttools",
+      "version": "6.10.3"
+    },
+    {
+      "id": "glib",
+      "destination": "gio/Cellar",
+      "asset": {
+        "url": "https://ghcr.io/v2/homebrew/core/glib/blobs/sha256:ce9568a335281cb6bd12c48fd89d7a118a046f9df16761c120826fdae116e468",
+        "sha256": "ce9568a335281cb6bd12c48fd89d7a118a046f9df16761c120826fdae116e468",
+        "size_bytes": 9479231,
+        "format": "tar.gz",
+        "root": ""
+      },
+      "package": "glib",
+      "version": "2.90.1"
+    },
+    {
+      "id": "gettext",
+      "destination": "gio/Cellar",
+      "asset": {
+        "url": "https://ghcr.io/v2/homebrew/core/gettext/blobs/sha256:98a116d35792ccd730360ffc8c0d8fc5799b2282b96bb7696192c573f064a331",
+        "sha256": "98a116d35792ccd730360ffc8c0d8fc5799b2282b96bb7696192c573f064a331",
+        "size_bytes": 10296282,
+        "format": "tar.gz",
+        "root": ""
+      },
+      "package": "gettext",
+      "version": "1.0"
+    },
+    {
+      "id": "pcre2",
+      "destination": "gio/Cellar",
+      "asset": {
+        "url": "https://ghcr.io/v2/homebrew/core/pcre2/blobs/sha256:0ec47d18c50f5770db2b3f07b5b85644284cc6ee8e07e23b11d2727e95932b77",
+        "sha256": "0ec47d18c50f5770db2b3f07b5b85644284cc6ee8e07e23b11d2727e95932b77",
+        "size_bytes": 2465167,
+        "format": "tar.gz",
+        "root": ""
+      },
+      "package": "pcre2",
+      "version": "10.49"
+    },
+    {
+      "id": "json-c",
+      "destination": "gio/Cellar",
+      "asset": {
+        "url": "https://ghcr.io/v2/homebrew/core/json-c/blobs/sha256:5624048dbb067f1a6d3784081029c3d738edeefd57188ce6724bb93d01aa53aa",
+        "sha256": "5624048dbb067f1a6d3784081029c3d738edeefd57188ce6724bb93d01aa53aa",
+        "size_bytes": 106627,
+        "format": "tar.gz",
+        "root": ""
+      },
+      "package": "json-c",
+      "version": "0.19"
+    },
+    {
+      "id": "libunistring",
+      "destination": "gio/Cellar",
+      "asset": {
+        "url": "https://ghcr.io/v2/homebrew/core/libunistring/blobs/sha256:5001abe192babcfaf0f97ad322e2e59958d0d991de3da9f2e941b24924b8a2b8",
+        "sha256": "5001abe192babcfaf0f97ad322e2e59958d0d991de3da9f2e941b24924b8a2b8",
+        "size_bytes": 1901828,
+        "format": "tar.gz",
+        "root": ""
+      },
+      "package": "libunistring",
+      "version": "1.5"
+    },
+    {
+      "id": "glib-source",
+      "destination": "gio/license-source",
+      "asset": {
+        "url": "https://download.gnome.org/sources/glib/2.90/glib-2.90.1.tar.xz",
+        "sha256": "93c941aa17d5eb1d53fe838365f29a8b4e539c222a256d974ec8f30fc413e396",
+        "size_bytes": 5871112,
+        "format": "tar.xz",
+        "root": "glib-2.90.1"
+      },
+      "package": "glib",
+      "version": "2.90.1"
+    },
+    {
+      "id": "dbus-source",
+      "destination": "broker-source",
+      "asset": {
+        "url": "https://dbus.freedesktop.org/releases/dbus/dbus-1.16.2.tar.xz",
+        "sha256": "0ba2a1a4b16afe7bceb2c07e9ce99a8c2c3508e5dec290dbb643384bd6beb7e2",
+        "size_bytes": 1115644,
+        "format": "tar.xz",
+        "root": "dbus-1.16.2"
+      },
+      "package": "dbus",
+      "version": "1.16.2"
+    }
+  ],
+  "licenses": [
+    {
+      "path": "gio/Cellar/glib/2.90.1/LGPL-2.1-or-later.txt",
+      "sha256": "fa6f36630bb1e0c571d34b2bbdf188d08495c9dbf58f28cac112f303fc1f58fb",
+      "size_bytes": 25967,
+      "package": "glib",
+      "version": "2.90.1",
+      "archive_id": "glib"
+    },
+    {
+      "path": "gio/Cellar/gettext/1.0/COPYING",
+      "sha256": "e79e9c8a0c85d735ff98185918ec94ed7d175efc377012787aebcf3b80f0d90b",
+      "size_bytes": 35151,
+      "package": "gettext",
+      "version": "1.0",
+      "archive_id": "gettext"
+    },
+    {
+      "path": "gio/Cellar/pcre2/10.49/COPYING",
+      "sha256": "99272c55f3dcfa07a8a7e15a5c1a33096e4727de74241d65fa049fccfdd59507",
+      "size_bytes": 97,
+      "package": "pcre2",
+      "version": "10.49",
+      "archive_id": "pcre2"
+    },
+    {
+      "path": "gio/Cellar/pcre2/10.49/LICENCE.md",
+      "sha256": "197d8a73ffee0d6b09adba2f9c677b5f5aede24edf89258a68e48248d010d811",
+      "size_bytes": 4011,
+      "package": "pcre2",
+      "version": "10.49",
+      "archive_id": "pcre2"
+    },
+    {
+      "path": "gio/Cellar/pcre2/10.49/share/doc/pcre2/COPYING",
+      "sha256": "99272c55f3dcfa07a8a7e15a5c1a33096e4727de74241d65fa049fccfdd59507",
+      "size_bytes": 97,
+      "package": "pcre2",
+      "version": "10.49",
+      "archive_id": "pcre2"
+    },
+    {
+      "path": "gio/Cellar/pcre2/10.49/share/doc/pcre2/LICENCE.md",
+      "sha256": "197d8a73ffee0d6b09adba2f9c677b5f5aede24edf89258a68e48248d010d811",
+      "size_bytes": 4011,
+      "package": "pcre2",
+      "version": "10.49",
+      "archive_id": "pcre2"
+    },
+    {
+      "path": "gio/Cellar/json-c/0.19/COPYING",
+      "sha256": "74c1e6ca5eba76b54d0ad00d4815c8315c1b3bc45ff99de61d103dc92486284c",
+      "size_bytes": 2205,
+      "package": "json-c",
+      "version": "0.19",
+      "archive_id": "json-c"
+    },
+    {
+      "path": "gio/Cellar/libunistring/1.5/COPYING",
+      "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+      "size_bytes": 35149,
+      "package": "libunistring",
+      "version": "1.5",
+      "archive_id": "libunistring"
+    },
+    {
+      "path": "gio/Cellar/libunistring/1.5/COPYING.LIB",
+      "sha256": "a853c2ffec17057872340eee242ae4d96cbf2b520ae27d903e1b2fef1a5f9d1c",
+      "size_bytes": 7639,
+      "package": "libunistring",
+      "version": "1.5",
+      "archive_id": "libunistring"
+    },
+    {
+      "path": "gio/Cellar/glib/2.90.1/COPYING-source-AFL-2.0.txt",
+      "sha256": "7ecc7db84298adb05d2cf10339c63a5315a1c5c270a68d97d7d40a53b508ccde",
+      "size_bytes": 8987,
+      "package": "glib",
+      "version": "2.90.1",
+      "archive_id": "glib-source"
+    },
+    {
+      "path": "gio/Cellar/glib/2.90.1/COPYING-source-Apache-2.0.txt",
+      "sha256": "074e6e32c86a4c0ef8b3ed25b721ca23aca83df277cd88106ef7177c354615ff",
+      "size_bytes": 10280,
+      "package": "glib",
+      "version": "2.90.1",
+      "archive_id": "glib-source"
+    },
+    {
+      "path": "gio/Cellar/glib/2.90.1/COPYING-source-CC-BY-SA-3.0.txt",
+      "sha256": "3f941b3b89cf7b8370ceb83cc76d2120d471b58735d8ca60238a751a48d7f72f",
+      "size_bytes": 22240,
+      "package": "glib",
+      "version": "2.90.1",
+      "archive_id": "glib-source"
+    },
+    {
+      "path": "gio/Cellar/glib/2.90.1/COPYING-source-CC0-1.0.txt",
+      "sha256": "a2010f343487d3f7618affe54f789f5487602331c0a8d03f49e9a7c547cf0499",
+      "size_bytes": 7048,
+      "package": "glib",
+      "version": "2.90.1",
+      "archive_id": "glib-source"
+    },
+    {
+      "path": "gio/Cellar/glib/2.90.1/COPYING-source-GPL-2.0-or-later.txt",
+      "sha256": "aaf135472f81c5b4a0dca9367e5bb5e9750032b5bebe5442b36e4c0a47430df3",
+      "size_bytes": 17337,
+      "package": "glib",
+      "version": "2.90.1",
+      "archive_id": "glib-source"
+    },
+    {
+      "path": "gio/Cellar/glib/2.90.1/COPYING-source-LGPL-2.1-only.txt",
+      "sha256": "fa6f36630bb1e0c571d34b2bbdf188d08495c9dbf58f28cac112f303fc1f58fb",
+      "size_bytes": 25967,
+      "package": "glib",
+      "version": "2.90.1",
+      "archive_id": "glib-source"
+    },
+    {
+      "path": "gio/Cellar/glib/2.90.1/COPYING-source-LGPL-2.1-or-later.txt",
+      "sha256": "fa6f36630bb1e0c571d34b2bbdf188d08495c9dbf58f28cac112f303fc1f58fb",
+      "size_bytes": 25967,
+      "package": "glib",
+      "version": "2.90.1",
+      "archive_id": "glib-source"
+    },
+    {
+      "path": "gio/Cellar/glib/2.90.1/COPYING-source-LLVM-exception.txt",
+      "sha256": "e34c58338bd89d43e709e226610d8f32b3e3c47f4ad9a99a8dc1d4ac7842488e",
+      "size_bytes": 919,
+      "package": "glib",
+      "version": "2.90.1",
+      "archive_id": "glib-source"
+    },
+    {
+      "path": "gio/Cellar/glib/2.90.1/COPYING-source-LicenseRef-old-glib-tests.txt",
+      "sha256": "fb261b2d5dbe76c4850f90da763210bc385e52428df6bbfd7b06295ac8a32914",
+      "size_bytes": 841,
+      "package": "glib",
+      "version": "2.90.1",
+      "archive_id": "glib-source"
+    },
+    {
+      "path": "gio/Cellar/glib/2.90.1/COPYING-source-MIT.txt",
+      "sha256": "b85dcd3e453d05982552c52b5fc9e0bdd6d23c6f8e844b984a88af32570b0cc0",
+      "size_bytes": 1078,
+      "package": "glib",
+      "version": "2.90.1",
+      "archive_id": "glib-source"
+    },
+    {
+      "path": "gio/Cellar/glib/2.90.1/COPYING-source-MPL-1.1.txt",
+      "sha256": "6214f8b1300bb9f37b16ebc146f8f61af0187e0025042ff95c8b3030744a8795",
+      "size_bytes": 23669,
+      "package": "glib",
+      "version": "2.90.1",
+      "archive_id": "glib-source"
+    },
+    {
+      "path": "broker-source/COPYING",
+      "sha256": "150e5d08e1cb5e62b65967d7931acad2c42d98ec1bbb584bebb01921cbc853c2",
+      "size_bytes": 1134,
+      "package": "dbus",
+      "version": "1.16.2",
+      "archive_id": "dbus-source"
+    },
+    {
+      "path": "broker-source/LICENSES/AFL-2.1.txt",
+      "sha256": "93bb4f7417aa775bab9026cc3d0af28aeb64451fc5a8ec651876785edd8eaf9b",
+      "size_bytes": 8948,
+      "package": "dbus",
+      "version": "1.16.2",
+      "archive_id": "dbus-source"
+    },
+    {
+      "path": "broker-source/LICENSES/GPL-2.0-or-later.txt",
+      "sha256": "aaf135472f81c5b4a0dca9367e5bb5e9750032b5bebe5442b36e4c0a47430df3",
+      "size_bytes": 17337,
+      "package": "dbus",
+      "version": "1.16.2",
+      "archive_id": "dbus-source"
+    }
+  ],
+  "libraries": [
+    {
+      "path": "gio/Cellar/glib/2.90.1/lib/libgio-2.0.0.dylib",
+      "sha256": "7a802f168c2187f3bd96cca9e3b5d2b23afb1b027ff85bccec5aff9b4b60c3c9",
+      "size_bytes": 2040160,
+      "package": "glib",
+      "version": "2.90.1",
+      "archive_id": "glib"
+    },
+    {
+      "path": "gio/Cellar/glib/2.90.1/lib/libgobject-2.0.0.dylib",
+      "sha256": "8abd4629077f4930fef1635e5b4b1fab55d6393bc440670c028d21420fc66e99",
+      "size_bytes": 411264,
+      "package": "glib",
+      "version": "2.90.1",
+      "archive_id": "glib"
+    },
+    {
+      "path": "gio/Cellar/glib/2.90.1/lib/libglib-2.0.0.dylib",
+      "sha256": "4a33f59fdb0fa96266c452043e53e10629b3c6d786f191120b0a330fa6ed0c59",
+      "size_bytes": 1366832,
+      "package": "glib",
+      "version": "2.90.1",
+      "archive_id": "glib"
+    },
+    {
+      "path": "gio/Cellar/glib/2.90.1/lib/libgmodule-2.0.0.dylib",
+      "sha256": "61ef6161603f3d63f28a5e4aad0b890ff2238144e6c546486a1cb7d99ca29529",
+      "size_bytes": 53568,
+      "package": "glib",
+      "version": "2.90.1",
+      "archive_id": "glib"
+    },
+    {
+      "path": "gio/Cellar/gettext/1.0/lib/libintl.8.dylib",
+      "sha256": "6b7eb0dbb34ec9ee01b542f1f7770469791d792b6c7b2a2ca91b0bc39ea007ec",
+      "size_bytes": 212048,
+      "package": "gettext",
+      "version": "1.0",
+      "archive_id": "gettext"
+    },
+    {
+      "path": "gio/Cellar/pcre2/10.49/lib/libpcre2-8.0.dylib",
+      "sha256": "56bc0ef73d8b270e074b163795abeb02b3809d83b68c50ee8d29b148d0b2e5d4",
+      "size_bytes": 573984,
+      "package": "pcre2",
+      "version": "10.49",
+      "archive_id": "pcre2"
+    }
+  ]
+}

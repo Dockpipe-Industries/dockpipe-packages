@@ -1,0 +1,61 @@
+{
+  "schema": 1,
+  "platform": "darwin-arm64",
+  "compiler": {
+    "id": "AppleClang",
+    "version": "17.0.0.17000013",
+    "os_id": "macos",
+    "os_version": "15.0"
+  },
+  "inputs": [
+    {
+      "id": "go",
+      "version": "1.26.10",
+      "url": "https://go.dev/dl/go1.26.10.darwin-arm64.tar.gz",
+      "size_bytes": 64669745,
+      "sha256": "0b5183492292ada170f9b561a834863808dd02edba599e4ad0e89899330020b3",
+      "format": "tar.gz",
+      "root": "go",
+      "destination": "go",
+      "license_path": "LICENSE"
+    },
+    {
+      "id": "cmake",
+      "version": "3.31.6",
+      "url": "https://github.com/Kitware/CMake/releases/download/v3.31.6/cmake-3.31.6-macos-universal.tar.gz",
+      "size_bytes": 78374480,
+      "sha256": "330b9514f5112e5ed4fb08b8b05803b776fd9b539a6ae12927d14dcc0ee2ba8d",
+      "format": "tar.gz",
+      "root": "cmake-3.31.6-macos-universal",
+      "destination": "cmake",
+      "license_path": "CMake.app/Contents/doc/cmake/Copyright.txt"
+    },
+    {
+      "id": "ninja",
+      "version": "1.12.1",
+      "url": "https://github.com/ninja-build/ninja/releases/download/v1.12.1/ninja-mac.zip",
+      "size_bytes": 281130,
+      "sha256": "89a287444b5b3e98f88a945afa50ce937b8ffd1dcc59c555ad9b1baf855298c9",
+      "format": "zip",
+      "root": "",
+      "destination": "ninja",
+      "license_asset": {
+        "url": "https://raw.githubusercontent.com/ninja-build/ninja/v1.12.1/COPYING",
+        "size_bytes": 11358,
+        "sha256": "eb7e9ab9690124c5c9f42bdc81383d886a3dede26345b6ed15bbad7caf81f7ea"
+      }
+    },
+    {
+      "id": "pkgconf-source",
+      "version": "2.3.0",
+      "url": "https://distfiles.ariadne.space/pkgconf/pkgconf-2.3.0.tar.xz",
+      "size_bytes": 316160,
+      "sha256": "3a9080ac51d03615e7c1910a0a2a8df08424892b5f13b0628a204d3fcce0ea8b",
+      "format": "tar.xz",
+      "root": "pkgconf-2.3.0",
+      "destination": "pkgconf-source",
+      "license_path": "COPYING"
+    }
+  ],
+  "compiler_inputs": []
+}

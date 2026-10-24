@@ -185,8 +185,14 @@ class NativeStoreTest(unittest.TestCase):
             native_store.require_runtime_core(profile, str(global_root))
 
     def test_producer_orchestrates_owning_public_hook_and_noncore_store_exports(self):
+        self.assert_producer_orchestration()
+
+    def test_recipe_generator_selection_reaches_the_actual_owning_source_hook(self):
+        self.assert_producer_orchestration({'CMAKE_GENERATOR': 'Ninja'})
+
+    def assert_producer_orchestration(self, recipe_environment=None):
         document = self.lock()
-        document['owned'].append(['workflow', 'vm-resolution'])
+        document['owned'] = [list(identity) for identity in sorted(native_store.VM_FAMILY)]
         profile = document['profiles']['linux-amd64']
         inputs = {}
         file_roles = {'broker_provenance', 'go_sdk_archive', 'go_sdk_manifest',
@@ -198,6 +204,12 @@ class NativeStoreTest(unittest.TestCase):
             else:
                 path.mkdir()
             inputs[role] = path
+        if recipe_environment is not None:
+            source = Path(__file__).resolve().parents[4]
+            recipes = json.loads((source / 'release/native-input-recipes.json').read_bytes())
+            profile['native_inputs'] = recipes['linux-amd64']
+            for role in native_store.native_inputs.DERIVED_ROLES:
+                del profile['inputs'][role]
         inputs['guest_release_manifest'].write_text('{}')
         (inputs['cli'] / 'dockpipe').write_bytes(b'fixture CLI')
         source = inputs['source']
@@ -213,18 +225,24 @@ class NativeStoreTest(unittest.TestCase):
         def invoke(arguments, repository, environment):
             commands.append([str(item) for item in arguments])
             self.assertEqual(environment['DOCKPIPE_DISPLAY_SDK'], 'display')
+            if recipe_environment is not None:
+                self.assertEqual(environment['CMAKE_GENERATOR'], 'Ninja')
             if arguments[1:4] != ['package', 'build', 'store']:
                 return
             destination = Path(arguments[arguments.index('--out') + 1])
             destination.mkdir()
             group = arguments[arguments.index('--only') + 1]
-            name = 'qemu' if group == 'resolvers' else 'vm-resolution'
-            artifact_name = 'dockpipe-' + group[:-1] + '-' + name + '-2.0.0.tar.gz'
-            (destination / artifact_name).write_bytes(b'compiled fixture')
-            entry = dict(name=name, version='2.0.0', tarball=artifact_name, size_bytes=16,
-                         sha256=hashlib.sha256(b'compiled fixture').hexdigest())
+            entries = []
+            for kind, name in sorted(native_store.VM_FAMILY):
+                if kind + 's' != group:
+                    continue
+                artifact_name = 'dockpipe-' + kind + '-' + name + '-1.3.6.tar.gz'
+                (destination / artifact_name).write_bytes(b'compiled fixture')
+                entries.append(dict(name=name, version='1.3.6', min_dockpipe_version='0.6.26-0',
+                                    tarball=artifact_name, size_bytes=16,
+                                    sha256=hashlib.sha256(b'compiled fixture').hexdigest()))
             (destination / 'packages-store-manifest.json').write_text(json.dumps(
-                {'schema': 1, 'platform': 'linux-amd64', 'packages': {group: [entry]}}))
+                {'schema': 1, 'platform': 'linux-amd64', 'packages': {group: entries}}))
         extracted = [inputs[role] for role in profile['inputs'] if role != 'runtime_core']
         with (
             patch.dict(os.environ, {}, clear=True),
@@ -237,6 +255,9 @@ class NativeStoreTest(unittest.TestCase):
                 patch.object(native_store, 'extract', side_effect=extracted),
                 patch.object(native_store, 'validate_guest_release'),
                 patch.object(native_store.subprocess, 'check_output', return_value=profile['cli_version']),
+                patch.object(native_store.native_inputs, 'prepare', return_value=(
+                    {role: inputs[role] for role in native_store.native_inputs.DERIVED_ROLES},
+                    recipe_environment or {})),
                 patch.object(native_store, 'run', side_effect=invoke),
             ):
                 output = self.root / 'produced'
@@ -245,7 +266,7 @@ class NativeStoreTest(unittest.TestCase):
         self.assertIn('vm', commands[0])
         self.assertEqual({command[-1] for command in commands if command[1:4] == ['package', 'build', 'store']}, {'workflows', 'resolvers'})
         self.assertTrue(all(command[0].endswith('/dockpipe') for command in commands))
-        planned = publication_plan.plan([output / 'candidate.json'])
+        planned = publication_plan.plan([output / 'candidate.json'], qualification='native')
         self.assertEqual(planned['owned'], document['owned'])
 
     def guest_release(self):
@@ -302,18 +323,18 @@ class NativeStoreTest(unittest.TestCase):
         native_store.archive_flat(flat, archive)
         descriptor = {'schema': 1, 'source_commit': self.commit, 'owned': [['resolver', 'qemu']],
                       'platform': 'linux-amd64', 'repository': native_store.REPOSITORY,
-                      'tag': 'catalog-candidate-' + self.commit, 'asset': archive.name,
+                      'tag': 'catalog-native-candidate-' + self.commit, 'asset': archive.name,
                       'sha256': native_store.sha256(archive), 'size_bytes': archive.stat().st_size,
                       'manifest_sha256': native_store.sha256(flat / 'packages-store-manifest.json'),
-                      'native_build': True, 'published': False}
+                      'publication_mode': 'native', 'native_build': True, 'published': False}
         path = output / 'candidate.json'
         path.write_text(json.dumps(descriptor))
         return path, archive
 
     def test_publication_plan_binds_actual_platform_and_exact_core_lock_wire(self):
         candidate, archive = self.candidate()
-        result = publication_plan.plan([candidate])
-        self.assertEqual(result['tag'], 'catalog-candidate-' + self.commit)
+        result = publication_plan.plan([candidate], qualification='native')
+        self.assertEqual(result['tag'], 'catalog-native-candidate-' + self.commit)
         self.assertEqual(set(result['artifacts']), {'linux-amd64'})
         artifact = result['core_lock_overlay']['artifacts']['linux-amd64']
         self.assertEqual(artifact['sha256'], native_store.sha256(archive))
@@ -322,10 +343,10 @@ class NativeStoreTest(unittest.TestCase):
     def test_publication_plan_rejects_corrupt_artifact_and_duplicate_platform(self):
         candidate, archive = self.candidate()
         with self.assertRaises(ValueError):
-            publication_plan.plan([candidate, candidate])
+            publication_plan.plan([candidate, candidate], qualification='native')
         archive.write_bytes(b'changed')
         with self.assertRaises(ValueError):
-            publication_plan.plan([candidate])
+            publication_plan.plan([candidate], qualification='native')
 
 
 if __name__ == '__main__':
