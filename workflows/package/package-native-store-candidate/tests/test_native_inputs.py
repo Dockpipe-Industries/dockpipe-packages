@@ -28,8 +28,25 @@ class NativeInputsTest(unittest.TestCase):
         for target, recipe in self.recipes.items():
             with self.subTest(target=target):
                 native_inputs.validate(recipe, target)
-        self.assertEqual(len(self.recipes['linux-amd64']['archives']), 31)
+        self.assertEqual(len(self.recipes['linux-amd64']['archives']), 38)
         self.assertEqual(len(self.recipes['windows-amd64']['archives']), 30)
+
+    def test_linux_qt_opengl_build_inputs_are_exact_and_owned(self):
+        recipe = self.recipes['linux-amd64']
+        packages = {entry['package']: entry for entry in recipe['archives']}
+        for package in ('libgl-dev', 'libglx-dev', 'libopengl-dev', 'libgl1',
+                        'libglvnd0', 'libglx0', 'libopengl0'):
+            entry = packages[package + ':amd64']
+            self.assertEqual(entry['version'], '1.4.0-1')
+            self.assertEqual(entry['destination'], 'gio')
+            self.assertTrue(entry['asset']['url'].startswith(
+                'https://archive.ubuntu.com/ubuntu/pool/main/libg/libglvnd/'))
+            licenses = [record for record in recipe['licenses']
+                        if record['archive_id'] == entry['id']]
+            self.assertEqual(len(licenses), 1)
+        libraries = {Path(record['path']).name for record in recipe['libraries']}
+        self.assertTrue({'libGL.so.1', 'libGLX.so.0', 'libOpenGL.so.0',
+                         'libGLdispatch.so.0'}.issubset(libraries))
 
     def test_recipe_replaces_four_roles_without_loosening_other_public_pins(self):
         lock = self.fixture.lock()

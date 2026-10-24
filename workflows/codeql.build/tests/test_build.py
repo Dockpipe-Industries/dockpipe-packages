@@ -36,7 +36,7 @@ class CodeQLBuildTests(unittest.TestCase):
             self.prepare_repository(root)
             with mock.patch.object(BUILD, 'ROOT', root), \
                     mock.patch.dict(os.environ, {'DOCKPIPE_GO_SDK_INPUTS': str(root / 'inputs')}), \
-                    mock.patch.object(BUILD.go_candidate, 'unpack_sdk', side_effect=ValueError('invalid SDK digest')), \
+                    mock.patch.object(BUILD.catalog_go_dependencies.go_candidate, 'unpack_sdk', side_effect=ValueError('invalid SDK digest')), \
                     mock.patch.object(BUILD.subprocess, 'run') as run:
                 with self.assertRaisesRegex(ValueError, 'invalid SDK digest'):
                     BUILD.main()
@@ -56,8 +56,8 @@ class CodeQLBuildTests(unittest.TestCase):
 
             with mock.patch.object(BUILD, 'ROOT', root), \
                     mock.patch.dict(os.environ, {'DOCKPIPE_GO_SDK_INPUTS': str(root / 'inputs')}), \
-                    mock.patch.object(BUILD.go_candidate, 'unpack_sdk', side_effect=unpack), \
-                    mock.patch.object(BUILD.go_candidate, 'validate_sdk_pin') as validate, \
+                    mock.patch.object(BUILD.catalog_go_dependencies.go_candidate, 'unpack_sdk', side_effect=unpack), \
+                    mock.patch.object(BUILD.catalog_go_dependencies.go_candidate, 'validate_sdk_pin') as validate, \
                     mock.patch.object(BUILD.platform, 'system', return_value='Linux'), \
                     mock.patch.object(BUILD.subprocess, 'run') as run:
                 BUILD.main()
@@ -102,8 +102,8 @@ class CodeQLBuildTests(unittest.TestCase):
             failure = subprocess.CalledProcessError(1, ['go', 'list'])
             with mock.patch.object(BUILD, 'ROOT', root), \
                     mock.patch.dict(os.environ, {'DOCKPIPE_GO_SDK_INPUTS': str(root / 'inputs')}), \
-                    mock.patch.object(BUILD.go_candidate, 'unpack_sdk', side_effect=unpack), \
-                    mock.patch.object(BUILD.go_candidate, 'validate_sdk_pin'), \
+                    mock.patch.object(BUILD.catalog_go_dependencies.go_candidate, 'unpack_sdk', side_effect=unpack), \
+                    mock.patch.object(BUILD.catalog_go_dependencies.go_candidate, 'validate_sdk_pin'), \
                     mock.patch.object(BUILD.subprocess, 'run', side_effect=[None, None, failure]) as run:
                 with self.assertRaises(subprocess.CalledProcessError):
                     BUILD.main()
