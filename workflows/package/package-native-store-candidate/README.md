@@ -164,6 +164,17 @@ aliases; no ambient Homebrew compiler/tools or source siblings substitute.
 Each run must produce native macOS 15 recipe/ABI and installed-product receipts.
 Evidence from another macOS baseline does not satisfy those gates.
 
+The private GIO pkg-config graph also uses zlib and libffi from the selected Apple
+SDK15.5. Before downloads or broker builds, the recipe requires the SDK's
+`usr/lib/pkgconfig/{zlib,libffi}.pc`, their headers and `.tbd` link stubs. It
+projects only those metadata files into a private directory, records actual
+versions and source/derived hashes, and admits the full GIO flags graph before
+CMake. A missing or escaping SDK input fails with its expected relative path.
+No global pkg-config sysroot rewrites the private bottle prefixes, and no ambient
+Homebrew search path or replacement zlib/libffi runtime is admitted. The SDK files
+remain build inputs owned by Apple's selected SDK; they are not redistributed
+with the package, so this adds no invented public archive or license pin.
+
 One final overlay owns eight entries: the three qualified source compatibility
 workflows plus qemu, linux-vm, windows-vm, vm-manage and vm-resolution. The source
 repairs come from the exact published `30859228a77ba20a23a4b69ab81aae133d6ccfe9`
