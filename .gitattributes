@@ -5,3 +5,5 @@ packages/pipeon/resolvers/pipeon/bin/pipeon text eol=lf
 packages/dorkpipe/tests/fixtures/backlog.remote/remote-diff.patch text eol=lf
 # Embedded Unicode data is verified against its upstream byte checksum at startup.
 src/lib/pipelang/coreir/unicode/CaseFolding-17.0.0.txt text eol=lf
+# Native admission hashes these exact source-bound descriptor bytes on Windows.
+release/native-compiler/windows-hosted-19.51.json text eol=lf

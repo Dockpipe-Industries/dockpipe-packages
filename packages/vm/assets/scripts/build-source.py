@@ -78,6 +78,12 @@ def update_launcher(surface_path, goos, launcher):
     if platform_key is None or Path(launcher).name != launcher:
         raise ValueError("Unsupported native QEMU launcher platform or asset")
     surface = json.loads(surface_path.read_text())
+    if goos == "darwin":
+        # Native display/management is qualified separately from guest launch and
+        # clipboard products. Do not advertise unimplemented macOS host actions.
+        unavailable = {"start-windows", "clipboard-start", "clipboard-stop"}
+        surface["actions"] = [action for action in surface.get("actions", [])
+                              if action.get("id") not in unavailable]
     for action in surface.get("actions", []):
         if action.get("id") == "start-windows":
             action["launch_environment"] = {

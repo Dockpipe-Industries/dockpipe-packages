@@ -14,7 +14,7 @@ Pipeon source currently requires repository access.
 | --- | --- |
 | [agent](packages/agent) | AI resolver integrations and cloud-lane diagnostics |
 | [cloud](packages/cloud) | Cloud storage, registry and publication workflows |
-| [cockpit](packages/cockpit/README.md) | Optional spatial workspace and native packages |
+| [Cockpit (external)](docs/migration/cockpit-retirement.md) | Independently owned SpatialPipe package; consume its pinned published runtime |
 | [ide](packages/ide) | Editor and development-container integrations |
 | [native-sdk](packages/native-sdk) | Product/native SDK packaging support |
 | [pipelang](packages/pipelang/README.md) | Standalone language-command workflows |
@@ -35,6 +35,20 @@ Native packages additionally require their matching host/product SDK artifacts.
 Fetch the declared SDK inputs through `tooling/fetch_sdk_release.py` as documented
 by the committed release locks. Missing or unpublished artifacts fail clearly;
 there is no sibling source-checkout fallback.
+
+Resolver discovery and integration tests also require the compiled runtime core.
+Its independent immutable archive is pinned in `release/dependencies.lock.json`.
+Install it into a fresh task-private global root before running those workflows:
+
+```bash
+python3 tooling/bootstrap_runtime_core.py --output /your/task-runtime
+export DOCKPIPE_GLOBAL_ROOT=/your/task-runtime
+```
+
+The helper sets this variable automatically in GitHub Actions. It requires curl,
+checks the exact archive size/hash and bounded layout, and installs only the compiled
+tarball. It preserves existing output directories by refusing to overwrite them.
+This bootstrap dependency does not qualify new native VM runtime features.
 
 From this repository root:
 

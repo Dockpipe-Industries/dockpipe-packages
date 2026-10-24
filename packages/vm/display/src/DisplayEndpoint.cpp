@@ -1,5 +1,6 @@
 #include "DisplayEndpoint.h"
 #include "NativeDisplayPlatform.h"
+#include "DisplayAddress.h"
 #include <QFileInfo>
 #include <QJsonDocument>
 #include <QRegularExpression>
@@ -34,7 +35,10 @@ bool DisplayEndpoint::load(const QJsonObject &options, DisplayEndpoint &endpoint
     if (parseError.error != QJsonParseError::NoError || !document.isObject())
         return false;
     const auto object = document.object();
-    if (object.size() != 7 || object.value("schema") != 1 ||
+    const bool legacy = object.size() == 7 && object.value("schema") == 1;
+    const bool dedicatedInput = object.size() == 8 && object.value("schema") == 2 &&
+        object.value("input_address").isString();
+    if ((!legacy && !dedicatedInput) ||
         object.value("resource_id") != resource || object.value("backend") != "qemu-dbus" ||
         !object.value("bus_address").isString() || !object.value("qemu_start_token").isString() ||
         !object.value("qemu_pid").isDouble() || !object.value("console_id").isDouble())
@@ -45,6 +49,17 @@ bool DisplayEndpoint::load(const QJsonObject &options, DisplayEndpoint &endpoint
         pid > std::numeric_limits<int>::max() || console < 0 || console > 15 || std::floor(console) != console)
         return false;
     endpoint.busAddress = object.value("bus_address").toString();
+    endpoint.inputAddress.clear();
+    if (dedicatedInput) {
+        QString busPath;
+        QString inputPath;
+        endpoint.inputAddress = object.value("input_address").toString();
+        if (console != 0 || !decodeDisplayBusPath(endpoint.busAddress, busPath) ||
+            !decodeDisplayBusPath(endpoint.inputAddress, inputPath) ||
+            inputPath != QFileInfo(busPath).absolutePath() + "/input" ||
+            !NativeDisplayPlatform::privateBusAddress(endpoint.inputAddress))
+            return false;
+    }
     endpoint.consoleId = unsigned(console);
     endpoint.qemuPid = int(pid);
     endpoint.qemuStartToken = object.value("qemu_start_token").toString();

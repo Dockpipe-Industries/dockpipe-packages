@@ -164,7 +164,7 @@ dockpipe_tf_run_imports() {
   if [[ -n "${DOCKPIPE_TF_IMPORT_ARGS:-}" ]]; then
     local -a imp=()
     read -r -a imp <<<"${DOCKPIPE_TF_IMPORT_ARGS}"
-    terraform import -input=false "${imp[@]}"
+    terraform import -input=false "${imp[@]}" || return
   fi
   if [[ -n "${DOCKPIPE_TF_IMPORT_FILE:-}" ]]; then
     local f="$DOCKPIPE_TF_IMPORT_FILE"
@@ -175,7 +175,7 @@ dockpipe_tf_run_imports() {
       addr="${line%% *}"
       id="${line#* }"
       [[ -n "$addr" && -n "$id" ]] || dockpipe_tf_die "bad import line (want 'ADDRESS ID...'): $line"
-      terraform import -input=false "$addr" "$id"
+      terraform import -input=false "$addr" "$id" || return
     done <"$f"
   fi
 }
@@ -226,9 +226,11 @@ dockpipe_tf_run_pipeline() {
   [[ -n "${DOCKPIPE_TF_FMT_ARGS:-}" ]] && read -r -a fmt_extra <<<"${DOCKPIPE_TF_FMT_ARGS}"
 
   (
+    # This subshell is guarded by || below, so Bash does not enforce errexit.
+    # Propagate each required operation explicitly before running the next one.
     set -e
     export TF_IN_AUTOMATION=1
-    cd "$tf_dir"
+    cd "$tf_dir" || return
 
     export AWS_EC2_METADATA_DISABLED=true
     if [[ -n "${DOCKPIPE_TF_STATE_ACCESS_KEY_ID:-}" && -n "${DOCKPIPE_TF_STATE_SECRET_ACCESS_KEY:-}" ]]; then
@@ -244,7 +246,7 @@ dockpipe_tf_run_pipeline() {
       case "$step" in
       init)
         if [[ "$tf_backend" == local ]]; then
-          terraform init -input=false -backend=false "${init_extra[@]}"
+          terraform init -input=false -backend=false "${init_extra[@]}" || return
         else
           local backend_use=""
           if [[ -n "${DOCKPIPE_TF_REMOTE_BACKEND_FILE:-}" ]]; then
@@ -252,36 +254,36 @@ dockpipe_tf_run_pipeline() {
             backend_use="${DOCKPIPE_TF_REMOTE_BACKEND_FILE}"
           else
             [[ -n "$backend_cfg_path" ]] || dockpipe_tf_die "remote backend requires backend config path (arg 2 to dockpipe_tf_run_pipeline) or set DOCKPIPE_TF_REMOTE_BACKEND_FILE"
-            dockpipe_tf_write_r2_remote_backend_config "$backend_cfg_path"
+            dockpipe_tf_write_r2_remote_backend_config "$backend_cfg_path" || return
             backend_use="$backend_cfg_path"
           fi
-          terraform init -input=false -backend-config="$backend_use" "${init_extra[@]}"
+          terraform init -input=false -backend-config="$backend_use" "${init_extra[@]}" || return
         fi
         did_init=true
-        dockpipe_tf_maybe_workspace
+        dockpipe_tf_maybe_workspace || return
         ;;
       plan)
-        terraform plan -input=false "${plan_extra[@]}"
+        terraform plan -input=false "${plan_extra[@]}" || return
         ;;
       apply)
         if [[ "${DOCKPIPE_TF_APPLY_AUTO_APPROVE:-1}" == "1" ]]; then
-          terraform apply -auto-approve -input=false "${apply_extra[@]}"
+          terraform apply -auto-approve -input=false "${apply_extra[@]}" || return
         else
-          terraform apply -input=false "${apply_extra[@]}"
+          terraform apply -input=false "${apply_extra[@]}" || return
         fi
         did_apply=true
         ;;
       validate)
-        terraform validate "${validate_extra[@]}"
+        terraform validate "${validate_extra[@]}" || return
         ;;
       fmt)
-        terraform fmt "${fmt_extra[@]}"
+        terraform fmt "${fmt_extra[@]}" || return
         ;;
       import)
         if [[ -z "${DOCKPIPE_TF_IMPORT_ARGS:-}" && -z "${DOCKPIPE_TF_IMPORT_FILE:-}" ]]; then
           dockpipe_tf_die "import step requires DOCKPIPE_TF_IMPORT_ARGS and/or DOCKPIPE_TF_IMPORT_FILE"
         fi
-        dockpipe_tf_run_imports
+        dockpipe_tf_run_imports || return
         ;;
       esac
     done

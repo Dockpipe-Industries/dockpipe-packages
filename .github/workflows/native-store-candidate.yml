@@ -1,0 +1,108 @@
+name: Immutable native catalog candidate
+on:
+  push:
+    branches: [dev]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: native-catalog-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  inputs:
+    runs-on: ubuntu-24.04
+    outputs:
+      matrix: ${{ steps.prepare.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13.7'
+      - name: Install the exact native extraction implementation
+        run: |
+          python -m pip install --require-hashes --only-binary=:all: -r release/native-extractor-linux-amd64.lock.txt -r release/source-overlay-requirements.lock.txt
+      - name: Test input, producer and immutable publisher contracts without network mutation
+        run: python -B -m unittest discover -s workflows/package/package-native-store-candidate/tests -v
+      - id: prepare
+        name: Bind the accepted commit once without a self-referential source lock
+        run: python -B workflows/package/package-native-store-candidate/assets/scripts/prepare_ci.py --template release/native-store.lock.json --output native-inputs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: native-inputs-${{ github.sha }}
+          path: native-inputs
+          if-no-files-found: error
+  native:
+    needs: inputs
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.inputs.outputs.matrix) }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13.7'
+      - uses: actions/download-artifact@v4
+        with:
+          name: native-inputs-${{ github.sha }}
+          path: native-inputs
+      - name: Install the exact platform extraction implementation
+        if: matrix.platform != 'darwin-arm64'
+        run: |
+          python -m pip install --require-hashes --only-binary=:all: -r release/native-extractor-${{ matrix.platform }}.lock.txt
+      - name: Select the explicit macOS baseline without changing global Xcode selection
+        if: matrix.platform == 'darwin-arm64'
+        run: |
+          test -d /Applications/Xcode_16.4.app/Contents/Developer
+          echo 'DEVELOPER_DIR=/Applications/Xcode_16.4.app/Contents/Developer' >> "$GITHUB_ENV"
+      - name: Admit exact preinstalled Microsoft compiler and desktop CRT on hosted Windows
+        if: matrix.platform == 'windows-amd64'
+        shell: pwsh
+        run: ./workflows/package/package-native-store-candidate/assets/scripts/prepare_msvc.ps1 -WorkDirectory "$env:RUNNER_TEMP/native-compiler" -AcquisitionFile "$env:GITHUB_WORKSPACE/release/native-compiler/windows-hosted-19.51.json"
+      - name: Bootstrap the independently pinned compiled runtime core
+        run: python -B tooling/bootstrap_runtime_core.py --output "${{ runner.temp }}/native-store-global"
+      - name: Enter the locked native Dockpipe workflow
+        env:
+          DOCKPIPE_NATIVE_PLATFORM: ${{ matrix.platform }}
+          DOCKPIPE_NATIVE_LOCK: ${{ github.workspace }}/native-inputs/effective-lock.json
+          DOCKPIPE_NATIVE_SOURCE_ARCHIVE: ${{ github.workspace }}/native-inputs/source-archive.tar.gz
+          DOCKPIPE_NATIVE_CACHE: ${{ runner.temp }}/native-store-cache
+          DOCKPIPE_NATIVE_WORK: ${{ runner.temp }}/native-store-work
+          DOCKPIPE_NATIVE_OUTPUT: ${{ runner.temp }}/native-store-output
+          DOCKPIPE_NATIVE_FETCH: '1'
+        run: python -B workflows/package/package-native-store-candidate/assets/scripts/bootstrap.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-catalog-${{ matrix.platform }}-${{ github.sha }}
+          path: ${{ runner.temp }}/native-store-output
+          if-no-files-found: error
+  publish:
+    needs: [inputs, native]
+    if: github.repository == 'Dockpipe-Industries/dockpipe-packages' && github.event_name == 'push' && github.ref == 'refs/heads/dev'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13.7'
+      - uses: actions/download-artifact@v4
+        with:
+          name: native-inputs-${{ github.sha }}
+          path: native-inputs
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: native-catalog-*-${{ github.sha }}
+          path: candidates
+      - name: Create or resume the exact immutable candidate and verify public bytes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python -B workflows/package/package-native-store-candidate/assets/scripts/publish_candidate.py --candidate-dir candidates --lock native-inputs/effective-lock.json --output publication
+      - uses: actions/upload-artifact@v4
+        with:
+          name: native-catalog-publication-${{ github.sha }}
+          path: publication
+          if-no-files-found: error

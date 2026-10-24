@@ -26,7 +26,7 @@ WINDOWS_SYSTEM_DLLS = {
 WINDOWS_HOST_CRT_DLLS = {
     'msvcp140.dll', 'msvcp140_1.dll', 'msvcp140_2.dll',
     'msvcp140_atomic_wait.dll', 'msvcp140_codecvt_ids.dll',
-    'vcruntime140.dll', 'vcruntime140_1.dll', 'concrt140.dll',
+    'vcruntime140.dll', 'vcruntime140_1.dll', 'vcruntime140_threads.dll', 'vccorlib140.dll', 'concrt140.dll',
 }
 
 
@@ -66,6 +66,8 @@ def windows_closure(module, destination, gio, qt, inspector):
             key = name.lower()
             if key in WINDOWS_SYSTEM_DLLS or key in WINDOWS_HOST_CRT_DLLS or key.startswith(('api-ms-win-', 'ext-ms-win-', 'qt6')):
                 continue
+            if re.match(r'^(?:msvcp|vcruntime|concrt|vccorlib)[0-9]', key):
+                raise ValueError('Unqualified host CRT dependency: ' + name)
             if key in result:
                 continue
             source = next((directory / name for directory in directories if (directory / name).is_file()), None)

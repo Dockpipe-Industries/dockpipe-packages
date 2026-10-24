@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 )
@@ -37,4 +38,40 @@ func resolutionRunID() string {
 		return value
 	}
 	return os.Getenv("DOCKPIPE_SURFACE_RESOURCE_ID")
+}
+
+// These limits match the owning software renderer's FrameStore contract.
+// They apply only to verified package-native sessions, not ordinary QEMU windows.
+const nativeResolutionMaximumDimension = 4096
+const nativeResolutionMaximumFrameBytes = 32 * 1024 * 1024
+
+func (manager manager) resolutionRequest(record sessionRecord, width, height string) (string, error) {
+	request, err := resolutionRequest(width, height)
+	if err != nil {
+		return "", err
+	}
+
+	directory := filepath.Join(manager.state, "display-"+record.RunID)
+	_, err = os.Lstat(directory)
+	if os.IsNotExist(err) {
+		return request, nil
+	}
+	if err != nil || manager.nativeDisplayOptions(record) == nil {
+		return "", fmt.Errorf("native display identity is not verified; resolution change refused")
+	}
+
+	// The generic request parser has already admitted canonical bounded integers.
+	pixelsWide, _ := strconv.Atoi(width)
+	pixelsHigh, _ := strconv.Atoi(height)
+	if !nativeResolutionWithinLimits(pixelsWide, pixelsHigh) {
+		return "", fmt.Errorf("resolution exceeds the active native display limit: 4096 pixels per axis and 32 MiB per 32-bit frame")
+	}
+	return request, nil
+}
+
+func nativeResolutionWithinLimits(width, height int) bool {
+	if width <= 0 || height <= 0 || width > nativeResolutionMaximumDimension || height > nativeResolutionMaximumDimension {
+		return false
+	}
+	return uint64(width)*uint64(height)*4 <= nativeResolutionMaximumFrameBytes
 }

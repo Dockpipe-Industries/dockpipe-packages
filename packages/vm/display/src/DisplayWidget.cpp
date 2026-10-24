@@ -155,7 +155,7 @@ bool DisplayWidget::absolutePosition(const QPointF &position, bool clamp)
     };
     sendInput({DisplayInput::Kind::Absolute,
                mapAxis(position.x(), target.x(), target.width(), frame.width()),
-               mapAxis(position.y(), target.y(), target.height(), frame.height())});
+               mapAxis(position.y(), target.y(), target.height(), frame.height()), frame.size()});
     return true;
 }
 

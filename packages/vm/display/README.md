@@ -15,6 +15,7 @@ disconnects its listener. It never stops or restarts QEMU.
 | Qt 6.10.3 software QWidget rendering | Native visible firmware proof | Native visible firmware proof, limited user | Native visible firmware proof |
 | Local shared framebuffer | Unix.Map, resize | Win32.Map, resize | Unix.Map, resize |
 | Raw local framebuffer | Firmware resize and actual Windows guest driver proof | Parser/unit coverage; native raw-only proof pending | Parser/unit coverage; native raw-only proof pending |
+| Dedicated QMP absolute input | Task candidate firmware and exact Windows protocol probe; final installed guest widget pending | Not yet run | Not yet run |
 | Keyboard and pointer protocol | Native acknowledgements; physical key map unit tests | Native acknowledgements; physical key map unit tests | Native acknowledgements; physical key map unit tests |
 | Installed factory handoff/close | Generic host wrapper and shared lease proof | Minimal installed Display SDK plugin proof | Minimal installed Display SDK plugin proof |
 | Private broker/runtime artifact | Installed Go shim and compiled archive proof | Native isolated module/broker artifact proof | Native relocated artifact and broker proof |
@@ -94,6 +95,19 @@ user SID and rejects wider ACL grants/reparse points. Process identity uses the
 same SID and exact decimal FILETIME creation token. Native mapping/process tests
 have run, as has the minimal installed-module shared-memory handoff proof. The
 complete Windows desktop host route remains a separate qualification.
+
+Windows test fixtures explicitly assign the current-user owner to only their
+newly created descriptor and AF_UNIX socket inside an already-private fixture
+directory. An elevated creator's default object owner can differ from its user
+SID; inherited private DACLs do not establish the child's owner. See Microsoft's
+[owner rules](https://learn.microsoft.com/en-us/windows/win32/secauthz/owner-of-a-new-object)
+and [DACL inheritance rules](https://learn.microsoft.com/en-us/windows/win32/secauthz/dacl-for-a-new-object). This fixture
+setup preserves production owner and peer checks and the unapproved-principal
+negative tests. It does not authorize relabeling imported metadata or sockets.
+The Go publisher creates its own directories and descriptor files with explicit
+current-user ownership. Broker/QEMU-created socket ownership still follows the
+creator token; an elevated session whose socket owner differs is rejected.
+Fixture correction does not qualify or repair that admin-mode production path.
 
 macOS uses the Unix FD protocol and bounded pread from an owned unlinked regular
 file, including QEMU's non-memfd allocation fallback. Linux retains its additional
@@ -247,3 +261,35 @@ a view leaves QEMU alive; final owned QEMU, supervisor and broker cleanup remove
 the private state. The protected `/Applications/DockPipe.app` is unchanged. This
 is not a signed release or publication claim. The full installed Windows route
 remains unrun at this checkpoint.
+
+## Absolute pointer endpoints
+
+New native launches reserve a separate owner-private QMP input monitor beside
+this resource's private display broker. The ordinary management monitor remains
+available to the VM controller. Private `display.json` schema 2 adds
+`input_address`; the public DisplaySDK and resource options remain unchanged.
+The module admits the exact QEMU process creation token and native Unix socket
+peer PID before using this channel. Windows uses AF_UNIX, not a named pipe or TCP.
+Only `qmp_capabilities` and typed `input-send-event` absolute-axis pairs are sent.
+No generic monitor command interface is exposed to the host UI.
+
+The existing display worker serializes motion with D-Bus button/key events. It
+waits for each fixed request's exact acknowledgement, bounds each exchange to two
+seconds and 32 asynchronous events, and rejects messages of 64 KiB or more. A
+failed exchange closes the connection; a later move cannot consume an old reply.
+Closing the display cancels and joins its worker without stopping the VM.
+
+Pixels from zero through `dimension - 1` map to QMP's inclusive 0..32767 range.
+On the qualified Windows tablet, the all-zero pair did not move the cursor;
+normalized `(1,1)` reaches guest pixel `(0,0)` exactly. This special case changes
+neither the requested pixel nor the acceptance tolerance. Frames are bounded to
+4096 pixels per axis, where normalized one still rounds to pixel zero. Queued
+positions carry their frame size. A stale size suppresses the motion and blocks a
+subsequent button press until a fresh position succeeds; releases remain allowed.
+
+Schema 1 endpoints from existing sessions keep their original D-Bus input path
+and its known QEMU coordinate-scaling limitation. They do not silently borrow the
+management QMP socket. A clean native relaunch is required to create the dedicated
+schema 2 channel. Multiconsole QMP input is not qualified; schema 2 admits console
+zero only. Native Windows/macOS channel behavior and exact Windows widget-corner
+acceptance require their own receipts in addition to Linux protocol tests.

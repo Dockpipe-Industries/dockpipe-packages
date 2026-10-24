@@ -6,7 +6,7 @@
 class QemuDisplayTransport {
 public:
     QemuDisplayTransport(FrameStore &frames, QString busAddress, unsigned consoleId,
-                         int expectedPid, QString expectedStartToken, bool allowSharedMemory = true);
+                         int expectedPid, QString expectedStartToken, bool allowSharedMemory = true, QString inputAddress = {});
     ~QemuDisplayTransport();
     void start();
     void stop();

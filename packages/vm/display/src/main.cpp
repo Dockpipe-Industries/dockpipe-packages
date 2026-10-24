@@ -15,6 +15,7 @@ int main(int argc, char **argv)
     parser.addOptions({
         {{"b", "bus-address"}, "Explicit task-private D-Bus Unix address", "address"},
         {"console", "QEMU console ID", "id", "0"},
+        {"input-address", "Explicit private dedicated QMP input address", "address"},
         {"expected-qemu-pid", "Expected fixture child PID", "pid"},
         {"expected-qemu-start-token", "Expected Linux kernel start token", "token"},
         {"proof-directory", "Write fixed proof receipt/frame then exit after 8 seconds", "directory"},
@@ -30,7 +31,7 @@ int main(int argc, char **argv)
         parser.showHelp(2);
     FrameStore frames;
     QemuDisplayTransport transport(frames, address, console, parser.value("expected-qemu-pid").toInt(),
-                                   parser.value("expected-qemu-start-token"), !parser.isSet("raw-only"));
+                                   parser.value("expected-qemu-start-token"), !parser.isSet("raw-only"), parser.value("input-address"));
     DisplayWidget widget(frames);
     widget.setWindowTitle(QStringLiteral("Dockpipe local QEMU display proof"));
     widget.sendInput = [&transport](DisplayInput input) { transport.submit(input); };
@@ -48,7 +49,7 @@ int main(int argc, char **argv)
             transport.submit({DisplayInput::Kind::KeyPress, 42});
             transport.submit({DisplayInput::Kind::KeyRelease, 42});
             transport.submit({widget.absolutePointer ? DisplayInput::Kind::Absolute :
-                              DisplayInput::Kind::Relative, 10, 10});
+                              DisplayInput::Kind::Relative, 10, 10, frames.snapshot().size()});
         }
     });
     poll.start(50);

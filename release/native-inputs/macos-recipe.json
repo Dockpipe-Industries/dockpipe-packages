@@ -1,0 +1,197 @@
+{
+  "schema": 1,
+  "platform": "darwin-arm64",
+  "runner": "macos-15",
+  "deployment_target": "15.0",
+  "sdk_version": "15.5",
+  "compiler": {
+    "id": "AppleClang",
+    "version": "17.0.0.17000013",
+    "os_id": "macos",
+    "os_version": "15.0"
+  },
+  "framework_reader": "Apple OS /usr/lib/libarchive.2.dylib; data-only API, no filesystem extraction",
+  "public_oci": {
+    "registry": "ghcr.io",
+    "namespace": "homebrew/core",
+    "tag": "arm64_sequoia",
+    "credentials": "anonymous pull-only token in RAM; no GH_TOKEN"
+  },
+  "formulae": [
+    {
+      "id": "glib",
+      "package": "glib",
+      "version": "2.90.1",
+      "revision": 0,
+      "bottle_tag": "arm64_sequoia",
+      "url": "https://ghcr.io/v2/homebrew/core/glib/blobs/sha256:ce9568a335281cb6bd12c48fd89d7a118a046f9df16761c120826fdae116e468",
+      "sha256": "ce9568a335281cb6bd12c48fd89d7a118a046f9df16761c120826fdae116e468",
+      "size_bytes": 9479231,
+      "dependencies": [
+        "pcre2",
+        "gettext"
+      ],
+      "cellar": "/opt/homebrew/Cellar",
+      "formula_source": "https://raw.githubusercontent.com/Homebrew/homebrew-core/3b7983907359f7548f4fdb121b36a1075623bc6d/Formula/g/glib.rb",
+      "formula_sha256": "e6c6094ef287cd9dd51af16a4e69cb899b732cdf92da900eb9371339099df005"
+    },
+    {
+      "id": "gettext",
+      "package": "gettext",
+      "version": "1.0",
+      "revision": 0,
+      "bottle_tag": "arm64_sequoia",
+      "url": "https://ghcr.io/v2/homebrew/core/gettext/blobs/sha256:98a116d35792ccd730360ffc8c0d8fc5799b2282b96bb7696192c573f064a331",
+      "sha256": "98a116d35792ccd730360ffc8c0d8fc5799b2282b96bb7696192c573f064a331",
+      "size_bytes": 10296282,
+      "dependencies": [
+        "json-c",
+        "libunistring"
+      ],
+      "cellar": "/opt/homebrew/Cellar",
+      "formula_source": "https://raw.githubusercontent.com/Homebrew/homebrew-core/3b7983907359f7548f4fdb121b36a1075623bc6d/Formula/g/gettext.rb",
+      "formula_sha256": "9c90f7cf5a45c828e2a66d9339b25b781302cf49316e939d029e6079e1b9d916"
+    },
+    {
+      "id": "pcre2",
+      "package": "pcre2",
+      "version": "10.49",
+      "revision": 0,
+      "bottle_tag": "arm64_sequoia",
+      "url": "https://ghcr.io/v2/homebrew/core/pcre2/blobs/sha256:0ec47d18c50f5770db2b3f07b5b85644284cc6ee8e07e23b11d2727e95932b77",
+      "sha256": "0ec47d18c50f5770db2b3f07b5b85644284cc6ee8e07e23b11d2727e95932b77",
+      "size_bytes": 2465167,
+      "dependencies": [],
+      "cellar": ":any",
+      "formula_source": "https://raw.githubusercontent.com/Homebrew/homebrew-core/3b7983907359f7548f4fdb121b36a1075623bc6d/Formula/p/pcre2.rb",
+      "formula_sha256": "2dcb74b4bc19dc81ace51feac7bb626b679c7b730eca1d3492d73fe822134fb8"
+    },
+    {
+      "id": "json-c",
+      "package": "json-c",
+      "version": "0.19",
+      "revision": 0,
+      "bottle_tag": "arm64_sequoia",
+      "url": "https://ghcr.io/v2/homebrew/core/json-c/blobs/sha256:5624048dbb067f1a6d3784081029c3d738edeefd57188ce6724bb93d01aa53aa",
+      "sha256": "5624048dbb067f1a6d3784081029c3d738edeefd57188ce6724bb93d01aa53aa",
+      "size_bytes": 106627,
+      "dependencies": [],
+      "cellar": ":any",
+      "formula_source": "https://raw.githubusercontent.com/Homebrew/homebrew-core/3b7983907359f7548f4fdb121b36a1075623bc6d/Formula/j/json-c.rb",
+      "formula_sha256": "7b6c55b79158a98a41e376a39e05bbee827f425b67654af75db461f79402af37"
+    },
+    {
+      "id": "libunistring",
+      "package": "libunistring",
+      "version": "1.5",
+      "revision": 0,
+      "bottle_tag": "arm64_sequoia",
+      "url": "https://ghcr.io/v2/homebrew/core/libunistring/blobs/sha256:5001abe192babcfaf0f97ad322e2e59958d0d991de3da9f2e941b24924b8a2b8",
+      "sha256": "5001abe192babcfaf0f97ad322e2e59958d0d991de3da9f2e941b24924b8a2b8",
+      "size_bytes": 1901828,
+      "dependencies": [],
+      "cellar": ":any",
+      "formula_source": "https://raw.githubusercontent.com/Homebrew/homebrew-core/3b7983907359f7548f4fdb121b36a1075623bc6d/Formula/lib/libunistring.rb",
+      "formula_sha256": "e19b8847465634aa2ab365c7fa641216450ad26cc02bddfce08c8d17342d21dc"
+    },
+    {
+      "id": "libffi",
+      "package": "libffi",
+      "version": "3.8.0",
+      "revision": 0,
+      "bottle_tag": "arm64_sequoia",
+      "url": "https://ghcr.io/v2/homebrew/core/libffi/blobs/sha256:ba141e26c8d3b55fa4534317c474b34d649355d93299e35aa33a6eebf60117f8",
+      "sha256": "ba141e26c8d3b55fa4534317c474b34d649355d93299e35aa33a6eebf60117f8",
+      "size_bytes": 270967,
+      "dependencies": [],
+      "cellar": ":any",
+      "formula_source": "https://raw.githubusercontent.com/Homebrew/homebrew-core/3b7983907359f7548f4fdb121b36a1075623bc6d/Formula/lib/libffi.rb",
+      "formula_sha256": "312e209812b3b223dad00b6828149fd61fd593008c2da785f486bc6556c24962",
+      "role": "private pkg-config build dependency; system runtime references remain unchanged"
+    },
+    {
+      "id": "zlib",
+      "package": "zlib",
+      "version": "1.3.2",
+      "revision": 0,
+      "bottle_tag": "arm64_sequoia",
+      "url": "https://ghcr.io/v2/homebrew/core/zlib/blobs/sha256:c43efaa12e3d22914f41882679ad8c86b58958660852f1edd7b305daee5860f0",
+      "sha256": "c43efaa12e3d22914f41882679ad8c86b58958660852f1edd7b305daee5860f0",
+      "size_bytes": 145320,
+      "dependencies": [],
+      "cellar": ":any",
+      "formula_source": "https://raw.githubusercontent.com/Homebrew/homebrew-core/3b7983907359f7548f4fdb121b36a1075623bc6d/Formula/z/zlib.rb",
+      "formula_sha256": "87cffca5f0c2604eee8c111143e6908c2d39b570b14fc419318734c24519e0bf",
+      "role": "private pkg-config build dependency; system runtime references remain unchanged"
+    }
+  ],
+  "private_broker_patch": {
+    "path": "macos-dbus-peerpid.patch",
+    "sha256": "69a03882576fd264a287a21d3dd298638e8fd58515552acb645edff6ab90526b",
+    "size_bytes": 2235
+  },
+  "published_browser_baseline": {
+    "schema": 1,
+    "product": "SpatialWebBrowserSDK",
+    "version": "0.1.0",
+    "platform": "darwin-arm64",
+    "qt_version": "6.10.3",
+    "source_repository": "Dockpipe-Industries/Spatial-Web",
+    "source_sha": "7552a56fa219deccafbd37e4a8b4ffeed59da032",
+    "source_state": "committed-snapshot",
+    "runtime_bundled": false,
+    "compiler": {
+      "id": "AppleClang",
+      "version": "17.0.0.17000013"
+    },
+    "abi": {
+      "cxx_standard": 17
+    },
+    "msvc_runtime": null,
+    "archive": {
+      "name": "SpatialWebBrowserSDK-0.1.0-darwin-arm64.tar.gz",
+      "size_bytes": 625512,
+      "sha256": "349482bfc9b3caa349843ea6a54813a424123b7dba2f8a53b7b2cb0c560a4ca0"
+    },
+    "file_manifest": {
+      "name": "SpatialWebBrowserSDK-0.1.0-darwin-arm64.files.json",
+      "sha256": "64d95345d16356de56afd14df7aeec118ec794c49bd4f612bf1fbe7a489049a0"
+    },
+    "checks": [
+      "sdk-component-install",
+      "relocated-external-consumer-compile-link",
+      "focused-browser-tests",
+      "relocated-external-consumer-compile-link-run"
+    ]
+  },
+  "minimum_os_evidence": {
+    "browser": [
+      15,
+      0,
+      0
+    ],
+    "gio_bottles": [
+      15,
+      0,
+      0
+    ],
+    "qt": [
+      13,
+      0,
+      0
+    ]
+  },
+  "display_sdk": {
+    "public_release": null,
+    "public_archive": null,
+    "sha256": null,
+    "required_compiler": {
+      "id": "AppleClang",
+      "version": "17.0.0.17000013",
+      "os_id": "macos",
+      "os_version": "15.0"
+    }
+  },
+  "native_qualification": false,
+  "prior_native_host_proof_scope": "Earlier MacOS27/AppleClang21 functional proof; not this OS15/compiler17/bottle profile qualification"
+}

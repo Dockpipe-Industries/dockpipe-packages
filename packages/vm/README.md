@@ -3,6 +3,26 @@
 Select `DOCKPIPE_BIN` as the absolute path to a pinned installed Dockpipe CLI.
 Run source commands from this package repository; no sibling core checkout is required.
 
+## Runtime compatibility and reproducible builds
+
+The QEMU resolver and every installable VM workflow at version 1.3.6 declare
+`min_dockpipe_version: 0.6.26-0`. This is a runtime compatibility floor: it admits
+0.6.26 prereleases and stable releases, and rejects 0.6.25 before loading or
+executing the newer package. Each workflow has its own manifest so exporting or
+installing it separately preserves the floor; the `vm` family manifest alone
+cannot protect installed slices. The existing Linux qualification controller's
+internal version remains 1.3.5; its execution contracts have not changed here.
+
+The repository's `dockpipe_version` and checksum lock select an exact released
+producer executable. They are separate from this lower bound and must be updated
+only after a real public candidate is available and verified. A local executable
+stamped with a candidate version can test admission, but cannot become a released
+producer pin or qualify distribution. Existing 1.3.5 archives remain immutable.
+
+A compatible runtime version does not replace native ABI admission. The selected
+DisplaySDK/LauncherSDK, Qt 6.10.3, compiler, platform, module metadata, inventories
+and private-broker closure must still satisfy their independent exact checks.
+
 The `vm` package owns guest-specific workflows, QEMU resolver models, and the
 VMM-neutral control protocol. Dockpipe core remains generic. Version 1.3.5
 keeps the pinned SQLite harness environment closed while adding the exact

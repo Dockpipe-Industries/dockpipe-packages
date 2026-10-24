@@ -10,6 +10,7 @@
 #include "RawFrameAssembler.h"
 #include "GeometryQueryWorker.h"
 #include "DisplayPointerStateStore.h"
+#include "QmpAbsoluteInput.h"
 #include <atomic>
 #include <cstdio>
 #include <limits>
@@ -45,12 +46,14 @@ constexpr char ListenerXml[] = R"XML(
 
 class QemuDisplayTransport::Implementation {
 public:
-    Implementation(FrameStore &frames, QString address, unsigned console, int pid, QString token, bool allowShared)
+    Implementation(FrameStore &frames, QString address, unsigned console, int pid, QString token, bool allowShared, QString inputAddress)
         : frames(frames), address(std::move(address)),
           consolePath(QStringLiteral("/org/qemu/Display1/Console_%1").arg(console)),
           sharedSource(frames, stopped), rawFrames(frames), expectedPid(pid), expectedStartToken(std::move(token)), allowSharedMemory(allowShared)
     {
+        absoluteInputAddress = std::move(inputAddress);
         cancel = g_cancellable_new();
+        absoluteInput = std::make_unique<QmpAbsoluteInput>(cancel);
         geometryWorker = std::make_unique<GeometryQueryWorker>([this] { g_cancellable_cancel(cancel); });
     }
 
@@ -58,6 +61,7 @@ public:
     {
         stop();
         geometryWorker.reset();
+        absoluteInput.reset();
         g_object_unref(cancel);
     }
 
@@ -384,6 +388,22 @@ public:
 
     void dispatch(DisplayInput input)
     {
+        if (!absoluteInputAddress.isEmpty()) {
+            if (input.kind == DisplayInput::Kind::Absolute) {
+                pointerPositionValid = false;
+                if (input.frameSize != frames.snapshot().size())
+                    return;
+                if (!absoluteInput->move(QPoint(input.first, input.second), input.frameSize)) {
+                    fail(QStringLiteral("Private absolute input channel failed"));
+                    return;
+                }
+                pointerPositionValid = true;
+                ++acknowledged;
+                return;
+            }
+            if (input.kind == DisplayInput::Kind::ButtonPress && absolute && !pointerPositionValid)
+                return;
+        }
         const char *interface = "org.qemu.Display1.Mouse";
         const char *method = nullptr;
         GVariant *parameters = nullptr;
@@ -419,7 +439,13 @@ public:
     {
         GMainContext *context = g_main_context_new();
         g_main_context_push_thread_default(context);
-        if (connectPeer()) {
+        bool inputReady = true;
+        if (!absoluteInputAddress.isEmpty()) {
+            inputReady = absoluteInput->connect(absoluteInputAddress, expectedPid, expectedStartToken);
+            if (!inputReady)
+                fail(QStringLiteral("Cannot admit private absolute input channel"));
+        }
+        if (inputReady && connectPeer()) {
             while (!stopped && !g_dbus_connection_is_closed(control) &&
                    !g_dbus_connection_is_closed(peer)) {
                 if (!DisplayEndpoint::processMatches(expectedPid, expectedStartToken)) {
@@ -450,6 +476,7 @@ public:
         ready = false;
         g_cancellable_cancel(cancel);
         geometryWorker->stop();
+        absoluteInput->close();
         rawFrames.clear();
         sharedSource.clear();
         if (peer) {
@@ -508,11 +535,14 @@ public:
     QString expectedStartToken;
     QString service;
     bool allowSharedMemory;
+    QString absoluteInputAddress;
+    std::unique_ptr<QmpAbsoluteInput> absoluteInput;
+    bool pointerPositionValid = false;
 };
 
 QemuDisplayTransport::QemuDisplayTransport(FrameStore &frames, QString address, unsigned console,
-                                           int pid, QString token, bool allowShared)
-    : implementation_(std::make_unique<Implementation>(frames, std::move(address), console, pid, std::move(token), allowShared))
+                                           int pid, QString token, bool allowShared, QString inputAddress)
+    : implementation_(std::make_unique<Implementation>(frames, std::move(address), console, pid, std::move(token), allowShared, std::move(inputAddress)))
 {
 }
 QemuDisplayTransport::~QemuDisplayTransport() = default;

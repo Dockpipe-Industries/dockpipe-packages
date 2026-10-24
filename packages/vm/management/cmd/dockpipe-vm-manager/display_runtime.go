@@ -157,6 +157,9 @@ func runQemuLauncher(arguments []string) error {
 		return err
 	}
 	arguments, err = nativeDisplayArguments(arguments, address)
+	if err == nil {
+		arguments, err = nativeAbsoluteInputArguments(arguments, address)
+	}
 	if err != nil {
 		return err
 	}
@@ -333,7 +336,7 @@ func runDisplaySupervisor() error {
 	if err != nil {
 		return err
 	}
-	descriptor := displayDescriptor{Schema: 1, ResourceID: configuration.RunID, Backend: "qemu-dbus", BusAddress: address, ConsoleID: 0, QemuPID: pid, QemuStartToken: token}
+	descriptor := displayDescriptor{Schema: 2, ResourceID: configuration.RunID, Backend: "qemu-dbus", BusAddress: address, InputAddress: privateDisplayBusAddress(filepath.Join(busDirectory, "input")), ConsoleID: 0, QemuPID: pid, QemuStartToken: token}
 	path := filepath.Join(stateDirectory, "display.json")
 	if err := writeDisplayDescriptor(path, descriptor); err != nil {
 		return err
@@ -430,7 +433,7 @@ func (manager manager) nativeDisplayOptions(record sessionRecord) map[string]any
 		return nil
 	}
 	var descriptor displayDescriptor
-	if decodeDisplayJSON(path, 4096, &descriptor) != nil || descriptor.Schema != 1 || descriptor.ResourceID != record.RunID ||
+	if decodeDisplayJSON(path, 4096, &descriptor) != nil || !validDisplayInputDescriptor(descriptor) || descriptor.ResourceID != record.RunID ||
 		descriptor.Backend != "qemu-dbus" || descriptor.ConsoleID != 0 || !displayResourceMatches(record, descriptor) ||
 		!strings.HasPrefix(descriptor.BusAddress, "unix:path=") {
 		return nil

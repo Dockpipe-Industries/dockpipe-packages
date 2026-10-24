@@ -58,6 +58,14 @@ class PreparedBuildTest(unittest.TestCase):
         self.root_patch.start()
         self.addCleanup(self.root_patch.stop)
 
+    def test_material_inventory_includes_cmake_test_runner(self):
+        tooling = self.current / 'tooling'
+        tooling.mkdir()
+        runner = tooling / 'RunNativeTest.cmake'
+        runner.write_text('execute_process(COMMAND fixture)\n')
+        inventory = producer.material_sources(self.current)
+        self.assertEqual(inventory['tooling/RunNativeTest.cmake'], producer.sha256(runner))
+
     def write_cache(self):
         self.build.joinpath('CMakeCache.txt').write_text(''.join(
             key + ':STRING=' + value + '\n' for key, value in self.cache.items()))
