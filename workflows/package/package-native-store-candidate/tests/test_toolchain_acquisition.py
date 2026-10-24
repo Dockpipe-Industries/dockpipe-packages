@@ -36,7 +36,33 @@ class ToolchainTests(unittest.TestCase):
             with self.subTest(url=url), self.assertRaises(ValueError):
                 acquire.admit_url(url)
         with self.assertRaises(ValueError):
-            acquire.OfficialRedirects().redirect_request(None, None, 302, '', {}, 'https://example.com/file')
+            acquire.admit_redirect(self.entry['url'], 'https://example.com/file')
+
+    def test_signed_github_transport_does_not_admit_authored_query_urls(self):
+        origin = 'https://github.com/Kitware/CMake/releases/download/v3.31.6/cmake.tar.gz'
+        transport = ('https://release-assets.githubusercontent.com/'
+                     'github-production-release-asset/537699/13316199-8d09-4e5a-9586-c4bbcb927726'
+                     '?se=2026-10-24T01%3A00%3A00Z&sig=fixture&jwt=fixture')
+        acquire.admit_redirect(origin, transport)
+        request = acquire.urllib.request.Request(origin)
+        redirected = acquire.OfficialRedirects().redirect_request(request, None, 302, '', {}, transport)
+        self.assertEqual(redirected.full_url, transport)
+        with self.assertRaises(ValueError):
+            acquire.admit_url(transport)
+        for source, target in [
+            (self.entry['url'], transport),
+            ('https://github.com/Kitware/CMake/blob/main/file', transport),
+            (origin, transport.replace('release-assets.githubusercontent.com', 'example.com')),
+            (origin, transport.replace('/github-production-release-asset/', '/other/')),
+            (origin, transport + '&unexpected=value'),
+            (origin, transport + '&sig=duplicate'),
+            (origin, transport + '#fragment'),
+            (origin, transport.replace('https://', 'http://')),
+            (origin, transport.replace('sig=fixture', 'sig=')),
+            (origin, transport + '&jwt=' + 'x' * 16384),
+        ]:
+            with self.subTest(source=source, target=target), self.assertRaises(ValueError):
+                acquire.admit_redirect(source, target)
 
     def test_download_size_and_checksum_reject_before_cache_commit(self):
         for payload in [b'short', self.payload + b'long', b'x' * len(self.payload)]:
