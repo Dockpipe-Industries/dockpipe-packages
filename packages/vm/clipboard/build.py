@@ -15,6 +15,24 @@ def run(arguments, **kwargs):
     return subprocess.check_output(arguments, text=True, **kwargs).strip()
 
 
+def dependency_environment(prefix, inherited):
+    environment = dict(inherited)
+    directories = [str(prefix / 'lib')]
+    if inherited.get('LD_LIBRARY_PATH'):
+        directories.append(inherited['LD_LIBRARY_PATH'])
+    environment['LD_LIBRARY_PATH'] = os.pathsep.join(directories)
+    return environment
+
+
+def require_resolved_dependencies(output):
+    if 'not found' not in output:
+        return
+    missing = re.findall(r'^\s*([A-Za-z0-9_.+-]{1,128})\s+=>\s+not found\s*$', output, re.MULTILINE)
+    if not missing or len(missing) > 32:
+        raise RuntimeError('Clipboard runtime dependency scan reported unresolved entries')
+    raise RuntimeError('Clipboard runtime dependencies unresolved: ' + ', '.join(missing))
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     selection = parser.add_mutually_exclusive_group(required=True)
@@ -57,10 +75,9 @@ def main():
     copied = set()
     while pending:
         binary = pending.pop()
-        environment = dict(os.environ, LD_LIBRARY_PATH=str(prefix / 'lib'))
+        environment = dependency_environment(prefix, os.environ)
         dependencies = run(['ldd', str(binary)], env=environment)
-        if 'not found' in dependencies:
-            raise RuntimeError('Clipboard runtime dependency is unresolved')
+        require_resolved_dependencies(dependencies)
         for library in re.findall(r'=>\s+(/\S+)', dependencies):
             path = Path(library).resolve()
             if not path.is_relative_to(prefix):

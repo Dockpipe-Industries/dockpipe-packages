@@ -168,6 +168,15 @@ class NativeInputsTest(unittest.TestCase):
         self.assertEqual((self.root / 'gio/usr/share/doc/Index.html').read_bytes(), b'upper')
         self.assertEqual((self.root / 'gio/usr/share/doc/index.html').read_bytes(), b'lower')
 
+    def test_hashed_hosted_descriptor_keeps_source_bytes_on_windows_checkout(self):
+        source = Path(__file__).resolve().parents[4]
+        attributes = (source / '.gitattributes').read_text().splitlines()
+        self.assertIn('release/native-compiler/windows-hosted-19.51.json text eol=lf', attributes)
+        descriptor = source / 'release/native-compiler/windows-hosted-19.51.json'
+        expected = self.recipes['windows-amd64']['compiler']['acquisition_sha256']
+        self.assertEqual(native_inputs.digest(descriptor), expected)
+        self.assertNotEqual(hashlib.sha256(descriptor.read_bytes().replace(b'\n', b'\r\n')).hexdigest(), expected)
+
     @patch('windows_runtime.validate_runtime', return_value=Path('/qualified-runtime'))
     def test_native_msvc_receipt_is_admitted_without_redistributing_compiler(self, runtime_admission):
         from types import SimpleNamespace
@@ -220,6 +229,15 @@ class NativeInputsTest(unittest.TestCase):
         with patch.object(native_inputs.subprocess, 'run', return_value=SimpleNamespace(
                 stdout='Compiler Version 19.51.36260 for x64',stderr='')):
             result = native_inputs.compiler_environment(recipe, self.root / 'tools', environment)
+        original_acquisition = receipt['acquisition_sha256']
+        descriptor_bytes = (Path(__file__).resolve().parents[4] /
+                            'release/native-compiler/windows-hosted-19.51.json').read_bytes()
+        receipt['acquisition_sha256'] = hashlib.sha256(descriptor_bytes.replace(b'\n', b'\r\n')).hexdigest()
+        path.write_text(json.dumps(receipt))
+        with self.assertRaisesRegex(ValueError, 'source-bound hosted ABI'):
+            native_inputs.compiler_environment(recipe, self.root / 'tools', environment)
+        receipt['acquisition_sha256'] = original_acquisition
+        path.write_text(json.dumps(receipt))
         self.assertEqual(result['CC'], str(directory / 'cl.exe'))
         self.assertEqual(result['CMAKE_GENERATOR'], 'Ninja')
         self.assertEqual(result['DOCKPIPE_VM_DISPLAY_INSPECTOR'], str(directory / 'dumpbin.exe'))
