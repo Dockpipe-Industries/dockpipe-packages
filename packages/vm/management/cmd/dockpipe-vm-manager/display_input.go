@@ -14,8 +14,10 @@ func displayInputPath(address string) (string, error) {
 	if !strings.HasPrefix(address, "unix:path=") || strings.ContainsAny(address, ",;\x00\r\n") {
 		return "", fmt.Errorf("invalid private display input address")
 	}
-	path, err := url.PathUnescape(strings.TrimPrefix(address, "unix:path="))
-	if err != nil || !filepath.IsAbs(path) || filepath.Clean(path) != path || filepath.Base(path) != "bus" ||
+	decoded, err := url.PathUnescape(strings.TrimPrefix(address, "unix:path="))
+	path := filepath.FromSlash(decoded)
+	if err != nil || !filepath.IsAbs(path) || strings.HasPrefix(filepath.VolumeName(path), `\\`) ||
+		filepath.Clean(path) != path || filepath.Base(path) != "bus" ||
 		address != privateDisplayBusAddress(path) {
 		return "", fmt.Errorf("invalid private display input path")
 	}

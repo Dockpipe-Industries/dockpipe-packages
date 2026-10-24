@@ -15,6 +15,7 @@ python3 tests/test_toolchain_paths.py
 python3 tests/test_clipboard_build.py
 grep -Fq 'version: 1.3.6' package.yml
 python3 tests/test_runtime_compatibility.py
+python3 tests/test_flatpak_management_profiles.py
 grep -Fq 'const version = "1.3.5"' tools/cmd/dockpipe-qemu-controller/main.go
 grep -Fq 'models/QemuVmResolverConfig' resolvers/qemu/types.yml
 grep -Fq 'models/LinuxQemuVmResolverConfig' resolvers/qemu/types.yml

@@ -100,9 +100,23 @@ class SourceBuildTests(unittest.TestCase):
                     source_build.build_manager(repository, {}, Path("/pinned/dockpipe"), "manager.exe", output)
             command = run.call_args.args[0]
             self.assertEqual(command[1], repository / "tooling/catalog_go.py")
-            self.assertEqual(command[2:6], ["--", "build", "-buildvcs=false", "-trimpath"])
-            self.assertIn("-s -w -X main.Version=1.3.5", command)
+            self.assertEqual(command[2:], ["--", "test", "-count=1", "./packages/vm/management/..."])
+            self.assertEqual(run.call_count, 1)
             self.assertEqual([call.args[3] for call in emit.call_args_list], ["start", "fail"])
+
+    def test_native_manager_tests_run_before_binary_build(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            repository = Path(temporary)
+            (repository / "VERSION").write_text("1.3.5\n")
+            with mock.patch.object(source_build, "run") as run, \
+                    mock.patch.object(source_build, "emit_result"):
+                source_build.build_manager(repository, {}, Path("/pinned/dockpipe"),
+                                           "manager.exe", repository / "manager.exe")
+            commands = [call.args[0] for call in run.call_args_list]
+            self.assertEqual(len(commands), 2)
+            self.assertEqual(commands[0][2:], ["--", "test", "-count=1", "./packages/vm/management/..."])
+            self.assertEqual(commands[1][2:6], ["--", "build", "-buildvcs=false", "-trimpath"])
+            self.assertIn("-s -w -X main.Version=1.3.5", commands[1])
 
     def test_explicit_empty_sdk_or_partial_guest_bundle_fails_without_compilation(self):
         cases = [
