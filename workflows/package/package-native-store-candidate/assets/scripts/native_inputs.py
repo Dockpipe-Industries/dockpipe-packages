@@ -596,7 +596,9 @@ def prepare(recipe, root, toolchain, cache, fetch, acquire, environment):
         runtime = []
     else:
         gio = root / 'gio/usr'
-        environment.update(PKG_CONFIG_SYSROOT_DIR=str(root / 'gio'),
+        # Qt's WrapOpenGL must resolve headers and import libraries from the declared prefix.
+        environment.update(CMAKE_PREFIX_PATH=str(gio),
+                           PKG_CONFIG_SYSROOT_DIR=str(root / 'gio'),
                            PKG_CONFIG_LIBDIR=os.pathsep.join(str(root / 'gio' / part) for part in
                                ('usr/lib/x86_64-linux-gnu/pkgconfig', 'usr/share/pkgconfig')),
                            LD_LIBRARY_PATH=str(gio / 'lib/x86_64-linux-gnu'))

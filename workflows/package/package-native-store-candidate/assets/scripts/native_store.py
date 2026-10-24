@@ -441,7 +441,7 @@ def build(lock_path, target, cache, work, output, fetch=False):
         raise ValueError('Go SDK acquisition differs from the catalog public dependency lock')
     environment['DOCKPIPE_GO_SDK_INPUTS'] = str(sdk)
     environment['PATH'] = os.pathsep.join(str(inputs[name] / 'bin') for name in ('toolchain', 'qt', 'gio')) + os.pathsep + os.defpath
-    for key in ('CC', 'CXX', 'CMAKE_GENERATOR', 'PKG_CONFIG_SYSROOT_DIR', 'PKG_CONFIG_LIBDIR', 'LD_LIBRARY_PATH',
+    for key in ('CC', 'CXX', 'CMAKE_GENERATOR', 'CMAKE_PREFIX_PATH', 'PKG_CONFIG_SYSROOT_DIR', 'PKG_CONFIG_LIBDIR', 'LD_LIBRARY_PATH',
                 'DOCKPIPE_VM_LINUX_DEPENDENCY_MODE', 'DOCKPIPE_VM_LINUX_PREFIX_RECEIPT', 'DOCKPIPE_VM_DISPLAY_INSPECTOR',
                 'DOCKPIPE_NATIVE_LIB', 'DOCKPIPE_NATIVE_DUMPBIN', 'DOCKPIPE_NATIVE_RC', 'DOCKPIPE_NATIVE_MT', 'PATH', 'GOROOT'):
         if key in recipe_environment:
@@ -456,6 +456,8 @@ def build(lock_path, target, cache, work, output, fetch=False):
     manifest = (source / 'packages/vm/package.yml').read_text()
     if not re.search(r'^\s+script: assets/scripts/build-source\.py\s*$', manifest, re.MULTILINE):
         raise ValueError('Approved catalog source must declare the native Python source hook')
+    run([os.sys.executable, source / 'tooling/catalog_go_dependencies.py',
+         '--sdk-inputs', sdk, '--target', target], source, environment)
     run([cli, 'package', 'build', 'source', '--workdir', source, '--only', 'vm'], source, environment)
     run([cli, 'package', 'compile', 'workflows', '--workdir', source, '--from', source / 'packages/vm/workflows', '--force'], source, environment)
     stores = {}

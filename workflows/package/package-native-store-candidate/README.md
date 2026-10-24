@@ -50,6 +50,14 @@ bootstrap acquisition/installation implementation. A CLI-only bootstrap cannot
 satisfy this dependency; no core source copy or sibling fallback is permitted.
 The isolated source archive must declare
 `build.source.script: assets/scripts/build-source.py` before this lane accepts it.
+Before source compilation, `tooling/catalog_go_dependencies.py` authenticates the
+pinned public Go SDK, checks the effective Go target, and acquires the build/test
+module graph into the Go cache. It uses a temporary modfile and only checksums
+already present in catalog source or the verified SDK; source mod/sum files stay
+unchanged. CodeQL uses the same acquisition helper. The later
+`tooling/catalog_go.py` build independently validates the SDK and keeps
+`GOPROXY=off` and `GOSUMDB=off`.
+
 The producer invokes public `package build source --only vm`, compiles VM
 workflows, exports workflow and resolver stores separately, then combines only
 `owned` entries into the deterministic flat archive. The existing VM source hook

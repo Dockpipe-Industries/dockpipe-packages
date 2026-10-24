@@ -32,6 +32,16 @@ function Get-ContainedFile([string]$Path, [string]$Root) {
     return $item
 }
 
+function Assert-SelectedCommand([string]$Name, [string]$ExpectedPath) {
+    # Get-Command can return every matching application on PATH. The first
+    # result is the application a native invocation will actually execute.
+    $command = Get-Command $Name -CommandType Application -ErrorAction Stop |
+        Select-Object -First 1
+    if ([IO.Path]::GetFullPath($command.Source) -ne [IO.Path]::GetFullPath($ExpectedPath)) {
+        throw 'Hosted command resolves outside the selected toolset or SDK.'
+    }
+}
+
 function Assert-MicrosoftBinary([string]$Path, [string]$Root, [string]$ExpectedHash = '', [string]$ExpectedVersion = '') {
     $item = Get-ContainedFile $Path $Root
     if ($item.Length -gt 128MB) {
@@ -143,9 +153,7 @@ $tools = [ordered]@{}
 foreach ($name in @('cl', 'dumpbin', 'lib', 'link')) {
     $file = Join-Path $directory ($name + '.exe')
     $hash = Assert-MicrosoftBinary $file $installation
-    if ((Get-Command ($name + '.exe') -CommandType Application).Source -ne [IO.Path]::GetFullPath($file)) {
-        throw 'Hosted compiler command resolves outside the selected toolset.'
-    }
+    Assert-SelectedCommand ($name + '.exe') $file
     $tools[$name] = @{
         path = $file.Substring($installation.Length + 1).Replace('\', '/')
         sha256 = $hash
@@ -159,9 +167,7 @@ foreach ($name in @('rc', 'mt')) {
         path = 'bin/10.0.26100.0/x64/' + $name + '.exe'
         sha256 = $hash
     }
-    if ((Get-Command ($name + '.exe') -CommandType Application).Source -ne [IO.Path]::GetFullPath($file)) {
-        throw 'Hosted Windows SDK command resolves outside the selected SDK.'
-    }
+    Assert-SelectedCommand ($name + '.exe') $file
 }
 $start = [Diagnostics.ProcessStartInfo]::new()
 $start.FileName = $compiler

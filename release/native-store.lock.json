@@ -619,6 +619,97 @@
             },
             "package": "libpcrecpp0v5:amd64",
             "version": "2:8.39-13ubuntu0.22.04.1"
+          },
+          {
+            "id": "libgl-dev-amd64",
+            "destination": "gio",
+            "package": "libgl-dev:amd64",
+            "version": "1.4.0-1",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/libg/libglvnd/libgl-dev_1.4.0-1_amd64.deb",
+              "sha256": "6cda0891ca38204ab3a9a2a9279ecb99989ab100d6e48101306efce28f0759a2",
+              "size_bytes": 101498,
+              "format": "deb",
+              "root": ""
+            }
+          },
+          {
+            "id": "libgl1-amd64",
+            "destination": "gio",
+            "package": "libgl1:amd64",
+            "version": "1.4.0-1",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/libg/libglvnd/libgl1_1.4.0-1_amd64.deb",
+              "sha256": "4fb2bbff94bb1a59bbdb40041e7a8ab58db2a003a151f4055357af03f0b78666",
+              "size_bytes": 110500,
+              "format": "deb",
+              "root": ""
+            }
+          },
+          {
+            "id": "libglvnd0-amd64",
+            "destination": "gio",
+            "package": "libglvnd0:amd64",
+            "version": "1.4.0-1",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/libg/libglvnd/libglvnd0_1.4.0-1_amd64.deb",
+              "sha256": "6956d8be93b160b439a043141a061adfd54561d877423a956ace84d2fb3bfb4e",
+              "size_bytes": 73582,
+              "format": "deb",
+              "root": ""
+            }
+          },
+          {
+            "id": "libglx-dev-amd64",
+            "destination": "gio",
+            "package": "libglx-dev:amd64",
+            "version": "1.4.0-1",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/libg/libglvnd/libglx-dev_1.4.0-1_amd64.deb",
+              "sha256": "98bc8061e0cc40bc553df71d84f4c653c8188ed4aabc9315aae99926948af7e4",
+              "size_bytes": 14126,
+              "format": "deb",
+              "root": ""
+            }
+          },
+          {
+            "id": "libglx0-amd64",
+            "destination": "gio",
+            "package": "libglx0:amd64",
+            "version": "1.4.0-1",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/libg/libglvnd/libglx0_1.4.0-1_amd64.deb",
+              "sha256": "950068e8a3ad3905058d21a8c870c37989e48c0a537a7c57231c277af19f5395",
+              "size_bytes": 41024,
+              "format": "deb",
+              "root": ""
+            }
+          },
+          {
+            "id": "libopengl-dev-amd64",
+            "destination": "gio",
+            "package": "libopengl-dev:amd64",
+            "version": "1.4.0-1",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/libg/libglvnd/libopengl-dev_1.4.0-1_amd64.deb",
+              "sha256": "825d0374431335bb4693a8f6e5a650353fd680838d6dc988fb9e232ffa0d95a1",
+              "size_bytes": 3400,
+              "format": "deb",
+              "root": ""
+            }
+          },
+          {
+            "id": "libopengl0-amd64",
+            "destination": "gio",
+            "package": "libopengl0:amd64",
+            "version": "1.4.0-1",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/libg/libglvnd/libopengl0_1.4.0-1_amd64.deb",
+              "sha256": "486473b82c475d8137d2a061adb22fbcd1d681936e9d85a3ca7f8b4b83e2ccde",
+              "size_bytes": 36450,
+              "format": "deb",
+              "root": ""
+            }
           }
         ],
         "licenses": [
@@ -837,6 +928,62 @@
             "package": "libpcrecpp0v5:amd64",
             "version": "2:8.39-13ubuntu0.22.04.1",
             "archive_id": "libpcrecpp0v5-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libgl-dev/copyright",
+            "sha256": "cf246da9d8979f9be80e5b9c3ce0010c09786f11a55637ff3d09f1a36d269b25",
+            "size_bytes": 4283,
+            "package": "libgl-dev:amd64",
+            "version": "1.4.0-1",
+            "archive_id": "libgl-dev-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libgl1/copyright",
+            "sha256": "cf246da9d8979f9be80e5b9c3ce0010c09786f11a55637ff3d09f1a36d269b25",
+            "size_bytes": 4283,
+            "package": "libgl1:amd64",
+            "version": "1.4.0-1",
+            "archive_id": "libgl1-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libglvnd0/copyright",
+            "sha256": "cf246da9d8979f9be80e5b9c3ce0010c09786f11a55637ff3d09f1a36d269b25",
+            "size_bytes": 4283,
+            "package": "libglvnd0:amd64",
+            "version": "1.4.0-1",
+            "archive_id": "libglvnd0-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libglx-dev/copyright",
+            "sha256": "cf246da9d8979f9be80e5b9c3ce0010c09786f11a55637ff3d09f1a36d269b25",
+            "size_bytes": 4283,
+            "package": "libglx-dev:amd64",
+            "version": "1.4.0-1",
+            "archive_id": "libglx-dev-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libglx0/copyright",
+            "sha256": "cf246da9d8979f9be80e5b9c3ce0010c09786f11a55637ff3d09f1a36d269b25",
+            "size_bytes": 4283,
+            "package": "libglx0:amd64",
+            "version": "1.4.0-1",
+            "archive_id": "libglx0-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libopengl-dev/copyright",
+            "sha256": "cf246da9d8979f9be80e5b9c3ce0010c09786f11a55637ff3d09f1a36d269b25",
+            "size_bytes": 4283,
+            "package": "libopengl-dev:amd64",
+            "version": "1.4.0-1",
+            "archive_id": "libopengl-dev-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libopengl0/copyright",
+            "sha256": "cf246da9d8979f9be80e5b9c3ce0010c09786f11a55637ff3d09f1a36d269b25",
+            "size_bytes": 4283,
+            "package": "libopengl0:amd64",
+            "version": "1.4.0-1",
+            "archive_id": "libopengl0-amd64"
           }
         ],
         "libraries": [
@@ -935,6 +1082,38 @@
             "package": "libexpat1:amd64",
             "version": "2.4.7-1ubuntu0.9",
             "archive_id": "libexpat1-amd64"
+          },
+          {
+            "path": "gio/usr/lib/x86_64-linux-gnu/libGL.so.1",
+            "sha256": "92e6ea9f8caa3c265f3ef141a122a18f7d2e27d6e5fd2b490cfea83262df745e",
+            "size_bytes": 543056,
+            "package": "libgl1:amd64",
+            "version": "1.4.0-1",
+            "archive_id": "libgl1-amd64"
+          },
+          {
+            "path": "gio/usr/lib/x86_64-linux-gnu/libGLdispatch.so.0",
+            "sha256": "a4f2642498fba54d2f39e90ca3daa94340cdd52198473185a5285608ae318cb6",
+            "size_bytes": 715200,
+            "package": "libglvnd0:amd64",
+            "version": "1.4.0-1",
+            "archive_id": "libglvnd0-amd64"
+          },
+          {
+            "path": "gio/usr/lib/x86_64-linux-gnu/libGLX.so.0",
+            "sha256": "19ad2625b20a3afe6f5e55f9acd1e18e0dfc81b0965d7d3f2181a05b6d48edbf",
+            "size_bytes": 141896,
+            "package": "libglx0:amd64",
+            "version": "1.4.0-1",
+            "archive_id": "libglx0-amd64"
+          },
+          {
+            "path": "gio/usr/lib/x86_64-linux-gnu/libOpenGL.so.0",
+            "sha256": "35ea98e979c5bcadf06a79b8ca5a767a197c77bc77428a9a8a16b95bf78e99e9",
+            "size_bytes": 174408,
+            "package": "libopengl0:amd64",
+            "version": "1.4.0-1",
+            "archive_id": "libopengl0-amd64"
           }
         ]
       },

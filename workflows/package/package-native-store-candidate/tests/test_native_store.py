@@ -190,6 +190,12 @@ class NativeStoreTest(unittest.TestCase):
     def test_recipe_generator_selection_reaches_the_actual_owning_source_hook(self):
         self.assert_producer_orchestration({'CMAKE_GENERATOR': 'Ninja'})
 
+    def test_declared_opengl_prefix_reaches_actual_owning_source_hook(self):
+        self.assert_producer_orchestration({
+            'CMAKE_GENERATOR': 'Ninja',
+            'CMAKE_PREFIX_PATH': '/declared/native-inputs/gio/usr',
+        })
+
     def assert_producer_orchestration(self, recipe_environment=None):
         document = self.lock()
         document['owned'] = [list(identity) for identity in sorted(native_store.VM_FAMILY)]
@@ -225,8 +231,8 @@ class NativeStoreTest(unittest.TestCase):
         def invoke(arguments, repository, environment):
             commands.append([str(item) for item in arguments])
             self.assertEqual(environment['DOCKPIPE_DISPLAY_SDK'], 'display')
-            if recipe_environment is not None:
-                self.assertEqual(environment['CMAKE_GENERATOR'], 'Ninja')
+            for key, value in (recipe_environment or {}).items():
+                self.assertEqual(environment[key], value)
             if arguments[1:4] != ['package', 'build', 'store']:
                 return
             destination = Path(arguments[arguments.index('--out') + 1])
@@ -262,10 +268,12 @@ class NativeStoreTest(unittest.TestCase):
             ):
                 output = self.root / 'produced'
                 native_store.build(self.save_lock(document), 'linux-amd64', self.root / 'cache', self.root / 'work', output)
-        self.assertEqual(commands[0][1:4], ['package', 'build', 'source'])
-        self.assertIn('vm', commands[0])
+        self.assertTrue(commands[0][1].endswith('/tooling/catalog_go_dependencies.py'))
+        self.assertEqual(commands[0][-2:], ['--target', 'linux-amd64'])
+        self.assertEqual(commands[1][1:4], ['package', 'build', 'source'])
+        self.assertIn('vm', commands[1])
         self.assertEqual({command[-1] for command in commands if command[1:4] == ['package', 'build', 'store']}, {'workflows', 'resolvers'})
-        self.assertTrue(all(command[0].endswith('/dockpipe') for command in commands))
+        self.assertTrue(all(command[0].endswith('/dockpipe') for command in commands[1:]))
         planned = publication_plan.plan([output / 'candidate.json'], qualification='native')
         self.assertEqual(planned['owned'], document['owned'])
 
