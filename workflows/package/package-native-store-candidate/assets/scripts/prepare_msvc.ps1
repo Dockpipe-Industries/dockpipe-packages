@@ -12,7 +12,7 @@ function Get-ContainedFile([string]$Path, [string]$Root) {
         throw 'Hosted tool must be contained in the explicit installation root.'
     }
     $item = Get-Item -LiteralPath $fullPath
-    if ($item.PSIsContainer) {
+    if ($item -isnot [IO.FileInfo]) {
         throw 'Hosted tool must be a regular file.'
     }
     $ancestor = $item
@@ -23,7 +23,7 @@ function Get-ContainedFile([string]$Path, [string]$Root) {
         if ($ancestor.FullName -eq $fullRoot) {
             break
         }
-        if ($ancestor.PSIsContainer) {
+        if ($ancestor -is [IO.DirectoryInfo]) {
             $ancestor = $ancestor.Parent
         } else {
             $ancestor = $ancestor.Directory

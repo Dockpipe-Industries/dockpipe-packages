@@ -3,6 +3,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 from pathlib import Path
 import tempfile
 import time
@@ -30,9 +31,34 @@ def admit_url(url):
         raise ValueError('Tool acquisition requires an admitted official HTTPS host')
 
 
+def admit_redirect(origin, destination):
+    target = urllib.parse.urlsplit(destination)
+    if not target.query:
+        admit_url(destination)
+        return
+
+    # GitHub signs its release-asset transport URLs. Authored recipe URLs still
+    # prohibit queries; only this exact official release-to-CDN edge admits one.
+    admit_url(origin)
+    source = urllib.parse.urlsplit(origin)
+    query = urllib.parse.parse_qs(target.query, keep_blank_values=True)
+    signed_keys = {'jwt', 'response-content-disposition', 'response-content-type',
+                   'rscd', 'rsct', 'se', 'sig', 'ske', 'skoid', 'sks', 'skt',
+                   'sktid', 'skv', 'sp', 'spr', 'sr', 'sv'}
+    if (source.hostname != 'github.com'
+            or not re.fullmatch(r'/[^/]+/[^/]+/releases/download/[^/]+/[^/]+', source.path)
+            or target.hostname != 'release-assets.githubusercontent.com'
+            or not re.fullmatch(r'/github-production-release-asset/[0-9]+/[0-9a-f-]{36}', target.path)
+            or len(destination) > 16384 or not {'sig', 'se'} <= query.keys()
+            or not query.keys() <= signed_keys
+            or any(len(values) != 1 or not values[0] for values in query.values())):
+        raise ValueError('Tool acquisition redirect is not an admitted signed release asset')
+    admit_url(urllib.parse.urlunsplit(target._replace(query='')))
+
+
 class OfficialRedirects(urllib.request.HTTPRedirectHandler):
     def redirect_request(self, request, file, code, message, headers, new_url):
-        admit_url(new_url)
+        admit_redirect(request.full_url, new_url)
         return super().redirect_request(request, file, code, message, headers, new_url)
 
 
