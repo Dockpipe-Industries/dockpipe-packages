@@ -77,7 +77,7 @@ class MacContractTest(unittest.TestCase):
 
     def test_only_supported_metadata_is_extended(self):
         self.assertIn('version: 1.3.7\n', (ROOT / 'package.yml').read_text())
-        self.assertIn('min_dockpipe_version: 0.6.28-0\n', (ROOT / 'package.yml').read_text())
+        self.assertIn('min_dockpipe_version: 0.6.29-0\n', (ROOT / 'package.yml').read_text())
         self.assertIn('platforms: [windows, deb, macos]', (ROOT / 'package.yml').read_text())
         self.assertIn('script: assets/scripts/build-source.py', (ROOT / 'package.yml').read_text())
         self.assertIn('script: tests/run.py', (ROOT / 'package.yml').read_text())

@@ -16,7 +16,7 @@ The root fields are exact; unknown or missing root fields stop preparation:
 | `baseline_manifests` | Six exact public staging store manifest URL/SHA256/size triplets |
 | `baseline_pointer` | Exact reviewed public/admin optional latest SHA256/size, or admitted absence; the actual S3 ETag is obtained at execution |
 | `cli` | LinuxAMD64, WindowsAMD64 and MacARM64 exact public CLI archive URL/SHA256/size, version and inner executable SHA256/size |
-| `destination` | Literal reference names `endpoint_reference: CATALOG_STAGING_R2_ENDPOINT` and `bucket_reference: CATALOG_STAGING_R2_BUCKET`; `target_sha256` of `catalog_plan.json_bytes({endpoint, bucket})` using actual operator values |
+| `destination` | Literal reference names `endpoint_reference: R2_ENDPOINT_URL` and `bucket_reference: DOCKPIPE_RELEASE_BUCKET`; `target_sha256` of `catalog_plan.json_bytes({endpoint, bucket})` using actual operator values |
 | `aws_cli_archive` | Exact `archive` triplet from the source-bound official AWS CLI descriptor |
 | `named_workflow_qualification` | Path below `release/catalog-qualification/`, SHA256 and size of the reviewed public evidence projection |
 | `runtime` | Independent public runtime pointer and manifest pins, runtime source/version, exact producer compiled-core release pin, and three platform store/core pins with effective `vmimage-run.sh` SHA256 |
