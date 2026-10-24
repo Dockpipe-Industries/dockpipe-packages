@@ -21,6 +21,7 @@
 #include <QJsonArray>
 #include <QTemporaryDir>
 #include <thread>
+#include "NativeFixtureOwnership.h"
 
 namespace {
 int ownProcessId()
@@ -73,6 +74,10 @@ public:
         g_object_unref(address);
         if (!bound)
             qFatal("Cannot bind isolated QMP fixture socket");
+#ifdef Q_OS_WIN
+        if (!NativeFixtureOwnership::assignFreshObjectToCurrentUser(path_))
+            qFatal("Cannot establish current-user ownership for fresh QMP fixture socket");
+#endif
         g_socket_set_blocking(listener_, false);
         worker_ = std::thread([this] { serve(); });
     }

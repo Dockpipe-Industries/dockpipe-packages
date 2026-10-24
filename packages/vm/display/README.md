@@ -96,6 +96,19 @@ same SID and exact decimal FILETIME creation token. Native mapping/process tests
 have run, as has the minimal installed-module shared-memory handoff proof. The
 complete Windows desktop host route remains a separate qualification.
 
+Windows test fixtures explicitly assign the current-user owner to only their
+newly created descriptor and AF_UNIX socket inside an already-private fixture
+directory. An elevated creator's default object owner can differ from its user
+SID; inherited private DACLs do not establish the child's owner. See Microsoft's
+[owner rules](https://learn.microsoft.com/en-us/windows/win32/secauthz/owner-of-a-new-object)
+and [DACL inheritance rules](https://learn.microsoft.com/en-us/windows/win32/secauthz/dacl-for-a-new-object). This fixture
+setup preserves production owner and peer checks and the unapproved-principal
+negative tests. It does not authorize relabeling imported metadata or sockets.
+The Go publisher creates its own directories and descriptor files with explicit
+current-user ownership. Broker/QEMU-created socket ownership still follows the
+creator token; an elevated session whose socket owner differs is rejected.
+Fixture correction does not qualify or repair that admin-mode production path.
+
 macOS uses the Unix FD protocol and bounded pread from an owned unlinked regular
 file, including QEMU's non-memfd allocation fallback. Linux retains its additional
 tmpfs admission check. Darwin identity uses libproc BSD start seconds:microseconds
