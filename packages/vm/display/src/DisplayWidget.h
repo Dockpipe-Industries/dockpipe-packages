@@ -11,6 +11,7 @@ struct DisplayInput {
     Kind kind;
     int first;
     int second = 0;
+    QSize frameSize;
 };
 
 // Transport-independent widget: no QEMU, GIO, D-Bus or process ownership.

@@ -15,6 +15,7 @@ import sys
 sys.dont_write_bytecode = True
 from tooling.runtime_closure import windows_closure, macos_closure
 from tooling.broker_closure import broker_inputs, bundle_broker
+from tooling.windows_test_diagnostics import diagnose_tests
 
 ROOT = Path(__file__).resolve().parent
 SYSTEM_ABI = {"libc.so.6", "libm.so.6", "libdl.so.2", "libpthread.so.0", "librt.so.1"}
@@ -55,7 +56,7 @@ def material_sources(root):
     paths = [root / "CMakeLists.txt"]
     for directory in ("src", "tests", "tooling"):
         paths.extend(path for path in (root / directory).rglob("*")
-                     if path.is_file() and path.suffix in {".cpp", ".h", ".in"})
+                     if path.is_file() and path.suffix in {".cpp", ".h", ".in", ".cmake"})
     if len(paths) > 256:
         raise ValueError("Prepared build source inventory exceeds 256 files")
     inventory = {}
@@ -137,6 +138,15 @@ def elf_dependencies(binary):
 
 
 def gio_closure():
+    from tooling.linux_prefix import selected
+    prefix = selected()
+    if prefix is not None:
+        gio = next((path for path in prefix.libraries if path.name == "libgio-2.0.so.0"), None)
+        if gio is None:
+            raise ValueError("Declared Linux prefix lacks GIO")
+        libraries = elf_dependencies(gio)
+        libraries[gio.name] = gio
+        return prefix.closure(libraries)
     library_directory = Path(subprocess.check_output(
         ["pkg-config", "--variable=libdir", "gio-2.0"], text=True).strip())
     gio = library_directory / "libgio-2.0.so.0"
@@ -161,6 +171,10 @@ def owning_package(path):
 
 
 def package_license(path):
+    from tooling.linux_prefix import selected
+    prefix = selected()
+    if prefix is not None:
+        return prefix.package_license(path)
     package = owning_package(path)
     source = Path("/usr/share/doc") / package.split(":", 1)[0] / "copyright"
     if not source.is_file():
@@ -218,7 +232,15 @@ def main():
         run(arguments)
         run(["cmake", "--build", build, "--config", "Release", "-j4"])
     if not args.skip_tests:
-        run(["ctest", "--test-dir", build, "-C", "Release", "--output-on-failure"])
+        try:
+            run(["ctest", "--test-dir", build, "-C", "Release", "--output-on-failure"])
+        except subprocess.CalledProcessError:
+            if system == "Windows":
+                try:
+                    diagnose_tests(build, gio, qt, os.environ)
+                except (OSError, ValueError, subprocess.SubprocessError) as diagnostic_error:
+                    print("Windows test evidence collection failed: " + str(diagnostic_error)[:2000], file=sys.stderr)
+            raise
     destination = args.output / "package/assets/display"
     destination.mkdir(parents=True)
     module_name = {"Linux": "libdockpipe-vm-display.so", "Windows": "dockpipe-vm-display.dll",
@@ -245,12 +267,8 @@ def main():
         provenance = []
         for name, source in sorted(libraries.items()):
             shutil.copyfile(source, runtime / name)
-            package = owning_package(source)
-            license_source = Path("/usr/share/doc") / package.split(":", 1)[0] / "copyright"
-            if not license_source.is_file():
-                raise ValueError("Runtime dependency copyright file is missing: " + package)
+            package, version, license_source = package_license(source)
             shutil.copyfile(license_source, licenses / (package.replace(":", "-") + ".copyright"))
-            version = subprocess.check_output(["dpkg-query", "-W", "-f=${Version}", package], text=True)
             provenance.append({"name": name, "sha256": sha256(runtime / name),
                                "package": package, "version": version.strip()})
     bundle_broker(broker_binary, broker_provenance, destination, system, gio, qt,

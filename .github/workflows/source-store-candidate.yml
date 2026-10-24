@@ -1,0 +1,81 @@
+name: Source-only catalog compatibility candidate
+on:
+  push:
+    branches: [dev]
+    paths:
+      - 'packages/terraform/resolvers/terraform-core/**'
+      - 'packages/cloud/storage/resolvers/r2/secretstore-r2-publish-test/**'
+      - 'packages/cloud/storage/resolvers/r2/dockpipe.cloudflare.r2infra/**'
+      - 'release/source-overlay*'
+      - 'workflows/package/package-native-store-candidate/**'
+      - '.github/workflows/source-store-candidate.yml'
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: source-catalog-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13.7'
+      - name: Install only the hash-locked source verifier dependency
+        run: |
+          python -m pip install --require-hashes --only-binary=:all: -r release/source-overlay-requirements.lock.txt
+      - name: Test source and immutable publication contracts without mutation
+        run: |
+          python -B -m unittest discover -s workflows/package/package-native-store-candidate/tests -p 'test_source_overlay.py' -v
+          python -B -m unittest discover -s workflows/package/package-native-store-candidate/tests -p 'test_publish_candidate.py' -v
+      - name: Bind the accepted source transport once
+        run: python -B workflows/package/package-native-store-candidate/assets/scripts/source_overlay.py prepare --lock release/source-overlay.lock.json --output source-inputs
+      - name: Compile through released Dockpipe and verify real consumer closure
+        run: python -B workflows/package/package-native-store-candidate/assets/scripts/source_overlay.py build --lock source-inputs/effective-lock.json --cache '${{ runner.temp }}/source-cache' --work '${{ runner.temp }}/source-work' --output source-output --fetch
+      - uses: actions/attest-build-provenance@v2
+        if: github.repository == 'Dockpipe-Industries/dockpipe-packages' && github.event_name == 'push' && github.ref == 'refs/heads/dev'
+        with:
+          subject-path: |
+            source-output/dockpipe-catalog-linux-amd64.tar.gz
+            source-output/candidate.json
+            source-output/consumer-proof.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: source-catalog-${{ github.sha }}
+          path: |
+            source-output
+            source-inputs
+          if-no-files-found: error
+  publish:
+    needs: build
+    if: github.repository == 'Dockpipe-Industries/dockpipe-packages' && github.event_name == 'push' && github.ref == 'refs/heads/dev'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      attestations: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13.7'
+      - uses: actions/download-artifact@v4
+        with:
+          name: source-catalog-${{ github.sha }}
+          path: candidate
+      - name: Verify CI attestations and create or resume exact immutable assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python -B workflows/package/package-native-store-candidate/assets/scripts/source_overlay.py publish --lock candidate/source-inputs/effective-lock.json --candidate candidate/source-output/candidate.json --output publication
+      - uses: actions/upload-artifact@v4
+        with:
+          name: source-catalog-publication-${{ github.sha }}
+          path: publication
+          if-no-files-found: error

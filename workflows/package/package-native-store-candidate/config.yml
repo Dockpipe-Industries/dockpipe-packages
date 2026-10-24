@@ -1,0 +1,9 @@
+name: package-native-store-candidate
+title: Immutable VM native catalog candidate
+description: Build an exact noncore native store overlay from public locked dependencies. Accepted dev pushes publish an immutable checksum-verified candidate.
+platforms: [deb, windows, macos]
+docker_preflight: false
+steps:
+  - id: produce-native-store
+    kind: host
+    run: assets/scripts/candidate.py

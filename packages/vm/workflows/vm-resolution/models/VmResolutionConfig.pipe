@@ -1,12 +1,12 @@
-/// <summary>Primary Windows guest display geometry. The guest driver must support this mode.</summary>
+/// <summary>Primary Windows guest display geometry. The guest driver must support this mode. Active native views also require at most 4096 pixels per axis and a 32 MiB 32-bit frame.</summary>
 public Class VmResolutionConfig
 {
-    /// <summary>Width in guest pixels. Accepted range: 640 to 8192.</summary>
+    /// <summary>Width in guest pixels. Accepted range: 640 to 8192; the active native display may require a smaller mode.</summary>
     [DisplayName = "Width"]
     [EnvName = "DOCKPIPE_VM_DISPLAY_WIDTH"]
     public string Width = "1920";
 
-    /// <summary>Height in guest pixels. Accepted range: 480 to 8192.</summary>
+    /// <summary>Height in guest pixels. Accepted range: 480 to 8192; the active native display may require a smaller mode.</summary>
     [DisplayName = "Height"]
     [EnvName = "DOCKPIPE_VM_DISPLAY_HEIGHT"]
     public string Height = "1080";

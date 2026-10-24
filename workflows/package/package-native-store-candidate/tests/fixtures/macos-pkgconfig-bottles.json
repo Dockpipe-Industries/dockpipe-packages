@@ -1,0 +1,86 @@
+[
+  {
+    "package": "glib",
+    "archive_sha256": "ce9568a335281cb6bd12c48fd89d7a118a046f9df16761c120826fdae116e468",
+    "header_directories": [
+      "glib/2.90.1/include/gio-unix-2.0/gio",
+      "glib/2.90.1/include/glib-2.0",
+      "glib/2.90.1/include/glib-2.0/gio",
+      "glib/2.90.1/include/glib-2.0/girepository",
+      "glib/2.90.1/include/glib-2.0/glib",
+      "glib/2.90.1/include/glib-2.0/glib/deprecated",
+      "glib/2.90.1/include/glib-2.0/gmodule",
+      "glib/2.90.1/include/glib-2.0/gobject",
+      "glib/2.90.1/lib/glib-2.0/include"
+    ],
+    "files": [
+      {
+        "path": "glib/2.90.1/lib/pkgconfig/gio-2.0.pc",
+        "sha256": "af8a2ee294386c1de3e40023ab0141e4d1abe66f7fccf4a262110523741745b3",
+        "content": "prefix=@@HOMEBREW_CELLAR@@/glib/2.90.1\nbindir=${prefix}/bin\ndatadir=${prefix}/share\nincludedir=${prefix}/include\nlibdir=${prefix}/lib\n\nschemasdir=${datadir}/glib-2.0/schemas\ndtdsdir=${datadir}/glib-2.0/dtds\ngiomoduledir=${libdir}/gio/modules\ngio=${bindir}/gio\ngio_querymodules=${bindir}/gio-querymodules\nglib_compile_schemas=${bindir}/glib-compile-schemas\nglib_compile_resources=${bindir}/glib-compile-resources\ngdbus=${bindir}/gdbus\ngdbus_codegen=${bindir}/gdbus-codegen\ngresource=${bindir}/gresource\ngsettings=${bindir}/gsettings\n\nName: GIO\nDescription: glib I/O library\nVersion: 2.90.1\nRequires: glib-2.0, gobject-2.0\nRequires.private: gmodule-no-export-2.0, zlib\nLibs: -L${libdir} -lgio-2.0\nLibs.private: -lintl -framework Foundation -framework CoreFoundation -framework AppKit -lresolv\nCflags: -I${includedir}\n"
+      },
+      {
+        "path": "glib/2.90.1/lib/pkgconfig/gio-unix-2.0.pc",
+        "sha256": "2eb5c63ca8043c5c787c675f78d683f4866f5b9931e33fa55488fd91bfc967e8",
+        "content": "prefix=@@HOMEBREW_CELLAR@@/glib/2.90.1\nincludedir=${prefix}/include\n\nName: GIO unix specific APIs\nDescription: unix specific headers for glib I/O library\nVersion: 2.90.1\nRequires: gobject-2.0, gio-2.0\nCflags: -I${includedir}/gio-unix-2.0\n"
+      },
+      {
+        "path": "glib/2.90.1/lib/pkgconfig/glib-2.0.pc",
+        "sha256": "34df52f52110dea46d8e40c9b0b847256b69ca27139ea3674d1d3a03cdc8a205",
+        "content": "prefix=@@HOMEBREW_CELLAR@@/glib/2.90.1\nbindir=${prefix}/bin\ndatadir=${prefix}/share\nincludedir=${prefix}/include\nlibdir=${prefix}/lib\n\nglib_genmarshal=${bindir}/glib-genmarshal\ngobject_query=${bindir}/gobject-query\nglib_mkenums=${bindir}/glib-mkenums\nglib_valgrind_suppressions=${datadir}/glib-2.0/valgrind/glib.supp\n\nName: GLib\nDescription: C Utility Library\nVersion: 2.90.1\nRequires.private: libpcre2-8 >= 10.32\nLibs: -L${libdir} -lglib-2.0 -L@@HOMEBREW_PREFIX@@/opt/gettext/lib -lintl\nLibs.private: -liconv -lm -framework Foundation -framework CoreFoundation -framework AppKit -framework Carbon\nCflags: -I${includedir}/glib-2.0 -I${libdir}/glib-2.0/include -I@@HOMEBREW_PREFIX@@/opt/gettext/include\n"
+      },
+      {
+        "path": "glib/2.90.1/lib/pkgconfig/gmodule-no-export-2.0.pc",
+        "sha256": "fdb5483b0ca8f6a4e5d74860adf3033eebe372be4f7f806fcfcb04a2cbc85178",
+        "content": "prefix=@@HOMEBREW_CELLAR@@/glib/2.90.1\nincludedir=${prefix}/include\nlibdir=${prefix}/lib\n\ngmodule_supported=true\n\nName: GModule\nDescription: Dynamic module loader for GLib\nVersion: 2.90.1\nRequires: glib-2.0\nLibs: -L${libdir} -lgmodule-2.0\nLibs.private: -lintl\nCflags: -I${includedir}\n"
+      },
+      {
+        "path": "glib/2.90.1/lib/pkgconfig/gobject-2.0.pc",
+        "sha256": "87fcdd2c32001186fc4235841e9a95788405ceb3b11b1e91f803f1781b15363e",
+        "content": "prefix=@@HOMEBREW_CELLAR@@/glib/2.90.1\nincludedir=${prefix}/include\nlibdir=${prefix}/lib\n\nName: GObject\nDescription: GLib Type, Object, Parameter and Signal Library\nVersion: 2.90.1\nRequires: glib-2.0\nRequires.private: libffi >=  3.0.0\nLibs: -L${libdir} -lgobject-2.0\nLibs.private: -lintl\nCflags: -I${includedir}\n"
+      }
+    ]
+  },
+  {
+    "package": "pcre2",
+    "archive_sha256": "0ec47d18c50f5770db2b3f07b5b85644284cc6ee8e07e23b11d2727e95932b77",
+    "header_directories": [
+      "pcre2/10.49/include"
+    ],
+    "files": [
+      {
+        "path": "pcre2/10.49/lib/pkgconfig/libpcre2-8.pc",
+        "sha256": "69a01b6e13fde47f96703cd37574cbaa35b36d2c6900a9a8d91cfe1c7268b0ff",
+        "content": "# Package Information for pkg-config\n\nprefix=@@HOMEBREW_CELLAR@@/pcre2/10.49\nexec_prefix=${prefix}\nlibdir=@@HOMEBREW_CELLAR@@/pcre2/10.49/lib\nincludedir=${prefix}/include\n\nName: libpcre2-8\nDescription: PCRE2 - Perl compatible regular expressions C library (2nd API) with 8 bit character support\nVersion: 10.49\nLicense: BSD-3-Clause WITH PCRE2-exception\nLibs: -L${libdir} -lpcre2-8\nLibs.private: -pthread -lpthread\nCflags: -I${includedir} \n"
+      }
+    ]
+  },
+  {
+    "package": "libffi",
+    "archive_sha256": "ba141e26c8d3b55fa4534317c474b34d649355d93299e35aa33a6eebf60117f8",
+    "header_directories": [
+      "libffi/3.8.0/include"
+    ],
+    "files": [
+      {
+        "path": "libffi/3.8.0/lib/pkgconfig/libffi.pc",
+        "sha256": "d9706e9d0a0ab162e79e7d445074327c905a02e0ce5c382935bd9d61e84d51be",
+        "content": "prefix=@@HOMEBREW_CELLAR@@/libffi/3.8.0\nexec_prefix=${prefix}\nlibdir=@@HOMEBREW_CELLAR@@/libffi/3.8.0/lib\ntoolexeclibdir=${libdir}\nincludedir=${prefix}/include\n\nName: libffi\nDescription: Library supporting Foreign Function Interfaces\nVersion: 3.8.0\nLibs: -L${toolexeclibdir} -lffi\nCflags: -I${includedir}\n"
+      }
+    ]
+  },
+  {
+    "package": "zlib",
+    "archive_sha256": "c43efaa12e3d22914f41882679ad8c86b58958660852f1edd7b305daee5860f0",
+    "header_directories": [
+      "zlib/1.3.2/include"
+    ],
+    "files": [
+      {
+        "path": "zlib/1.3.2/lib/pkgconfig/zlib.pc",
+        "sha256": "cfea26ef7dccacbf10e006146bf7a7c88fe755a0d22788865ac90f08baadd7b9",
+        "content": "prefix=@@HOMEBREW_PREFIX@@/opt/zlib\nexec_prefix=${prefix}\nlibdir=${exec_prefix}/lib\nsharedlibdir=${libdir}\nincludedir=${prefix}/include\n\nName: zlib\nDescription: zlib compression library\nVersion: 1.3.2\nLicense: Zlib\n\nRequires:\nLibs: -L${libdir} -L${sharedlibdir} -lz\nCflags: -I${includedir}\n"
+      }
+    ]
+  }
+]

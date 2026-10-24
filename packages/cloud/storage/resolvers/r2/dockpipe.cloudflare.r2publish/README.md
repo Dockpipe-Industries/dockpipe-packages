@@ -3,7 +3,7 @@
 This folder documents the historical **`dockpipe.cloudflare.r2publish`** publish flow. The active **Terraform module** now lives under **`packages/cloud/storage/resolvers/r2/dockpipe.cloudflare.r2infra/terraform/`** and the active host scripts are referenced in workflow YAML by their **logical script ids**:
 
 - **Terraform host flow:** **`assets/scripts/terraform-cloudflare-r2-run.sh`** in the `dockpipe.cloudflare.r2infra` resolver
-- **Tar + upload:** **`scripts/dockpipe/r2-publish.sh`**
+- **Tar + upload:** **`scripts/dorkpipe/r2-publish.sh`**
 - **Provider-agnostic Terraform core:** **`assets/scripts/terraform-run.sh`** in the `dockpipe.terraform.core` resolver
 
 **Infra and object upload are separate workflows** (same script, different env):

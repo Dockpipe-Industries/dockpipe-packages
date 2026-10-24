@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "platform": "windows-amd64",
+  "compiler": {
+    "id": "MSVC",
+    "version": "19.51.36260.0",
+    "os_id": "windows",
+    "os_version": "2025",
+    "acquisition_sha256": "e02640c0b61524f3c9d7db87ebd4d87dbf485ef0cd06c1688e10deebb684d593",
+    "acquisition_mode": "hosted-exact"
+  },
+  "inputs": [
+    {
+      "id": "go",
+      "version": "1.26.10",
+      "url": "https://go.dev/dl/go1.26.10.windows-amd64.zip",
+      "size_bytes": 75004774,
+      "sha256": "7ecd2d7260e82c59bcbd7f1077a07cee2dea607295b858df67195a1e4e09629b",
+      "format": "zip",
+      "root": "go"
+    },
+    {
+      "id": "cmake",
+      "version": "3.31.6",
+      "url": "https://github.com/Kitware/CMake/releases/download/v3.31.6/cmake-3.31.6-windows-x86_64.zip",
+      "size_bytes": 46473549,
+      "sha256": "d163cd3ab4959b0a53fa8988f2ddbd2e6c501658201e6a154386bad9dbe4f836",
+      "format": "zip",
+      "root": "cmake-3.31.6-windows-x86_64"
+    },
+    {
+      "id": "ninja",
+      "version": "1.12.1",
+      "url": "https://github.com/ninja-build/ninja/releases/download/v1.12.1/ninja-win.zip",
+      "size_bytes": 275425,
+      "sha256": "f550fec705b6d6ff58f2db3c374c2277a37691678d6aba463adcbb129108467a",
+      "format": "zip",
+      "root": "",
+      "license_asset": {
+        "url": "https://raw.githubusercontent.com/ninja-build/ninja/v1.12.1/COPYING",
+        "size_bytes": 11358,
+        "sha256": "eb7e9ab9690124c5c9f42bdc81383d886a3dede26345b6ed15bbad7caf81f7ea"
+      }
+    },
+    {
+      "id": "pkgconf-source",
+      "version": "2.3.0",
+      "url": "https://distfiles.ariadne.space/pkgconf/pkgconf-2.3.0.tar.xz",
+      "size_bytes": 316160,
+      "sha256": "3a9080ac51d03615e7c1910a0a2a8df08424892b5f13b0628a204d3fcce0ea8b",
+      "format": "tar.xz",
+      "root": "pkgconf-2.3.0",
+      "destination": "pkgconf-source",
+      "license_path": "COPYING"
+    },
+    {
+      "id": "meson",
+      "version": "1.7.2",
+      "url": "https://files.pythonhosted.org/packages/e5/2b/46bda4ef5a7ae4135dbfe27fc0368c44e5a349a897a54fdf2cedb8dcb66e/meson-1.7.2-py3-none-any.whl",
+      "size_bytes": 991596,
+      "sha256": "82c6818dc81743c96de3a458f06175776ebfde4081195ea31ea6971838f25e38",
+      "format": "wheel",
+      "root": ""
+    }
+  ],
+  "compiler_inputs": []
+}

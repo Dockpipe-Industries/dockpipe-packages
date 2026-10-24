@@ -186,7 +186,7 @@ func (manager manager) action(ctx context.Context, action, runID string) error {
 	message := ""
 	switch action {
 	case "resolution":
-		request, err := resolutionRequest(os.Getenv("DOCKPIPE_VM_DISPLAY_WIDTH"), os.Getenv("DOCKPIPE_VM_DISPLAY_HEIGHT"))
+		request, err := manager.resolutionRequest(record, os.Getenv("DOCKPIPE_VM_DISPLAY_WIDTH"), os.Getenv("DOCKPIPE_VM_DISPLAY_HEIGHT"))
 		if err != nil {
 			return err
 		}

@@ -5,14 +5,12 @@ version: 0.6.1
 title: Dockpipe container registries
 platforms: [windows, deb, macos]
 description: |
-  Umbrella for OCI/container registry publish workflows. Package id cloud.container-registry;
-  resolver ghcr -> dotted cloud.container-registry.ghcr. Resolvers under resolvers/ are optional
-  backends for concrete registries and may host one or more workflows.
+  Authoring family for OCI/container registry publication workflows. The legacy
+  resolvers/ghcr directory groups the installable dockpipe.github.ghcrpush workflow;
+  it does not define a ghcr resolver profile.
 author: Dockpipe
 license: Apache-2.0
 repository: https://github.com/Dockpipe-Industries/dockpipe-packages
 tags: [workflow, registry, container, oci, ghcr, github]
-includes_resolvers:
-  - ghcr
 script_contract:
   inject: [workdir, workflow_name, script_dir, package_root, assets_dir, dockpipe_bin]
