@@ -62,12 +62,14 @@ def build_manager(repository, environment, binary, tool, output):
     emit_result(binary, repository, environment, "start", fields)
     started = time.monotonic()
     try:
+        run([sys.executable, repository / "tooling/catalog_go.py", "--", "test",
+             "-count=1", "./packages/vm/management/..."], repository, environment)
         run([sys.executable, repository / "tooling/catalog_go.py", "--", "build",
              "-buildvcs=false", "-trimpath", "-ldflags", "-s -w -X main.Version=" + version,
              "-o", output, "./packages/vm/management/cmd/dockpipe-vm-manager"], repository, environment)
     except (OSError, subprocess.CalledProcessError):
         duration = int((time.monotonic() - started) * 1000)
-        emit_result(binary, repository, environment, "fail", fields, duration, "catalog Go build failed")
+        emit_result(binary, repository, environment, "fail", fields, duration, "catalog Go manager test/build failed")
         raise
     emit_result(binary, repository, environment, "done", fields,
                 int((time.monotonic() - started) * 1000))

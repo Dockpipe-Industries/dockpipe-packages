@@ -156,7 +156,11 @@ func installSSHHelper(t *testing.T, manager manager) string {
 		name += ".exe"
 	}
 	destination := filepath.Join(bin, name)
-	if err := os.Link(manager.program, destination); err != nil {
+	linked := false
+	if runtime.GOOS != "windows" {
+		linked = os.Link(manager.program, destination) == nil
+	}
+	if !linked {
 		data, err := os.ReadFile(manager.program)
 		if err != nil {
 			t.Fatal(err)
