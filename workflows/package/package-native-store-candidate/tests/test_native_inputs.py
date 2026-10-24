@@ -28,7 +28,7 @@ class NativeInputsTest(unittest.TestCase):
         for target, recipe in self.recipes.items():
             with self.subTest(target=target):
                 native_inputs.validate(recipe, target)
-        self.assertEqual(len(self.recipes['linux-amd64']['archives']), 57)
+        self.assertEqual(len(self.recipes['linux-amd64']['archives']), 61)
         self.assertEqual(len(self.recipes['windows-amd64']['archives']), 30)
 
     def test_linux_qt_opengl_build_inputs_are_exact_and_owned(self):
@@ -83,6 +83,31 @@ class NativeInputsTest(unittest.TestCase):
                             if record['archive_id'] == entry['id']]
                 self.assertEqual(len(licenses), 1)
         self.assertIn('xkb-data', archives)
+
+    def test_linux_gio_pcre2_metadata_alias_targets_are_exact_and_owned(self):
+        recipe = self.recipes['linux-amd64']
+        expected = {
+            'libpcre2-16-0': 'libpcre2-16.so.0',
+            'libpcre2-32-0': 'libpcre2-32.so.0',
+            'libpcre2-posix3': 'libpcre2-posix.so.3',
+        }
+        archives = {entry['package'].split(':')[0]: entry for entry in recipe['archives']}
+        for package, soname in expected.items():
+            with self.subTest(package=package):
+                entry = archives[package]
+                self.assertEqual(entry['destination'], 'gio')
+                self.assertTrue(entry['asset']['url'].startswith(
+                    'https://archive.ubuntu.com/ubuntu/pool/'))
+                libraries = [record for record in recipe['libraries']
+                             if record['archive_id'] == entry['id']]
+                self.assertEqual([Path(record['path']).name for record in libraries], [soname])
+                licenses = [record for record in recipe['licenses']
+                            if record['archive_id'] == entry['id']]
+                self.assertEqual(len(licenses), 1)
+        self.assertIn('libpcre2-dev', archives)
+        runtime_version = archives['libpcre2-8-0']['version']
+        for package in (*expected, 'libpcre2-dev'):
+            self.assertEqual(archives[package]['version'], runtime_version)
 
     def test_recipe_replaces_four_roles_without_loosening_other_public_pins(self):
         lock = self.fixture.lock()

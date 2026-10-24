@@ -957,6 +957,58 @@
               "format": "deb",
               "root": ""
             }
+          },
+          {
+            "id": "libpcre2-16-0-amd64",
+            "destination": "gio",
+            "package": "libpcre2-16-0:amd64",
+            "version": "10.39-3ubuntu0.1",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/p/pcre2/libpcre2-16-0_10.39-3ubuntu0.1_amd64.deb",
+              "sha256": "d4b3cd60636e869a0ca23d912d59df914779806cef7f52c0469fcd074c149d87",
+              "size_bytes": 203294,
+              "format": "deb",
+              "root": ""
+            }
+          },
+          {
+            "id": "libpcre2-32-0-amd64",
+            "destination": "gio",
+            "package": "libpcre2-32-0:amd64",
+            "version": "10.39-3ubuntu0.1",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/p/pcre2/libpcre2-32-0_10.39-3ubuntu0.1_amd64.deb",
+              "sha256": "a46b16422d8124779cb45b69e1cf7a733de1a4aa892ded9b13efd115d684f528",
+              "size_bytes": 193782,
+              "format": "deb",
+              "root": ""
+            }
+          },
+          {
+            "id": "libpcre2-dev-amd64",
+            "destination": "gio",
+            "package": "libpcre2-dev:amd64",
+            "version": "10.39-3ubuntu0.1",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/p/pcre2/libpcre2-dev_10.39-3ubuntu0.1_amd64.deb",
+              "sha256": "e87721e31a285bb60f6a502ad380a329e060702a8518864b77a49298d41e9818",
+              "size_bytes": 730282,
+              "format": "deb",
+              "root": ""
+            }
+          },
+          {
+            "id": "libpcre2-posix3-amd64",
+            "destination": "gio",
+            "package": "libpcre2-posix3:amd64",
+            "version": "10.39-3ubuntu0.1",
+            "asset": {
+              "url": "https://archive.ubuntu.com/ubuntu/pool/main/p/pcre2/libpcre2-posix3_10.39-3ubuntu0.1_amd64.deb",
+              "sha256": "03e09e2e2b2e9861f4f68e40d46d08c5da87a8d185443fec6445a0479b942828",
+              "size_bytes": 6130,
+              "format": "deb",
+              "root": ""
+            }
           }
         ],
         "licenses": [
@@ -1383,6 +1435,38 @@
             "package": "xkb-data",
             "version": "2.33-1",
             "archive_id": "xkb-data-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libpcre2-16-0/copyright",
+            "sha256": "f65dae37239e4d61a1bdeaf2ded76b8569d012a054aa042233b78615e7a83210",
+            "size_bytes": 3123,
+            "package": "libpcre2-16-0:amd64",
+            "version": "10.39-3ubuntu0.1",
+            "archive_id": "libpcre2-16-0-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libpcre2-32-0/copyright",
+            "sha256": "f65dae37239e4d61a1bdeaf2ded76b8569d012a054aa042233b78615e7a83210",
+            "size_bytes": 3123,
+            "package": "libpcre2-32-0:amd64",
+            "version": "10.39-3ubuntu0.1",
+            "archive_id": "libpcre2-32-0-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libpcre2-dev/copyright",
+            "sha256": "f65dae37239e4d61a1bdeaf2ded76b8569d012a054aa042233b78615e7a83210",
+            "size_bytes": 3123,
+            "package": "libpcre2-dev:amd64",
+            "version": "10.39-3ubuntu0.1",
+            "archive_id": "libpcre2-dev-amd64"
+          },
+          {
+            "path": "gio/usr/share/doc/libpcre2-posix3/copyright",
+            "sha256": "f65dae37239e4d61a1bdeaf2ded76b8569d012a054aa042233b78615e7a83210",
+            "size_bytes": 3123,
+            "package": "libpcre2-posix3:amd64",
+            "version": "10.39-3ubuntu0.1",
+            "archive_id": "libpcre2-posix3-amd64"
           }
         ],
         "libraries": [
@@ -1657,6 +1741,30 @@
             "package": "libxkbcommon0:amd64",
             "version": "1.4.0-1",
             "archive_id": "libxkbcommon0-amd64"
+          },
+          {
+            "path": "gio/usr/lib/x86_64-linux-gnu/libpcre2-16.so.0",
+            "sha256": "e90c511808431835f34f6640c0cbe6639381d6f04370e33af7ca27e14f101bd9",
+            "size_bytes": 559816,
+            "package": "libpcre2-16-0:amd64",
+            "version": "10.39-3ubuntu0.1",
+            "archive_id": "libpcre2-16-0-amd64"
+          },
+          {
+            "path": "gio/usr/lib/x86_64-linux-gnu/libpcre2-32.so.0",
+            "sha256": "12a676c99c365598d8d5e6b5d7817565ab8e60ff8d6384e7dfb8fbca3fbebeb6",
+            "size_bytes": 539336,
+            "package": "libpcre2-32-0:amd64",
+            "version": "10.39-3ubuntu0.1",
+            "archive_id": "libpcre2-32-0-amd64"
+          },
+          {
+            "path": "gio/usr/lib/x86_64-linux-gnu/libpcre2-posix.so.3",
+            "sha256": "7a9044a567598c1f41a0a67b7e7dff5548eca7887d3c207f656d8a009d40f7df",
+            "size_bytes": 14592,
+            "package": "libpcre2-posix3:amd64",
+            "version": "10.39-3ubuntu0.1",
+            "archive_id": "libpcre2-posix3-amd64"
           }
         ]
       },
