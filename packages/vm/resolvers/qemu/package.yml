@@ -1,8 +1,8 @@
 schema: 1
 kind: resolver
 name: qemu
-version: 1.3.6
-min_dockpipe_version: 0.6.26-0
+version: 1.3.7
+min_dockpipe_version: 0.6.28-0
 title: QEMU virtual machine integration
 description: Run supported guest virtual machines through QEMU. Requires QEMU, compatible firmware, and your own guest image.
 catalog_type: integration

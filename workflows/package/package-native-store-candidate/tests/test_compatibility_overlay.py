@@ -90,13 +90,13 @@ class CompatibilityOverlayTest(unittest.TestCase):
     def test_native_family_requires_all_five_coherent_versions_and_runtime_minimums(self):
         manifest = {'packages': {'workflows': [], 'resolvers': []}}
         for kind, name in native_store.VM_FAMILY:
-            manifest['packages'][kind + 's'].append({'name': name, 'version': '1.3.6',
-                                                   'min_dockpipe_version': '0.6.26-0'})
+            manifest['packages'][kind + 's'].append({'name': name, 'version': '1.3.7',
+                                                   'min_dockpipe_version': '0.6.28-0'})
         native_store.verify_vm_family(manifest)
         manifest['packages']['workflows'][0]['version'] = '1.3.5'
         with self.assertRaisesRegex(ValueError, 'coherent'):
             native_store.verify_vm_family(manifest)
-        manifest['packages']['workflows'][0]['version'] = '1.3.6'
+        manifest['packages']['workflows'][0]['version'] = '1.3.7'
         manifest['packages']['workflows'].pop()
         with self.assertRaisesRegex(ValueError, 'all five'):
             native_store.verify_vm_family(manifest)
