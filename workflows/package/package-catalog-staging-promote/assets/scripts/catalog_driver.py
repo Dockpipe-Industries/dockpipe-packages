@@ -110,6 +110,19 @@ def admit_named_qualification(request, source_root, manifests, runtime):
     return document
 
 
+def admit_pipeline_environment(api):
+    """Require an existing environment before dependent jobs can bind it.
+
+    This metadata read proves existence only. Provider stages separately reject
+    missing settings before any object write; secret values are never queried.
+    """
+    document = api.get('repos/Dockpipe-Industries/dockpipe-packages/environments/release-staging')
+    if (document.get('name') != 'release-staging'
+            or type(document.get('id')) is not int or document['id'] <= 0):
+        raise PublicationStopped('Existing release-staging pipeline environment is required')
+    return {'name': document['name'], 'id': document['id']}
+
+
 def prepare_stage(arguments):
     source = Path(arguments.request).resolve()
     source_root = Path(os.environ['GITHUB_WORKSPACE']).resolve()
@@ -125,7 +138,9 @@ def prepare_stage(arguments):
     if (promotion['product_source_sha'] != request['candidate']['source_sha']
             or promotion['product_tag'] != request['candidate']['tag']):
         raise PublicationStopped('Product source identities differ')
-    admit_candidate(request['candidate'], GitHubReadOnly())
+    api = GitHubReadOnly()
+    admit_pipeline_environment(api)
+    admit_candidate(request['candidate'], api)
     root = Path(arguments.bundle).resolve()
     if root.exists():
         raise PublicationStopped('Prepare output must be fresh')
@@ -215,8 +230,8 @@ def admit_aws_pin(pin, source_root):
 def destination_from_environment(declaration):
     expected_fields = {'endpoint_reference', 'bucket_reference', 'target_sha256'}
     if (set(declaration) != expected_fields
-            or declaration['endpoint_reference'] != 'CATALOG_STAGING_R2_ENDPOINT'
-            or declaration['bucket_reference'] != 'CATALOG_STAGING_R2_BUCKET'
+            or declaration['endpoint_reference'] != 'R2_ENDPOINT_URL'
+            or declaration['bucket_reference'] != 'DOCKPIPE_RELEASE_BUCKET'
             or not SHA256.fullmatch(declaration['target_sha256'])):
         raise PublicationStopped('Destination must use the exact reviewed staging references')
     destination = {

@@ -6,8 +6,8 @@ Run source commands from this package repository; no sibling core checkout is re
 ## Runtime compatibility and reproducible builds
 
 The QEMU resolver and every installable VM workflow at version 1.3.7 declare
-`min_dockpipe_version: 0.6.28-0`. This is a runtime compatibility floor: it admits
-0.6.28 prereleases and stable releases, and rejects 0.6.27 before loading or
+`min_dockpipe_version: 0.6.29-0`. This is a runtime compatibility floor: it admits
+0.6.29 prereleases and stable releases, and rejects 0.6.28 before loading or
 executing the newer package. Each workflow has its own manifest so exporting or
 installing it separately preserves the floor; the `vm` family manifest alone
 cannot protect installed slices. The existing Linux qualification controller's
@@ -1012,7 +1012,7 @@ Run package tests with:
 
 ### macOS host launch prerequisite (1.3.7)
 
-The VM 1.3.7 installables require Dockpipe 0.6.28-0 or newer. Both boot apps
+The VM 1.3.7 installables require Dockpipe 0.6.29-0 or newer. Both boot apps
 require the QEMU resolver; Linux guest qualification remains Debian-only.
 The Windows VM control plane supports a macOS host through the generic Darwin
 VM runtime, emulating x86_64 with TCG and CPU `max` on Intel or Apple Silicon.
@@ -1030,7 +1030,7 @@ package display factory and its private broker. A valid explicit short private
 `/private/tmp` parent. It rejects invalid explicit runtime directories.
 
 Publication requires a new source-bound three-platform native candidate using
-an actual public 0.6.28 CLI pin. Earlier 1.3.6/64 release bytes are preserved.
+an actual public 0.6.29 CLI pin and matching published compiled-core runtime. Earlier native candidates, including 1.3.7/e70, remain immutable. The floor includes installed-archive integrity and default boot-display fixes; producer locks and named-workflow proofs must still bind exact artifacts.
 
 
 For double-click launcher sessions, Windows VM's Advanced → Host Tools page has

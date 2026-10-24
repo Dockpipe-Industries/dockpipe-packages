@@ -30,15 +30,15 @@ class FrontendAdmissionTest(unittest.TestCase):
         values = {'endpoint': 'https://' + 'a' * 32 + '.r2.cloudflarestorage.com',
                   'bucket': 'fixture-bucket'}
         declaration = {
-            'endpoint_reference': 'CATALOG_STAGING_R2_ENDPOINT',
-            'bucket_reference': 'CATALOG_STAGING_R2_BUCKET',
+            'endpoint_reference': 'R2_ENDPOINT_URL',
+            'bucket_reference': 'DOCKPIPE_RELEASE_BUCKET',
             'target_sha256': hashlib.sha256(json_bytes(values)).hexdigest(),
         }
-        with patch.dict('os.environ', {'CATALOG_STAGING_R2_ENDPOINT': values['endpoint'],
-                                      'CATALOG_STAGING_R2_BUCKET': values['bucket']}, clear=True):
+        with patch.dict('os.environ', {'R2_ENDPOINT_URL': values['endpoint'],
+                                      'DOCKPIPE_RELEASE_BUCKET': values['bucket']}, clear=True):
             self.assertEqual(destination_from_environment(declaration), values)
-        with patch.dict('os.environ', {'CATALOG_STAGING_R2_ENDPOINT': values['endpoint'],
-                                      'CATALOG_STAGING_R2_BUCKET': 'different'}, clear=True):
+        with patch.dict('os.environ', {'R2_ENDPOINT_URL': values['endpoint'],
+                                      'DOCKPIPE_RELEASE_BUCKET': 'different'}, clear=True):
             with self.assertRaisesRegex(PublicationStopped, 'target digest'):
                 destination_from_environment(declaration)
         with self.assertRaisesRegex(PublicationStopped, 'references'):

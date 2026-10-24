@@ -8,10 +8,10 @@
     "archive_sha256": "91b8a7490d75ec7323d792d02e5e44026dc502afbfa491ae762d01f40528cd43"
   },
   "dockpipe_runtime_core": {
-    "version": "0.6.28",
-    "release": "v0.6.28-staging.40088316037.1.fbf3262568ae",
-    "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/v0.6.28-staging.40088316037.1.fbf3262568ae/dockpipe-core-0.6.28.tar.gz",
-    "size_bytes": 2796665,
-    "sha256": "649bdfa497121a55108171fe7289d2407f20fc22c61302f2102683dde7b47411"
+    "version": "0.6.30",
+    "release": "v0.6.30-staging.40103059599.1.959f7ad04a7b",
+    "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/v0.6.30-staging.40103059599.1.959f7ad04a7b/dockpipe-core-0.6.30.tar.gz",
+    "size_bytes": 2796697,
+    "sha256": "6e7790b83f7fea631776b906a90549dd4a76bf823bdd7bf851a71ea945c95e85"
   }
 }
