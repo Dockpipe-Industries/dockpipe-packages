@@ -133,6 +133,7 @@ jobs:
           if-no-files-found: error
 
   catalog-upload:
+    environment: release-staging
     permissions:
       contents: read
       actions: read
@@ -151,10 +152,10 @@ jobs:
       - name: Create or reconcile immutable optional catalog objects only
         env:
           GH_TOKEN: ${{ github.token }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.CATALOG_STAGING_R2_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.CATALOG_STAGING_R2_SECRET_ACCESS_KEY }}
-          CATALOG_STAGING_R2_ENDPOINT: ${{ vars.CATALOG_STAGING_R2_ENDPOINT }}
-          CATALOG_STAGING_R2_BUCKET: ${{ vars.CATALOG_STAGING_R2_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          R2_ENDPOINT_URL: ${{ vars.R2_ENDPOINT_URL }}
+          DOCKPIPE_RELEASE_BUCKET: ${{ vars.DOCKPIPE_RELEASE_BUCKET }}
         run: >-
           python -B workflows/package/package-catalog-staging-promote/assets/scripts/catalog_driver.py upload
           --bundle "$RUNNER_TEMP/catalog-bundle"
@@ -226,6 +227,7 @@ jobs:
           if-no-files-found: warn
 
   catalog-promote:
+    environment: release-staging
     permissions:
       contents: read
       actions: read
@@ -260,10 +262,10 @@ jobs:
       - name: Recheck real consumers and runtime then conditionally promote only optional latest
         env:
           GH_TOKEN: ${{ github.token }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.CATALOG_STAGING_R2_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.CATALOG_STAGING_R2_SECRET_ACCESS_KEY }}
-          CATALOG_STAGING_R2_ENDPOINT: ${{ vars.CATALOG_STAGING_R2_ENDPOINT }}
-          CATALOG_STAGING_R2_BUCKET: ${{ vars.CATALOG_STAGING_R2_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          R2_ENDPOINT_URL: ${{ vars.R2_ENDPOINT_URL }}
+          DOCKPIPE_RELEASE_BUCKET: ${{ vars.DOCKPIPE_RELEASE_BUCKET }}
         run: >-
           python -B workflows/package/package-catalog-staging-promote/assets/scripts/catalog_driver.py promote
           --bundle "$RUNNER_TEMP/catalog-bundle"

@@ -30,7 +30,7 @@ class GitHubReadOnly:
         suffix = endpoint.removeprefix(allowed)
         if (not endpoint.startswith(allowed) or not any(re.fullmatch(pattern, suffix) for pattern in [
                 r'actions/runs/[0-9]+', r'actions/runs/[0-9]+/attempts/[0-9]+/jobs\?per_page=100',
-                r'releases/[0-9]+', r'git/ref/tags/catalog-native-candidate-[0-9a-f]{40}'])):
+                r'releases/[0-9]+', r'environments/release-staging', r'git/ref/tags/catalog-native-candidate-[0-9a-f]{40}'])):
             raise PublicationStopped('Qualification API endpoint is outside authority')
         headers = {
             'User-Agent': 'Dockpipe-Catalog-Qualification/1',

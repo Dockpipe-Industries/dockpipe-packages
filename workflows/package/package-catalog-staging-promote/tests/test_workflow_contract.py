@@ -50,7 +50,10 @@ class WorkflowContractTest(unittest.TestCase):
         for name, job in self.jobs.items():
             if name.startswith('catalog-'):
                 self.assertNotIn('continue-on-error', job)
-                self.assertNotIn('environment', job)
+                if name in {'catalog-upload', 'catalog-promote'}:
+                    self.assertEqual(job['environment'], 'release-staging')
+                else:
+                    self.assertNotIn('environment', job)
                 for step in job['steps']:
                     self.assertNotIn('continue-on-error', step)
         for name in ['catalog-prepare', 'catalog-consumer', 'catalog-promotion-contracts']:
@@ -67,9 +70,12 @@ class WorkflowContractTest(unittest.TestCase):
             environments = [step['env'] for step in self.jobs[name]['steps'] if 'env' in step]
             self.assertEqual(len(environments), 1)
             self.assertEqual(environments[0]['AWS_ACCESS_KEY_ID'],
-                             '${{ secrets.CATALOG_STAGING_R2_ACCESS_KEY_ID }}')
+                             '${{ secrets.AWS_ACCESS_KEY_ID }}')
             self.assertEqual(environments[0]['AWS_SECRET_ACCESS_KEY'],
-                             '${{ secrets.CATALOG_STAGING_R2_SECRET_ACCESS_KEY }}')
+                             '${{ secrets.AWS_SECRET_ACCESS_KEY }}')
+            self.assertEqual(environments[0]['R2_ENDPOINT_URL'], '${{ vars.R2_ENDPOINT_URL }}')
+            self.assertEqual(environments[0]['DOCKPIPE_RELEASE_BUCKET'],
+                             '${{ vars.DOCKPIPE_RELEASE_BUCKET }}')
 
     def test_api_token_is_step_scoped_to_three_admission_stages(self):
         for name in ['catalog-prepare', 'catalog-upload', 'catalog-promote']:
