@@ -3,6 +3,7 @@
 #include <aclapi.h>
 #include "NativeDisplayPlatform.h"
 #include "SharedFrameSource.h"
+#include "NativeFixtureOwnership.h"
 #include <QFile>
 #include <QTemporaryDir>
 #include <QtTest>
@@ -63,11 +64,13 @@ private slots:
         QTemporaryDir directory;
         QVERIFY(directory.isValid());
         QVERIFY(NativeDisplayPlatform::protectDirectory(directory.path()));
+        QVERIFY(!NativeFixtureOwnership::assignFreshObjectToCurrentUser(directory.path()));
         const auto path = directory.path() + "/display.json";
         QFile file(path);
         QVERIFY(file.open(QIODevice::WriteOnly));
         file.write("{}");
         file.close();
+        QVERIFY(NativeFixtureOwnership::assignFreshObjectToCurrentUser(path));
         QByteArray bytes;
         QVERIFY(NativeDisplayPlatform::readPrivateDescriptor(directory.path(), bytes));
         QCOMPARE(bytes, QByteArray("{}"));
