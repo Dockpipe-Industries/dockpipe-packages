@@ -33,6 +33,7 @@ class DiagnosticTests(unittest.TestCase):
             build, gio, qt = (root / name for name in ['build', 'gio', 'qt'])
             for name in diagnostics.TEST_NAMES:
                 self.write_pe(build / name)
+                (build / (name + '.qtest.txt')).write_text('fixture QtTest text: ' + name)
             for name in ['libgio-2.0-0.dll', 'libglib-2.0-0.dll']:
                 self.write_pe(gio / 'bin' / name)
             self.write_pe(qt / 'bin/Qt6Test.dll')
@@ -64,9 +65,13 @@ class DiagnosticTests(unittest.TestCase):
             self.assertEqual(run.call_count, 8)
             self.assertEqual(set(evidence['test_symbol_imports']), set(diagnostics.TEST_NAMES[:2]))
             self.assertEqual(set(path.name for path in destination.iterdir()),
-                             {*diagnostics.TEST_NAMES, 'windows-test-evidence.json'})
+                             {*diagnostics.TEST_NAMES, *(name + '.qtest.txt' for name in diagnostics.TEST_NAMES),
+                              'windows-test-evidence.json'})
+            self.assertEqual(len(evidence['qt_test_logs']), 3)
             for name in diagnostics.TEST_NAMES:
                 self.assertEqual((destination / name).read_bytes(), (build / name).read_bytes())
+                log_name = name + '.qtest.txt'
+                self.assertEqual((destination / log_name).read_bytes(), (build / log_name).read_bytes())
             self.assertEqual(json.loads((destination / 'windows-test-evidence.json').read_bytes()), evidence)
 
     @unittest.skipUnless(shutil.which('cmake') and os.name != 'nt', 'Host CMake and executable shell fixtures required')
@@ -76,17 +81,38 @@ class DiagnosticTests(unittest.TestCase):
             for expected in [0, 23]:
                 marker = root / ('count-' + str(expected))
                 executable = root / ('fixture ' + str(expected))
-                executable.write_text('#!/bin/sh\nprintf x >> "' + str(marker) + '"\nexit ' + str(expected) + '\n')
+                executable.write_text('#!/bin/sh\nprintf x >> "' + str(marker) + '"\n'
+                                      'if [ "$1" = "-o" ]; then\n'
+                                      '    output="${2%,txt}"\n'
+                                      '    printf "fixture QtTest detail ' + str(expected) + '\\n" > "$output"\n'
+                                      'fi\nexit ' + str(expected) + '\n')
                 executable.chmod(0o755)
                 result = subprocess.run([shutil.which('cmake'), '-DPROGRAM=' + str(executable), '-P',
                                          str(PACKAGE / 'tooling/RunNativeTest.cmake')],
-                                        capture_output=True, text=True, timeout=15)
+                                        capture_output=True, text=True, timeout=15, cwd=root)
                 self.assertEqual(marker.read_text(), 'x')
+                self.assertIn('fixture QtTest detail ' + str(expected), result.stderr)
+                self.assertTrue((root / (executable.name + '.qtest.txt')).is_file())
                 if expected == 0:
                     self.assertEqual(result.returncode, 0, result.stderr)
                 else:
                     self.assertNotEqual(result.returncode, 0)
                     self.assertIn('Native test child exit status: 23', result.stderr)
+
+
+    @unittest.skipUnless(shutil.which('cmake') and os.name != 'nt', 'Host CMake and executable shell fixtures required')
+    def test_cmake_runner_rejects_oversized_qtest_text(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            executable = root / 'oversized-log'
+            executable.write_text('#!/bin/sh\nhead -c 1048577 /dev/zero > "${2%,txt}"\nexit 0\n')
+            executable.chmod(0o755)
+            result = subprocess.run([shutil.which('cmake'), '-DPROGRAM=' + str(executable), '-P',
+                                     str(PACKAGE / 'tooling/RunNativeTest.cmake')],
+                                    capture_output=True, text=True, timeout=15, cwd=root)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn('QtTest text exceeds its 1 MiB capacity', result.stderr)
+            self.assertLess(len(result.stderr), 4096)
 
 
 if __name__ == '__main__':

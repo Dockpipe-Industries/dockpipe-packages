@@ -92,12 +92,21 @@ def diagnose_tests(build, gio, qt, environment):
         if len(result.stdout) + len(result.stderr) > 1 << 20:
             raise ValueError('Diagnostic PE symbol import metadata exceeds capacity')
         symbol_imports[binary.name] = result.stdout
+    test_logs = []
+    for binary in selected:
+        log = build / (binary.name + '.qtest.txt')
+        if not log.exists():
+            continue
+        if log.is_symlink() or not log.is_file() or log.stat().st_size > 1 << 20:
+            raise ValueError('Native QtTest text is not a bounded regular file')
+        test_logs.append({'name': log.name, 'size_bytes': log.stat().st_size,
+                          'sha256': hashlib.sha256(log.read_bytes()).hexdigest()})
     evidence = {'schema': 1, 'effective_path': path_value, 'gio_bin': str(gio / 'bin'),
                 'qt_bin': str(qt / 'bin'), 'selected_inspector': str(inspector),
                 'prepared_crt_directory': environment.get('DOCKPIPE_NATIVE_CRT_DIR'),
                 'prepared_redist_root': environment.get('VCTOOLSREDISTDIR') or environment.get('VCToolsRedistDir'),
                 'selected_tests': [str(path) for path in selected], 'pe_graph': graph,
-                'test_symbol_imports': symbol_imports,
+                'test_symbol_imports': symbol_imports, 'qt_test_logs': test_logs,
                 'dll_execution_or_copy': False, 'test_retries': 0}
     data = json.dumps(evidence, indent=2)
     if len(data.encode()) > 4 << 20:
@@ -112,4 +121,6 @@ def diagnose_tests(build, gio, qt, environment):
         (destination / 'windows-test-evidence.json').write_text(data + '\n', encoding='utf-8')
         for path in selected:
             shutil.copyfile(path, destination / path.name)
+        for record in test_logs:
+            shutil.copyfile(build / record['name'], destination / record['name'])
     return evidence
