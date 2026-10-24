@@ -3,7 +3,8 @@ title: Manage virtual machines
 description: Inspect VM status or run a package-owned management action from the CLI.
 catalog_type: integration
 categories: [virtual-machines, development]
-platforms: [windows, deb, macos]
+platforms: [windows, deb, macos, flatpak]
+docker_preflight: false
 steps:
   - id: manage
     kind: host

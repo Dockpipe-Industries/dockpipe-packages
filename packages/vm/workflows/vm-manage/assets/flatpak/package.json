@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "artifacts": [
+    {
+      "kind": "workflow",
+      "name": "vm-manage"
+    }
+  ],
+  "tools": [],
+  "host_commands": [],
+  "required_files": [
+    "config.yml",
+    "assets/scripts/vm-manage.py"
+  ]
+}

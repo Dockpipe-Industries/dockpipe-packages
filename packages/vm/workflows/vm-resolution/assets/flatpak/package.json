@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "artifacts": [
+    {
+      "kind": "workflow",
+      "name": "vm-resolution"
+    }
+  ],
+  "tools": [],
+  "host_commands": [],
+  "required_files": [
+    "config.yml",
+    "assets/scripts/vm-resolution.py",
+    "models/VmResolutionConfig.pipe"
+  ]
+}
