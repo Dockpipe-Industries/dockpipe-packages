@@ -1,4 +1,4 @@
-"""Execute the admitted public CLI in a fresh, source-hidden consumer directory.
+"""Execute the admitted public CLI in a fresh, source-independent consumer directory.
 
 This is the secret-free native CI job boundary. It does not execute any package
 workflow or boot a VM. The separate named-workflow qualification remains required.
@@ -8,6 +8,7 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import sys
 import time
 
 from catalog_plan import entries
@@ -19,7 +20,7 @@ from catalog_transaction import PublicationStopped, fingerprint_inventory
 SCRIPT_DIRECTORY = Path('workflows/package/package-catalog-staging-promote/assets/scripts')
 
 
-def assert_source_hidden(checkout_root):
+def assert_source_independent(checkout_root):
     """Admit only the sparse helper checkout, excluding Git's inert metadata."""
     checkout_root = Path(checkout_root)
     if not checkout_root.is_absolute() or checkout_root.is_symlink() or not checkout_root.is_dir():
@@ -81,8 +82,74 @@ def run_cli(executable, arguments, root, environment, label):
     return output.read_bytes()
 
 
+RUNTIME_CAPABILITY_CHECKS = [
+    'init-without-source-dependencies', 'execute-host-starter',
+    'sdk-shell-powershell-python-resources', 'python-sdk-explicit-cli',
+]
+
+
+def verify_runtime_capabilities(executable, cli_sha256, cli_version, root, environment):
+    """Run real capabilities with private state; OS network denial is separate proof."""
+    project = root / 'runtime-capability'
+    project.mkdir(mode=0o700)
+    selected_environment = dict(environment, DOCKPIPE_WORKDIR=str(project))
+    outputs = []
+
+    def invoke(command, arguments, label):
+        content = run_cli(command, arguments, project, selected_environment, label)
+        outputs.append({'role': label, 'sha256': hashlib.sha256(content).hexdigest(),
+                        'size_bytes': len(content)})
+        return content
+
+    invoke(executable, ['init'], 'init')
+    workflow = project / 'workflows/example/config.yml'
+    if not workflow.is_file() or b'kind: host' not in workflow.read_bytes():
+        raise PublicationStopped('Standalone init did not create the inert host starter')
+    output = invoke(executable, ['--no-vault', '--no-op-inject', '--workdir', str(project),
+                                 '--workflow', 'example'], 'execute-starter')
+    if b'Hello from Dockpipe' not in output:
+        raise PublicationStopped('Standalone host starter did not execute')
+    helpers = {}
+    for language in ('shell', 'powershell', 'python'):
+        output = invoke(executable, ['sdk', 'path', '--language', language,
+                                     '--workdir', str(project)], 'sdk-' + language)
+        path = Path(output.decode().strip())
+        if (not path.is_absolute() or path.is_symlink() or not path.is_file()
+                or not path.resolve().is_relative_to(root.resolve())):
+            raise PublicationStopped('SDK helper escaped the actual private consumer state')
+        digest, size = file_digest(path, 1048576)
+        helpers[language] = {'sha256': digest, 'size_bytes': size}
+        if language == 'python':
+            python_helper = path
+    python_code = """import importlib.util
+import json
+import os
+from pathlib import Path
+import sys
+
+specification = importlib.util.spec_from_file_location('selected_runtime_sdk', sys.argv[1])
+module = importlib.util.module_from_spec(specification)
+sys.modules[specification.name] = module
+specification.loader.exec_module(module)
+sdk = module.DockpipeSDK(os.getcwd())
+if Path(sdk.dockpipe_bin).resolve() != Path(os.environ['DOCKPIPE_BIN']).resolve():
+    raise RuntimeError('SDK selected a different executable')
+scope = sdk.scope()
+if not isinstance(scope, dict) or not scope:
+    raise RuntimeError('SDK scope query failed')
+print(json.dumps(scope, sort_keys=True))
+"""
+    invoke(Path(sys.executable), ['-c', python_code, str(python_helper)], 'python-sdk-scope')
+    if (selected_environment.get('DOCKPIPE_GLOBAL_ROOT') and
+            (Path(selected_environment['DOCKPIPE_GLOBAL_ROOT']) / 'packages/core').exists()):
+        raise PublicationStopped('Standalone CLI unexpectedly materialized a core package')
+    return {'cli_sha256': cli_sha256, 'cli_version': cli_version,
+            'checks': RUNTIME_CAPABILITY_CHECKS, 'helpers': helpers, 'outputs': outputs,
+            'network_denial_claimed': False}
+
+
 def verify_consumer(cli, cli_sha256, cli_version, root, plan, platform, store_manifest, promoted, closures, source_checkout):
-    source_admission = assert_source_hidden(source_checkout)
+    source_admission = assert_source_independent(source_checkout)
     executable = Path(cli)
     root = Path(root)
     if (not executable.is_absolute() or executable.is_symlink()
@@ -95,6 +162,8 @@ def verify_consumer(cli, cli_sha256, cli_version, root, plan, platform, store_ma
     packages.mkdir(mode=0o700)
     environment = {'HOME': str(root), 'USERPROFILE': str(root),
                    'XDG_CONFIG_HOME': str(root / 'config'),
+                   'XDG_STATE_HOME': str(root / 'state'),
+                   'DOCKPIPE_SYSTEM_ROOT': str(root / 'system'),
                    'XDG_CACHE_HOME': str(root / 'cache'),
                    'XDG_DATA_HOME': str(root / 'data'),
                    'LOCALAPPDATA': str(root / 'local'), 'APPDATA': str(root / 'roaming'),
@@ -115,6 +184,7 @@ def verify_consumer(cli, cli_sha256, cli_version, root, plan, platform, store_ma
     observed_version = run_cli(executable, ['--version'], root, environment, 'version').decode().strip()
     if cli_version not in observed_version.split():
         raise PublicationStopped('Actual CLI version differs from admitted public release')
+    capability = verify_runtime_capabilities(executable, cli_sha256, cli_version, root, environment)
     wrapper = next(item for item in plan['objects'] if item['role'] == 'release-manifest')
     remote = 'https://packages.staging.dockpipe.com/' + wrapper['key']
     observed = json.loads(run_cli(executable, ['package', 'catalog', '--remote', remote,
@@ -162,7 +232,8 @@ def verify_consumer(cli, cli_sha256, cli_version, root, plan, platform, store_ma
     return {'schema': 1, 'platform': platform, 'cli_sha256': cli_sha256,
             'cli_version_output': observed_version, 'wrapper_sha256': wrapper['sha256'],
             'object_inventory_sha256': fingerprint_inventory(plan['objects']),
-            'source_hidden': source_admission['only_helper_scripts'],
+            'source_independent': source_admission['only_helper_scripts'],
+            'runtime_capability': capability,
             'source_checkout_admission': source_admission,
             'exit_code': 0, 'installed': installed_receipts,
             'VM_operations': False, 'environment_keys': sorted(environment)}

@@ -130,7 +130,7 @@ class CatalogTransaction:
         if (receipt.get('wrapper_sha256') != wrapper['sha256']
                 or receipt.get('object_inventory_sha256') != fingerprint_inventory(plan['objects'])
                 or receipt.get('exit_code') != 0
-                or receipt.get('source_hidden') is not True):
+                or receipt.get('source_independent') is not True):
             raise PublicationStopped('Actual consumer receipt is not bound to this publication')
         self.record('consumer-verified', receipt_sha256=fingerprint_receipt(receipt))
         if not already_promoted:

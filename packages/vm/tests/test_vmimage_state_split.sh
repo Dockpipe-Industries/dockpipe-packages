@@ -55,15 +55,9 @@ export DOCKPIPE_VM_TEST_HELPER_LOG="${TEST_ROOT}/helper.log"
 export DOCKPIPE_VM_TEST_DURABLE_ROOT="${TEST_ROOT}/durable"
 export DOCKPIPE_VM_TEST_RUNTIME_ROOT="${TEST_ROOT}/runtime"
 
-# Resolve runtime assets from the installed CLI SDK, never a sibling checkout.
-if [[ -z "${DOCKPIPE_VMIMAGE_SCRIPT:-}" ]]; then
-  eval "$("$DOCKPIPE_BIN" sdk --workdir "$WORKDIR")"
-  shopt -s extdebug
-  read -r sdk_function sdk_line sdk_file < <(declare -F dockpipe_sdk_refresh)
-  shopt -u extdebug
-  DOCKPIPE_VMIMAGE_SCRIPT="$(dirname "$sdk_file")/../vmimage-run.sh"
-fi
-[[ -f "$DOCKPIPE_VMIMAGE_SCRIPT" ]] || { echo "installed SDK lacks vmimage-run.sh" >&2; exit 1; }
+# VM behavior belongs to this package; the selected CLI supplies only its SDK.
+DOCKPIPE_VMIMAGE_SCRIPT="${DOCKPIPE_VMIMAGE_SCRIPT:-${PACKAGE_ROOT}/resolvers/qemu/assets/scripts/vmimage-run.sh}"
+[[ -f "$DOCKPIPE_VMIMAGE_SCRIPT" ]] || { echo "VM package backend is unavailable" >&2; exit 1; }
 # shellcheck source=/dev/null
 source "$DOCKPIPE_VMIMAGE_SCRIPT"
 

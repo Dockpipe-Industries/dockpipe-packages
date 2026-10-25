@@ -109,7 +109,7 @@ class TransactionTest(unittest.TestCase):
     def consumer(self, plan):
         return {'wrapper_sha256': self.item['sha256'],
                 'object_inventory_sha256': fingerprint_inventory(plan['objects']),
-                'exit_code': 0, 'source_hidden': True}
+                'exit_code': 0, 'source_independent': True}
 
     def publish(self, consumer=None, public=None):
         transaction = CatalogTransaction(self.provider, public or self.provider.read,
@@ -381,6 +381,16 @@ class NativeArtifactGateTest(unittest.TestCase):
                                     'cli_version_output': '0.6.28', 'VM_operations': False,
                                     'installed': []} for platform in PLATFORMS}
         self.cli = {platform: {'sha256': 'a' * 64, 'version': '0.6.28'} for platform in PLATFORMS}
+        from catalog_consumer import RUNTIME_CAPABILITY_CHECKS
+        for receipt in self.receipts.values():
+            receipt['runtime_capability'] = {
+                'cli_sha256': 'a' * 64, 'cli_version': '0.6.28',
+                'checks': RUNTIME_CAPABILITY_CHECKS, 'network_denial_claimed': False,
+                'helpers': {language: {'sha256': 'b' * 64, 'size_bytes': 100}
+                            for language in ('shell', 'powershell', 'python')},
+                'outputs': [{'role': role, 'sha256': 'c' * 64, 'size_bytes': 10}
+                            for role in ('init', 'execute-starter', 'sdk-shell', 'sdk-powershell',
+                                         'sdk-python', 'python-sdk-scope')]}
         self.manifests = {platform: {'schema': 1, 'platform': platform,
                                     'packages': {'resolvers': [], 'workflows': []}}
                           for platform in PLATFORMS}

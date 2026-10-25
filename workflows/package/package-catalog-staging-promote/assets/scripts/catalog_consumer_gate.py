@@ -62,6 +62,29 @@ def bind_native_receipt(receipt, environment):
             'orchestration_source_sha': environment['GITHUB_SHA'], 'repository': REPOSITORY}
 
 
+def require_runtime_capability(receipt, cli_pin):
+    from catalog_consumer import RUNTIME_CAPABILITY_CHECKS
+    if (not isinstance(receipt, dict) or receipt.get('cli_sha256') != cli_pin['sha256']
+            or receipt.get('cli_version') != cli_pin['version']
+            or receipt.get('checks') != RUNTIME_CAPABILITY_CHECKS
+            or receipt.get('network_denial_claimed') is not False
+            or set(receipt.get('helpers', {})) != {'shell', 'powershell', 'python'}):
+        raise PublicationStopped('Native source-independent runtime capability binding differs')
+    for helper in receipt['helpers'].values():
+        if (not re.fullmatch('[0-9a-f]{64}', helper.get('sha256', ''))
+                or type(helper.get('size_bytes')) is not int or not 0 < helper['size_bytes'] <= 1048576):
+            raise PublicationStopped('Native SDK capability byte inventory is incomplete')
+    outputs = receipt.get('outputs')
+    expected = {'init', 'execute-starter', 'sdk-shell', 'sdk-powershell', 'sdk-python', 'python-sdk-scope'}
+    if (not isinstance(outputs, list) or len(outputs) != len(expected)
+            or {item.get('role') for item in outputs} != expected):
+        raise PublicationStopped('Native runtime capability command inventory differs')
+    for output in outputs:
+        if (not re.fullmatch('[0-9a-f]{64}', output.get('sha256', ''))
+                or type(output.get('size_bytes')) is not int or not 0 <= output['size_bytes'] <= 1048576):
+            raise PublicationStopped('Native runtime capability output provenance is incomplete')
+
+
 def admit_native_receipts(plan, receipts, cli_pins, manifests, closures, environment, api):
     if set(receipts) != PLATFORMS or set(cli_pins) != PLATFORMS:
         raise PublicationStopped('All three exact native consumer platforms are required')
@@ -103,9 +126,10 @@ def admit_native_receipts(plan, receipts, cli_pins, manifests, closures, environ
                 or cli_pins[platform]['version'] not in receipt.get('cli_version_output', '').split()
                 or receipt.get('wrapper_sha256') != wrapper['sha256']
                 or receipt.get('object_inventory_sha256') != fingerprint_inventory(plan['objects'])
-                or receipt.get('exit_code') != 0 or receipt.get('source_hidden') is not True
+                or receipt.get('exit_code') != 0 or receipt.get('source_independent') is not True
                 or receipt.get('VM_operations') is not False):
             raise PublicationStopped('Native consumer artifact binding differs: ' + platform)
+        require_runtime_capability(receipt.get('runtime_capability'), cli_pins[platform])
         selected = entries(manifests[platform])
         expected_requests = {item['identity'] for item in plan['reports'][platform]['decisions']
                              if item['action'] == 'promote'}
@@ -129,6 +153,6 @@ def admit_native_receipts(plan, receipts, cli_pins, manifests, closures, environ
                 raise PublicationStopped('Native installed archive hash inventory differs')
     return {'schema': 1, 'wrapper_sha256': wrapper['sha256'],
             'object_inventory_sha256': fingerprint_inventory(plan['objects']),
-            'source_hidden': True, 'exit_code': 0, 'run_id': run_id, 'run_attempt': attempt,
+            'source_independent': True, 'exit_code': 0, 'run_id': run_id, 'run_attempt': attempt,
             'native_receipt_sha256': {platform: fingerprint_receipt(receipt)
                                      for platform, receipt in receipts.items()}}

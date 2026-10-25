@@ -26,7 +26,7 @@ MAX_FILES = 50000
 MAX_EXPANDED = 4 * 1024 ** 3
 SUPPORTED = {'linux-amd64', 'windows-amd64', 'darwin-arm64'}
 ROLES = {'source', 'cli', 'display_sdk', 'qt', 'gio', 'toolchain', 'broker',
-         'broker_provenance', 'go_sdk_archive', 'go_sdk_manifest', 'guest_tools', 'guest_descriptor', 'guest_release_manifest', 'runtime_core'}
+         'broker_provenance', 'go_sdk_archive', 'go_sdk_manifest', 'guest_tools', 'guest_descriptor', 'guest_release_manifest'}
 REPOSITORY = 'Dockpipe-Industries/dockpipe-packages'
 
 
@@ -139,7 +139,7 @@ def load_lock(path, target, source_template=False):
             raise ValueError('Source archive URL must bind the exact approved catalog commit')
         if any(other['inputs']['source'] != profile['inputs']['source'] for other in lock['profiles'].values()):
             raise ValueError('Every platform must consume the same exact committed source archive')
-    for role in ('cli', 'display_sdk', 'runtime_core', 'go_sdk_archive', 'go_sdk_manifest'):
+    for role in ('cli', 'display_sdk', 'go_sdk_archive', 'go_sdk_manifest'):
         if not profile['inputs'][role]['url'].startswith('https://github.com/Dockpipe-Industries/dockpipe/releases/download/'):
             raise ValueError('Core-owned dependency must come from its owning public release')
     for name, digest in profile['previous_artifacts'].items():
@@ -291,22 +291,28 @@ def validate_guest_release(document, profile):
         raise ValueError('Guest Tools toolchain identity differs')
 
 
-def require_runtime_core(profile, selected_root):
-    # Installation/acquisition belongs to the shared catalog runtime-core bootstrap.
-    # This consumer only admits its explicit task-private output against the same pin.
-    if not selected_root or not Path(selected_root).is_absolute():
-        raise ValueError('Run the catalog runtime-core bootstrap and select its task-private DOCKPIPE_GLOBAL_ROOT')
-    root = Path(selected_root)
-    asset = profile['inputs']['runtime_core']
-    name = urllib.parse.urlsplit(asset['url']).path.rsplit('/', 1)[1]
-    relative(name)
-    directory = root / 'packages/core'
-    expected = directory / name
-    if (root.is_symlink() or directory.is_symlink() or expected.is_symlink() or not expected.is_file()
-            or expected.stat().st_size != asset['size_bytes'] or sha256(expected) != asset['sha256']
-            or sorted(item.name for item in directory.glob('dockpipe-core-*.tar.*')) != [name]):
-        raise ValueError('Task-private runtime-core bootstrap output differs from the immutable core pin')
+def prepare_runtime_root(work):
+    """Use an empty private runtime store; no archive or ambient store is inherited."""
+    root = work / 'runtime-global'
+    if root.exists() or any(parent.is_symlink() for parent in (root, *root.parents)):
+        raise ValueError('Self-contained runtime requires a fresh private store without links')
+    root.mkdir(mode=0o700)
     return root
+
+
+def validate_cli_source_pin(source, profile, target):
+    """Bind the native producer to the exact released CLI in its owning source."""
+    config = read_json(source / 'dockpipe.config.json')
+    lock = read_json(source / 'dockpipe.lock.json')
+    platform = target.replace('-', '/', 1)
+    version = config.get('dockpipe_version')
+    runtime = lock.get('dockpipe', {})
+    artifact = runtime.get('artifacts', {}).get(platform, {})
+    if (lock.get('schema') != 1 or not version or version != profile['cli_version']
+            or runtime.get('version') != version):
+        raise ValueError('Native CLI version differs from the owning public source lock')
+    if any(artifact.get(key) != profile['inputs']['cli'][key] for key in ('url', 'sha256', 'size_bytes')):
+        raise ValueError('Native CLI archive differs from the owning public source lock')
 
 
 def combine(stores, owned, target, destination, previous):
@@ -362,8 +368,8 @@ def verify_vm_family(manifest):
             identity = (kind, artifact['name'])
             if identity not in VM_FAMILY:
                 continue
-            if artifact.get('version') != '1.3.7' or artifact.get('min_dockpipe_version') != '0.6.29-0':
-                raise ValueError('Native VM family requires coherent1.3.7/min0.6.29-0 metadata')
+            if artifact.get('version') != '1.3.8' or artifact.get('min_dockpipe_version') != '0.6.29-0':
+                raise ValueError('Native VM family requires coherent1.3.8/min0.6.29-0 metadata')
             found.add(identity)
     if found != VM_FAMILY:
         raise ValueError('Native candidate must contain all five VM family installables')
@@ -394,11 +400,9 @@ def build(lock_path, target, cache, work, output, fetch=False):
         raise ValueError('Use an exact native host and fresh task work/output directories')
     work.mkdir(parents=True)
     output.mkdir(parents=True)
-    global_root = require_runtime_core(profile, os.environ.get('DOCKPIPE_GLOBAL_ROOT', ''))
+    global_root = prepare_runtime_root(work)
     inputs = {}
     for role, asset in profile['inputs'].items():
-        if role == 'runtime_core':
-            continue
         inputs[role] = extract(asset, acquire(asset, cache, fetch), work / role)
     validate_guest_release(read_json(inputs['guest_release_manifest']), profile)
     recipe_environment = {}
@@ -434,9 +438,7 @@ def build(lock_path, target, cache, work, output, fetch=False):
     shutil.copyfile(inputs['go_sdk_archive'], sdk / 'sdk.tar.gz')
     shutil.copyfile(inputs['go_sdk_manifest'], sdk / 'sdk.json')
     dependencies = read_json(source / 'release/dependencies.lock.json')
-    runtime_pin = dependencies.get('dockpipe_runtime_core', {})
-    if any(runtime_pin.get(key) != profile['inputs']['runtime_core'][key] for key in ('url', 'sha256', 'size_bytes')):
-        raise ValueError('Runtime core profile differs from the shared catalog bootstrap dependency lock')
+    validate_cli_source_pin(source, profile, target)
     pin = dependencies['dockpipe_go_sdk']
     if sha256(sdk / 'sdk.tar.gz') != pin['archive_sha256'] or sha256(sdk / 'sdk.json') != pin['manifest_sha256']:
         raise ValueError('Go SDK acquisition differs from the catalog public dependency lock')

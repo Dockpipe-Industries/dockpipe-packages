@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "repository": "Dockpipe-Industries/dockpipe",
-  "tag": "dockpipe-go-sdk-0.1.0-source.90db6efa41c56d31",
-  "manifest_asset": "dockpipe-go-sdk-90db6efa41c56d31.json",
-  "archive_asset": "dockpipe-go-sdk-90db6efa41c56d31.tar.gz"
+  "tag": "dockpipe-go-sdk-0.1.0-source.2130fcfe0504ccf4",
+  "manifest_asset": "dockpipe-go-sdk-2130fcfe0504ccf4.json",
+  "archive_asset": "dockpipe-go-sdk-2130fcfe0504ccf4.tar.gz"
 }

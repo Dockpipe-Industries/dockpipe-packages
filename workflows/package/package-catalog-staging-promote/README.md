@@ -16,7 +16,7 @@ package/config platform declarations and resolver-aware transitive dependency
 closure. A same-named workflow cannot satisfy `requires_resolvers`. Missing native
 platform evidence is never supplied by copying another platform's binary.
 
-The pending VM1.3.7 candidate requires the genuine core0.6.28 public CLI and actual
+The pending VM1.3.7 candidate requires the genuine independently published self-contained CLI and actual
 Mac startup qualification. This implementation does not contain a fabricated pin
 for that future candidate. Candidate64 remains immutable evidence, not a repaired
 VM1.3.7 delivery artifact. Secretstore must be explicitly retired where its required
@@ -37,7 +37,7 @@ DorkPipe resolver is unavailable; the independent Terraform pair is unaffected.
    `package catalog` and install each promoted package in its own fresh global
    store. Each result must include the exact returned path and complete selected
    dependency archive/hash set. A shared preinstalled QEMU cannot mask missing app
-   metadata. Existing source-hidden named-workflow/native proofs are independently
+   metadata. Existing source-independent named-workflow/native proofs are independently
    required; catalog installation does not establish startup, rendering, or input.
 4. A final privileged job accepts consumer artifacts only from those required
    successful jobs of the same trusted workflow run and exact plan. A handwritten
@@ -88,7 +88,7 @@ The credential policy must restrict writes to the reviewed immutable catalog
 prefix and optional `packages/latest.json` key.
 
 The runnable request/CI wrapper still needs the actual public candidate N, the
-independently published CLI0.6.29 and compiled-core0.6.30 pins, the reviewed all-platform policy,
+independently published CLI and SDK pins, the reviewed all-platform policy,
 and the source-bound named-workflow qualification projection. No default, placeholder
 or source-cache fallback may fill those values. These missing inputs do not affect
 independent core runtime publication.
@@ -124,11 +124,14 @@ source request under `release/`, its exact SHA256, and `catalog_promotion_execut
 A new workflow file on a nondefault branch is not assumed to be dispatchable.
 The final three-job gate checks actual current-run job results and receipt bytes.
 
-The candidate product's `release/native-store.lock.json` and
-`release/dependencies.lock.json` member `dockpipe_runtime_core` must select the
-same admitted public CLI/compiled-core inputs. Readiness rechecks the independent
-runtime pointer and effective compiled `vmimage-run.sh` bytes before optional
-catalog CAS. No CLI version alone establishes Darwin runtime support.
+The candidate product's `release/native-store.lock.json` binds the actual public
+CLI archive; `release/dependencies.lock.json` binds the published SDK source and
+archive identities. Readiness rechecks the independent runtime pointer, CLI
+producer metadata, SDK manifest and actual package-owned QEMU adapter before the
+optional catalog CAS. No mandatory core archive or runtime package store exists.
+The reviewed strict Linux isolated/offline receipt must name the actual public
+CLI; current-run native capability checks separately prove source independence.
+See `REQUEST-CONTRACT.md` for exact receipt fields and limits.
 
 The provider contract uses R2's documented atomic conditional PutObject headers,
 not an assumed compatibility property: [S3 API compatibility](https://developers.cloudflare.com/r2/api/s3/api/)
@@ -151,5 +154,5 @@ non-cone sparse checkout and `persist-credentials: false`. Before any CLI call,
 the helper verifies the actual checkout contains only those regular helper files
 and inert Git metadata. Unexpected packages, src, tooling, source, root config,
 or aliased files are rejected. The resulting checked helper inventory is recorded
-in the consumer receipt; `source_hidden` follows that check. The CLI itself still
+in the consumer receipt; `source_independent` follows that check. The CLI itself still
 runs in a distinct fresh project and uses a fresh global store for each app.

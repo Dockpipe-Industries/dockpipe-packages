@@ -76,6 +76,52 @@ def admit_bundle(root, expected):
     return request, plan
 
 
+def native_package_stores(request, root):
+    return {platform: {'directory': root / 'inputs' / ('native-' + platform),
+                       'manifest_sha256': request['candidate']['artifacts'][platform]['manifest_sha256']}
+            for platform in PLATFORMS}
+
+
+def qualification_document(pin, source_root):
+    if not isinstance(pin, dict) or set(pin) != {'path', 'sha256', 'size_bytes'}:
+        raise PublicationStopped('Exact source-bound qualification receipt reference is required')
+    relative = relative_path(pin['path'])
+    if not relative.startswith('release/catalog-qualification/'):
+        raise PublicationStopped('Qualification receipt must be an owning reviewed source projection')
+    path = contained_file(source_root, relative)
+    if file_digest(path, 1048576) != (pin['sha256'], pin['size_bytes']):
+        raise PublicationStopped('Qualification receipt bytes differ from the reviewed provenance')
+    return json.loads(path.read_bytes())
+
+
+def admit_isolated_cli_qualification(pin, source_root, cli_pin, cli_source_sha):
+    """Bind reviewed raw network-none capsule proof, not a caller success flag."""
+    receipt = qualification_document(pin, source_root)
+    checks = {'typed offline init', 'execute real host starter', 'three SDK resource languages',
+              'real Python SDK explicit CLI without PATH CLI'}
+    if (receipt.get('schema') != 1 or receipt.get('cli_sha256') != cli_pin['executable_sha256']
+            or receipt.get('cli_version') != cli_pin['version']
+            or receipt.get('cli_source_sha') != cli_source_sha
+            or receipt.get('network') != 'none' or receipt.get('source_or_sibling_mounts') is not False
+            or not checks.issubset(receipt.get('checks', []))):
+        raise PublicationStopped('Reviewed isolated CLI acceptance does not bind the actual public executable')
+    commands = qualification_document(receipt.get('command_receipt'), source_root)
+    if not isinstance(commands, list) or not 1 <= len(commands) <= 128:
+        raise PublicationStopped('Isolated CLI raw command inventory is missing or unbounded')
+    for command in commands:
+        if (not isinstance(command, dict) or type(command.get('exit')) is not int or command['exit'] != 0
+                or not isinstance(command.get('argv'), list)
+                or not command['argv'] or any(not isinstance(value, str) for value in command['argv'])):
+            raise PublicationStopped('Isolated CLI raw commands contain an incomplete or failed execution')
+    arguments = [command['argv'] for command in commands]
+    if (not any(command[0] == 'init' for command in arguments)
+            or not any('--workflow' in command and 'example' in command for command in arguments)
+            or any(not any(command[:4] == ['sdk', 'path', '--language', language] for command in arguments)
+                   for language in ('shell', 'powershell', 'python'))):
+        raise PublicationStopped('Isolated CLI raw receipt omits the required actual capabilities')
+    return receipt
+
+
 def admit_named_qualification(request, source_root, manifests, runtime):
     """Bind a committed projection of separately reviewed raw named-workflow proof.
 
@@ -93,6 +139,8 @@ def admit_named_qualification(request, source_root, manifests, runtime):
     if (document.get('schema') != 1 or document.get('product_source_sha') != request['candidate']['source_sha']
             or set(document.get('platforms', {})) != PLATFORMS):
         raise PublicationStopped('Named workflow qualification source/platform binding differs')
+    admit_isolated_cli_qualification(document.get('isolated_cli_acceptance'), source_root,
+                                     request['cli']['linux-amd64'], runtime['cli_source_sha'])
     for platform in PLATFORMS:
         proof = document['platforms'][platform]
         expected = {key: entry['sha256'] for key, entry in manifests[platform].items()}
@@ -180,7 +228,7 @@ def prepare_stage(arguments):
     dependencies = json.loads(acquire(request['candidate']['source_dependencies'], root / 'inputs/cache').read_bytes())
     from catalog_runtime_gate import admit_runtime
     runtime = admit_runtime(request['runtime'], source_lock, dependencies, request['cli'], reader,
-                            root / 'runtime-readiness', acquire)
+                            root / 'runtime-readiness', acquire, native_package_stores(request, root))
     plan['runtime_binding'] = runtime
     from catalog_plan import entries
     candidate_manifests = {}
@@ -314,9 +362,9 @@ def main(argv=None):
         source_lock = json.loads(acquire(request['candidate']['source_lock'], state / 'source-cache').read_bytes())
         dependencies = json.loads(acquire(request['candidate']['source_dependencies'], state / 'source-cache').read_bytes())
         current_runtime = admit_runtime(request['runtime'], source_lock, dependencies, request['cli'],
-                                        reader, state / 'runtime-readiness', acquire)
+                                        reader, state / 'runtime-readiness', acquire, native_package_stores(request, root))
         if current_runtime != current_plan['runtime_binding']:
-            raise PublicationStopped('Runtime/core changed before optional catalog commit')
+            raise PublicationStopped('Runtime/CLI/SDK or package adapter changed before optional catalog commit')
         receipts_root = Path(arguments.receipts).resolve()
         receipts = {platform: json.loads(contained_file(receipts_root, platform + '/receipt.json').read_bytes())
                     for platform in PLATFORMS}

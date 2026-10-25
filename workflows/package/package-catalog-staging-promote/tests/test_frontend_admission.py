@@ -64,7 +64,7 @@ class FrontendAdmissionTest(unittest.TestCase):
             }}
             with patch('catalog_runtime_gate.acquire_baseline', return_value=source):
                 with self.assertRaisesRegex(PublicationStopped, 'Darwin runtime floor'):
-                    admit_runtime(pin, {}, {}, {}, None, root / 'readiness', None)
+                    admit_runtime(pin, {}, {}, {}, None, root / 'readiness', None, {})
 
     def test_effective_script_not_gzip_container_identity_is_admitted(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -74,7 +74,7 @@ class FrontendAdmissionTest(unittest.TestCase):
             for index, timestamp in enumerate([0, 100]):
                 archive = root / (str(index) + '.tar.gz')
                 with tarfile.open(archive, 'w:gz') as output:
-                    member = tarfile.TarInfo('core/assets/scripts/vmimage-run.sh')
+                    member = tarfile.TarInfo('resolvers/qemu/assets/scripts/vmimage-run.sh')
                     member.mtime = timestamp
                     member.size = len(script)
                     output.addfile(member, io.BytesIO(script))
@@ -87,7 +87,7 @@ class FrontendAdmissionTest(unittest.TestCase):
             archive = Path(directory) / 'core.tar.gz'
             with tarfile.open(archive, 'w:gz') as output:
                 for _ in range(2):
-                    member = tarfile.TarInfo('core/assets/scripts/vmimage-run.sh')
+                    member = tarfile.TarInfo('resolvers/qemu/assets/scripts/vmimage-run.sh')
                     member.size = 1
                     output.addfile(member, io.BytesIO(b'x'))
             with self.assertRaisesRegex(PublicationStopped, 'duplicated'):

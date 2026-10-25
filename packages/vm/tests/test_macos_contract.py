@@ -70,13 +70,14 @@ class MacContractTest(unittest.TestCase):
     def test_windows_keeps_its_existing_explicit_portable_matrix(self):
         commands = runner.test_commands(ROOT, 'Windows', {})
         import vm_go
-        self.assertEqual([arguments for directory, arguments in commands[:-1]], vm_go.test_arguments('Windows'))
-        self.assertIn('test_runtime_compatibility.py', commands[-1][1][-1])
-        self.assertTrue(all(directory == ROOT / 'tools' for directory, arguments in commands[:-1]))
+        self.assertEqual([arguments for directory, arguments in commands[:-2]], vm_go.test_arguments('Windows'))
+        self.assertIn('test_runtime_compatibility.py', commands[-2][1][-1])
+        self.assertTrue(all(directory == ROOT / 'tools' for directory, arguments in commands[:-2]))
+        self.assertIn('backend_contracts.py', commands[-1][1][-1])
         self.assertTrue(all('./...' not in arguments for directory, arguments in commands))
 
     def test_only_supported_metadata_is_extended(self):
-        self.assertIn('version: 1.3.7\n', (ROOT / 'package.yml').read_text())
+        self.assertIn('version: 1.3.8\n', (ROOT / 'package.yml').read_text())
         self.assertIn('min_dockpipe_version: 0.6.29-0\n', (ROOT / 'package.yml').read_text())
         self.assertIn('platforms: [windows, deb, macos]', (ROOT / 'package.yml').read_text())
         self.assertIn('script: assets/scripts/build-source.py', (ROOT / 'package.yml').read_text())

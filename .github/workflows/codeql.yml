@@ -32,7 +32,7 @@ jobs:
       - uses: actions/setup-go@v7
         if: matrix.language == 'go'
         with:
-          go-version: '1.26.9'
+          go-version: '1.26.10'
       - name: Install the locked Dockpipe version
         if: matrix.language == 'go'
         run: python3 tooling/bootstrap_dockpipe.py --output "$RUNNER_TEMP/dockpipe"

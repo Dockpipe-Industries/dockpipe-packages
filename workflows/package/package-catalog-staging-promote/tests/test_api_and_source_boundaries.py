@@ -9,7 +9,7 @@ from unittest.mock import patch
 import urllib.request
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'assets/scripts'))
-from catalog_consumer import SCRIPT_DIRECTORY, assert_source_hidden, verify_consumer
+from catalog_consumer import SCRIPT_DIRECTORY, assert_source_independent, verify_consumer
 from catalog_consumer_gate import GitHubReadOnly, NoRedirect
 from catalog_plan import json_bytes
 from catalog_transaction import PublicationStopped
@@ -94,7 +94,7 @@ class SourceHiddenTest(unittest.TestCase):
     def test_only_helper_checkout_is_admitted(self):
         with tempfile.TemporaryDirectory() as directory:
             root = self.helper_checkout(Path(directory))
-            receipt = assert_source_hidden(root)
+            receipt = assert_source_independent(root)
             self.assertTrue(receipt['only_helper_scripts'])
             self.assertEqual(len(receipt['files']), 1)
             self.assertEqual(receipt['files'][0]['path'],
@@ -117,7 +117,7 @@ class SourceHiddenTest(unittest.TestCase):
             root = self.helper_checkout(Path(directory))
             (root / 'dockpipe.config.json').write_text('{}')
             with self.assertRaisesRegex(PublicationStopped, 'non-helper'):
-                assert_source_hidden(root)
+                assert_source_independent(root)
 
     def test_consumer_receipt_follows_checked_absence_and_secrets_do_not_reach_cli(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -147,10 +147,11 @@ class SourceHiddenTest(unittest.TestCase):
 
             with patch.dict('os.environ', {'GH_TOKEN': 'github-sentinel',
                                           'AWS_SECRET_ACCESS_KEY': 'aws-sentinel'}, clear=False):
-                with patch('catalog_consumer.subprocess.Popen', side_effect=launch):
+                with patch('catalog_consumer.subprocess.Popen', side_effect=launch), \
+                        patch('catalog_consumer.verify_runtime_capabilities', return_value={}):
                     receipt = verify_consumer(executable, digest, 'fixture-version', root / 'consumer',
                                               plan, 'linux-amd64', manifest, [], {}, checkout)
-            self.assertTrue(receipt['source_hidden'])
+            self.assertTrue(receipt['source_independent'])
             self.assertTrue(receipt['source_checkout_admission']['only_helper_scripts'])
             self.assertEqual(len(calls), 2)
             for environment in calls:

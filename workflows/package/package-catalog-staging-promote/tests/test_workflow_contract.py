@@ -21,7 +21,7 @@ class WorkflowContractTest(unittest.TestCase):
         for name in ['test', 'test-windows']:
             text = '\n'.join(step.get('run', '') for step in self.jobs[name]['steps'])
             self.assertIn('tooling/bootstrap_dockpipe.py', text)
-            self.assertIn('tooling/bootstrap_runtime_core.py', text)
+            self.assertNotIn('tooling/bootstrap_runtime_core.py', text)
             self.assertIn('tooling/fetch_sdk_release.py', text)
         linux = '\n'.join(step.get('run', '') for step in self.jobs['test']['steps'])
         windows = '\n'.join(step.get('run', '') for step in self.jobs['test-windows']['steps'])
@@ -30,6 +30,20 @@ class WorkflowContractTest(unittest.TestCase):
         self.assertIn('workflows/ci.windows/config.yml', windows)
         self.assertNotIn('if', self.jobs['test'])
         self.assertNotIn('if', self.jobs['test-windows'])
+
+    def test_runner_state_is_scoped_to_runtime_execution_steps(self):
+        for name in ['test', 'test-windows']:
+            job = self.jobs[name]
+            self.assertNotIn('runner.', str(job.get('env', {})))
+            runtime_steps = [
+                step for step in job['steps']
+                if '--workflow-file' in step.get('run', '')
+            ]
+            self.assertEqual(len(runtime_steps), 1)
+            self.assertEqual(
+                runtime_steps[0]['env']['DOCKPIPE_GLOBAL_ROOT'],
+                '${{ runner.temp }}/dockpipe-runtime',
+            )
 
     def test_only_explicit_staging_dispatch_can_reach_provider_jobs(self):
         prepare = self.jobs['catalog-prepare']

@@ -62,16 +62,16 @@
           "root": "DockPipeDisplaySDK-1.0.0-linux-amd64"
         },
         "go_sdk_archive": {
-          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/dockpipe-go-sdk-0.1.0-source.90db6efa41c56d31/dockpipe-go-sdk-90db6efa41c56d31.tar.gz",
-          "sha256": "91b8a7490d75ec7323d792d02e5e44026dc502afbfa491ae762d01f40528cd43",
-          "size_bytes": 292110,
+          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/dockpipe-go-sdk-0.1.0-source.2130fcfe0504ccf4/dockpipe-go-sdk-2130fcfe0504ccf4.tar.gz",
+          "sha256": "79446c926a8e067469d2db207b20fc9b5be572fd45cf3899484ae455e1038f73",
+          "size_bytes": 246953,
           "format": "file",
           "root": ""
         },
         "go_sdk_manifest": {
-          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/dockpipe-go-sdk-0.1.0-source.90db6efa41c56d31/dockpipe-go-sdk-90db6efa41c56d31.json",
-          "sha256": "bdb299b23b5e2ac9e5d8d7d2c1637105eeeca50d42842de4724d6abf4ff6ec6d",
-          "size_bytes": 48906,
+          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/dockpipe-go-sdk-0.1.0-source.2130fcfe0504ccf4/dockpipe-go-sdk-2130fcfe0504ccf4.json",
+          "sha256": "2aafc16df9f3920c17d9769a606c81032542de2a31cfa8f83d4f2ee7ef826064",
+          "size_bytes": 36101,
           "format": "file",
           "root": ""
         },
@@ -93,13 +93,6 @@
           "url": "https://github.com/Dockpipe-Industries/dockpipe-packages/releases/download/guest-tools-candidate-13ffe8ad8c59f1c8aa6ba75e2b229d9c26a34681/guest-tools-candidate-manifest.json",
           "sha256": "cedd8adf546b6369de951f30e2cce07e9f8800de29da853b3859b3ca41f404c8",
           "size_bytes": 2691,
-          "format": "file",
-          "root": ""
-        },
-        "runtime_core": {
-          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/v0.6.30-staging.40103059599.1.959f7ad04a7b/dockpipe-core-0.6.30.tar.gz",
-          "sha256": "6e7790b83f7fea631776b906a90549dd4a76bf823bdd7bf851a71ea945c95e85",
-          "size_bytes": 2796697,
           "format": "file",
           "root": ""
         }
@@ -1823,16 +1816,16 @@
           "root": "DockPipeDisplaySDK-1.0.0-windows-amd64"
         },
         "go_sdk_archive": {
-          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/dockpipe-go-sdk-0.1.0-source.90db6efa41c56d31/dockpipe-go-sdk-90db6efa41c56d31.tar.gz",
-          "sha256": "91b8a7490d75ec7323d792d02e5e44026dc502afbfa491ae762d01f40528cd43",
-          "size_bytes": 292110,
+          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/dockpipe-go-sdk-0.1.0-source.2130fcfe0504ccf4/dockpipe-go-sdk-2130fcfe0504ccf4.tar.gz",
+          "sha256": "79446c926a8e067469d2db207b20fc9b5be572fd45cf3899484ae455e1038f73",
+          "size_bytes": 246953,
           "format": "file",
           "root": ""
         },
         "go_sdk_manifest": {
-          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/dockpipe-go-sdk-0.1.0-source.90db6efa41c56d31/dockpipe-go-sdk-90db6efa41c56d31.json",
-          "sha256": "bdb299b23b5e2ac9e5d8d7d2c1637105eeeca50d42842de4724d6abf4ff6ec6d",
-          "size_bytes": 48906,
+          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/dockpipe-go-sdk-0.1.0-source.2130fcfe0504ccf4/dockpipe-go-sdk-2130fcfe0504ccf4.json",
+          "sha256": "2aafc16df9f3920c17d9769a606c81032542de2a31cfa8f83d4f2ee7ef826064",
+          "size_bytes": 36101,
           "format": "file",
           "root": ""
         },
@@ -1854,13 +1847,6 @@
           "url": "https://github.com/Dockpipe-Industries/dockpipe-packages/releases/download/guest-tools-candidate-13ffe8ad8c59f1c8aa6ba75e2b229d9c26a34681/guest-tools-candidate-manifest.json",
           "sha256": "cedd8adf546b6369de951f30e2cce07e9f8800de29da853b3859b3ca41f404c8",
           "size_bytes": 2691,
-          "format": "file",
-          "root": ""
-        },
-        "runtime_core": {
-          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/v0.6.30-staging.40103059599.1.959f7ad04a7b/dockpipe-core-0.6.30.tar.gz",
-          "sha256": "6e7790b83f7fea631776b906a90549dd4a76bf823bdd7bf851a71ea945c95e85",
-          "size_bytes": 2796697,
           "format": "file",
           "root": ""
         }
@@ -2827,16 +2813,16 @@
           "root": "DockPipeDisplaySDK-1.0.0-darwin-arm64"
         },
         "go_sdk_archive": {
-          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/dockpipe-go-sdk-0.1.0-source.90db6efa41c56d31/dockpipe-go-sdk-90db6efa41c56d31.tar.gz",
-          "sha256": "91b8a7490d75ec7323d792d02e5e44026dc502afbfa491ae762d01f40528cd43",
-          "size_bytes": 292110,
+          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/dockpipe-go-sdk-0.1.0-source.2130fcfe0504ccf4/dockpipe-go-sdk-2130fcfe0504ccf4.tar.gz",
+          "sha256": "79446c926a8e067469d2db207b20fc9b5be572fd45cf3899484ae455e1038f73",
+          "size_bytes": 246953,
           "format": "file",
           "root": ""
         },
         "go_sdk_manifest": {
-          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/dockpipe-go-sdk-0.1.0-source.90db6efa41c56d31/dockpipe-go-sdk-90db6efa41c56d31.json",
-          "sha256": "bdb299b23b5e2ac9e5d8d7d2c1637105eeeca50d42842de4724d6abf4ff6ec6d",
-          "size_bytes": 48906,
+          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/dockpipe-go-sdk-0.1.0-source.2130fcfe0504ccf4/dockpipe-go-sdk-2130fcfe0504ccf4.json",
+          "sha256": "2aafc16df9f3920c17d9769a606c81032542de2a31cfa8f83d4f2ee7ef826064",
+          "size_bytes": 36101,
           "format": "file",
           "root": ""
         },
@@ -2858,13 +2844,6 @@
           "url": "https://github.com/Dockpipe-Industries/dockpipe-packages/releases/download/guest-tools-candidate-13ffe8ad8c59f1c8aa6ba75e2b229d9c26a34681/guest-tools-candidate-manifest.json",
           "sha256": "cedd8adf546b6369de951f30e2cce07e9f8800de29da853b3859b3ca41f404c8",
           "size_bytes": 2691,
-          "format": "file",
-          "root": ""
-        },
-        "runtime_core": {
-          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/v0.6.30-staging.40103059599.1.959f7ad04a7b/dockpipe-core-0.6.30.tar.gz",
-          "sha256": "6e7790b83f7fea631776b906a90549dd4a76bf823bdd7bf851a71ea945c95e85",
-          "size_bytes": 2796697,
           "format": "file",
           "root": ""
         }

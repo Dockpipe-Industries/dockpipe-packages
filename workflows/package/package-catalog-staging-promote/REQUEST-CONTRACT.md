@@ -19,7 +19,7 @@ The root fields are exact; unknown or missing root fields stop preparation:
 | `destination` | Literal reference names `endpoint_reference: R2_ENDPOINT_URL` and `bucket_reference: DOCKPIPE_RELEASE_BUCKET`; `target_sha256` of `catalog_plan.json_bytes({endpoint, bucket})` using actual operator values |
 | `aws_cli_archive` | Exact `archive` triplet from the source-bound official AWS CLI descriptor |
 | `named_workflow_qualification` | Path below `release/catalog-qualification/`, SHA256 and size of the reviewed public evidence projection |
-| `runtime` | Independent public runtime pointer and manifest pins, runtime source/version, exact producer compiled-core release pin, and three platform store/core pins with effective `vmimage-run.sh` SHA256 |
+| `runtime` | Independent public runtime pointer/manifest pins and source/version; exact `cli_manifest` public CLI producer metadata; three platform package-owned `vmimage_run_sha256` values |
 
 All file pins use `url`, `sha256`, `size_bytes`; native outer pins also bind
 `manifest_sha256`. Candidate asset records additionally preserve actual immutable
@@ -33,14 +33,36 @@ The named-workflow projection has schema1, `product_source_sha`, and three
 `effective_vmimage_run_sha256`, empty `failed_checks`/`skipped_checks`, and bounded
 `raw_receipts` references (`role`, `sha256`, `size_bytes`). This supplementary
 review projection does not replace the required actual producer and three native
-consumer jobs. It must describe the new VM1.3.7 cohort and real runtime0.6.28.
+consumer jobs. It must describe the actual VM1.3.7 cohort and admitted public runtime/CLI inputs.
 
 The runtime pin resolves only `/packages/runtime/latest.json`, which the catalog
-publisher never writes. Its manifest must classify itself as runtime, and each
-selected platform store must be core-only. Product source
-`release/native-store.lock.json` and `release/dependencies.lock.json` member
-`dockpipe_runtime_core` must bind the exact selected public CLI and producer core.
-The effective script bytes must match both host-bundled and producer core archives.
+publisher never writes. Empty or absent runtime package stores are valid. The
+public CLI manifest must bind all five producer archives to its exact source,
+release, executable inventories and owning checks. Each selected native CLI must
+also match the product source lock. The SDK dependency lock binds the actual
+published source digest, commit, archive and manifest; no sibling SDK is accepted.
+Effective VM adapter bytes come from the hash-admitted `resolver/qemu` archive in
+the actual native product, never a runtime source/core archive.
+
+The named projection additionally requires `isolated_cli_acceptance`, a
+`path`/`sha256`/`size_bytes` reference beneath `release/catalog-qualification/`.
+That reviewed raw Linux capsule receipt binds the actual public `cli_sha256`,
+`cli_version`, and `cli_source_sha`, `network: none`, and
+`source_or_sibling_mounts: false`. Its checks include `typed offline init`,
+`execute real host starter`, `three SDK resource languages`, and
+`real Python SDK explicit CLI without PATH CLI`. A nested `command_receipt` uses
+the same path/hash/size contract and contains the actual commands: nonempty
+`argv` arrays and integer `exit: 0`, including init, named example execution and
+all three SDK path languages. Never generate this projection from a local-only
+binary or insert anticipated public hashes. Keep host paths and credentials out
+of committed public proof; execution outputs belong in workflow artifact scopes.
+
+Each actual native consumer independently runs init, the host starter, all three
+SDK resource paths and the Python SDK with the selected CLI. Its receipt binds
+command-output and helper hashes to that binary and trusted current-run job.
+These sparse-helper checks establish source independence and do not claim OS
+filesystem isolation or network denial. They supplement the reviewed strict
+Linux capsule and all existing native product/provider gates.
 
 The destination's actual values remain operator configuration, not committed
 source or printed metadata. The digest binds the reviewed target without granting
