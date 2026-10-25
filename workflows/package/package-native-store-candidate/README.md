@@ -42,12 +42,13 @@ The producer reuses the owning `build_windows.py` and materializer contracts.
 
 `bootstrap.py` acquires the locked CLI and enters `config.yml` through Dockpipe.
 The workflow uses native `run:.py`; its CLI therefore must include that public
-primitive. `tooling/bootstrap_runtime_core.py --output <fresh task-global-root>` must first seed its verified compiled
-archive into task-private `DOCKPIPE_GLOBAL_ROOT/packages/core`. This producer
-requires that explicit output and independently checks its locked filename/hash/size
-and that no competing core archive is present. It does not duplicate the shared
-bootstrap acquisition/installation implementation. A CLI-only bootstrap cannot
-satisfy this dependency; no core source copy or sibling fallback is permitted.
+primitive. The producer creates a fresh empty task-private runtime store and requires no
+core archive. Its exact released CLI must match both the native profile and the
+owning source's `dockpipe.config.json`/`dockpipe.lock.json`. Published SDK archive,
+manifest, source inventory and module identities remain mandatory. Old CLI/SDK
+pins stay unchanged until independently published replacements are qualified;
+removing an archive dependency does not qualify an older binary as self-contained.
+The package-owned QEMU resolver now carries the VM backend and guest services.
 The isolated source archive must declare
 `build.source.script: assets/scripts/build-source.py` before this lane accepts it.
 Before source compilation, `tooling/catalog_go_dependencies.py` authenticates the
@@ -68,6 +69,12 @@ PipeLang source fallback exists.
 store metadata. Any changed bytes under a previous name fail; package versions
 must be bumped in approved source. An outer candidate tag is not a version bump.
 Core ingestion independently enforces that rule too.
+
+The five VM installables and their parent package use the coherent 1.3.8 cohort
+for the package-owned backend and guest-services payload. Existing 1.3.7 releases
+and all previous archive hashes remain immutable. The three compatibility
+workflow overlays retain their admitted versions and bytes; they are not rebuilt
+merely because the VM SDK pin changes.
 
 ## Admitted platforms and native gates
 
@@ -281,3 +288,11 @@ Portable source/failure tests do not qualify this hosted profile. Clean native
 Windows admission, shared-library ABI execution, full package compilation/tests
 and matching desktop integration must still pass before immutable publication.
 Missing exact image tools fail rather than installing or choosing latest tools.
+
+## Historical reproduction
+
+`source_overlay.py` and `release/source-overlay.lock.json` preserve the explicitly
+selected 0.6.25 compatibility reproduction, including its historical public core
+input. Its GitHub workflow is manual-only and has no publication job. Current CI,
+native VM production and staging catalog promotion never invoke that legacy lane.
+The historical archive is not a replacement dependency for this producer.

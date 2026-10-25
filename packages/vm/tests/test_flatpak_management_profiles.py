@@ -18,7 +18,7 @@ class ManagementFlatpakProfiles(unittest.TestCase):
                 self.assertEqual(manifest['kind'], 'workflow')
                 self.assertEqual(manifest['name'], name)
                 self.assertEqual(manifest['requires_resolvers'], ['qemu'])
-                self.assertEqual(manifest['version'], '1.3.7')
+                self.assertEqual(manifest['version'], '1.3.8')
                 self.assertEqual(manifest['min_dockpipe_version'], '0.6.29-0')
                 self.assertEqual(manifest['platforms'], ['windows', 'deb', 'macos', 'flatpak'])
 

@@ -75,6 +75,22 @@ def build_manager(repository, environment, binary, tool, output):
                 int((time.monotonic() - started) * 1000))
 
 
+def build_guest_services(package, repository, environment, go_executable, resolver):
+    source = package / "guest-services/windows"
+    if not all((source / name).is_file() for name in ("go.mod", "main.go", "guest_tools_install.go")):
+        raise ValueError("Windows guest-services source is incomplete")
+    architecture = environment.get("DOCKPIPE_VM_GUEST_AGENT_GOARCH", "amd64")
+    if architecture not in {"amd64", "arm64"}:
+        raise ValueError("Unsupported Windows guest-services architecture")
+    output = resolver / "assets/scripts/dockpipe-guest-agent.exe"
+    output.parent.mkdir(parents=True, exist_ok=True)
+    selected = dict(environment, GOOS="windows", GOARCH=architecture, CGO_ENABLED="0",
+                    GO111MODULE="on", GOWORK="off", GOTOOLCHAIN="local",
+                    GOPROXY="off", GOSUMDB="off")
+    run([go_executable, "build", "-mod=readonly", "-buildvcs=false", "-trimpath",
+         "-ldflags=-s -w", "-o", output, "."], source, selected)
+
+
 def update_launcher(surface_path, goos, launcher):
     platform_key = PLATFORMS.get(goos)
     if platform_key is None or Path(launcher).name != launcher:
@@ -187,6 +203,7 @@ def main():
                  "--destination", resolver / "assets/guest-tools/windows"], repository, environment)
             with (resolver / "profile").open("a") as profile:
                 profile.write("DOCKPIPE_RESOLVER_VM_GUEST_TOOLS_BUNDLE=assets/guest-tools/windows\n")
+        build_guest_services(package, repository, environment, go_executable, resolver)
         run([binary, "package", "compile", "resolvers", "--workdir", repository,
              "--from", staging / "resolvers", "--force"], repository, environment)
 

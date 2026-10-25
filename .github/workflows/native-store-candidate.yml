@@ -60,8 +60,6 @@ jobs:
         if: matrix.platform == 'windows-amd64'
         shell: pwsh
         run: ./workflows/package/package-native-store-candidate/assets/scripts/prepare_msvc.ps1 -WorkDirectory "$env:RUNNER_TEMP/native-compiler" -AcquisitionFile "$env:GITHUB_WORKSPACE/release/native-compiler/windows-hosted-19.51.json"
-      - name: Bootstrap the independently pinned compiled runtime core
-        run: python -B tooling/bootstrap_runtime_core.py --output "${{ runner.temp }}/native-store-global"
       - name: Enter the locked native Dockpipe workflow
         env:
           DOCKPIPE_NATIVE_PLATFORM: ${{ matrix.platform }}

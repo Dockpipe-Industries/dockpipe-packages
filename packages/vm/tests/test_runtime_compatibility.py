@@ -14,7 +14,7 @@ import yaml
 
 PACKAGE = Path(__file__).resolve().parents[1]
 MINIMUM = "0.6.29-0"
-VERSION = "1.3.7"
+VERSION = "1.3.8"
 OLD_CLI = os.environ.get("DOCKPIPE_VM_COMPAT_OLD_BIN", "")
 OLD_VERSION = os.environ.get("DOCKPIPE_VM_COMPAT_OLD_VERSION", "0.6.28")
 NEW_CLI = os.environ.get("DOCKPIPE_VM_COMPAT_NEW_BIN", "")

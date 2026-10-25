@@ -23,11 +23,13 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      DOCKPIPE_GLOBAL_ROOT: ${{ runner.temp }}/dockpipe-runtime
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
-          go-version: '1.26.9'
+          go-version: '1.26.10'
       - name: Install catalog test prerequisites
         run: |
           sudo apt-get update
@@ -36,8 +38,6 @@ jobs:
         run: python3 -m unittest discover -s tooling -p test_*.py
       - name: Install the locked Dockpipe version
         run: python3 tooling/bootstrap_dockpipe.py --output "$RUNNER_TEMP/dockpipe"
-      - name: Install the locked compiled runtime core
-        run: python3 tooling/bootstrap_runtime_core.py --output "$RUNNER_TEMP/dockpipe-runtime"
       - name: Fetch the pinned Dockpipe SDK
         env:
           GH_TOKEN: ${{ github.token }}
@@ -50,13 +50,15 @@ jobs:
           "$DOCKPIPE_BIN" --workflow-file workflows/catalog.test/config.yml --
   test-windows:
     runs-on: windows-latest
+    env:
+      DOCKPIPE_GLOBAL_ROOT: ${{ runner.temp }}/dockpipe-runtime
     permissions:
       contents: read
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-go@v7
         with:
-          go-version: '1.26.9'
+          go-version: '1.26.10'
       - uses: actions/setup-python@v6
         with:
           python-version: '3.13'
@@ -65,9 +67,6 @@ jobs:
       - name: Install the official checksum-verified Dockpipe release
         shell: pwsh
         run: python tooling/bootstrap_dockpipe.py --output "$env:RUNNER_TEMP/dockpipe"
-      - name: Install the locked compiled runtime core
-        shell: pwsh
-        run: python tooling/bootstrap_runtime_core.py --output "$env:RUNNER_TEMP/dockpipe-runtime"
       - name: Fetch the pinned Dockpipe SDK
         shell: pwsh
         env:

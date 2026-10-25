@@ -21,7 +21,7 @@ class WorkflowContractTest(unittest.TestCase):
         for name in ['test', 'test-windows']:
             text = '\n'.join(step.get('run', '') for step in self.jobs[name]['steps'])
             self.assertIn('tooling/bootstrap_dockpipe.py', text)
-            self.assertIn('tooling/bootstrap_runtime_core.py', text)
+            self.assertNotIn('tooling/bootstrap_runtime_core.py', text)
             self.assertIn('tooling/fetch_sdk_release.py', text)
         linux = '\n'.join(step.get('run', '') for step in self.jobs['test']['steps'])
         windows = '\n'.join(step.get('run', '') for step in self.jobs['test-windows']['steps'])

@@ -11,9 +11,12 @@ GOWORK=off GOCACHE="$VM_TEST_TMP/cache" GOTMPDIR="$VM_TEST_TMP/tmp" CGO_ENABLED=
 
 cd "$PACKAGE_ROOT"
 bash tests/test_vmimage_state_split.sh
+python3 tests/test_backend_assets.py
+python3 tests/backend_contracts.py
+python3 tests/source_build_test.py
 python3 tests/test_toolchain_paths.py
 python3 tests/test_clipboard_build.py
-grep -Fq 'version: 1.3.7' package.yml
+grep -Fq 'version: 1.3.8' package.yml
 python3 tests/test_runtime_compatibility.py
 python3 tests/test_flatpak_management_profiles.py
 grep -Fq 'const version = "1.3.5"' tools/cmd/dockpipe-qemu-controller/main.go

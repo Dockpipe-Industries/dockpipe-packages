@@ -25,6 +25,9 @@ def main():
         subprocess.run(arguments, cwd=ROOT / 'packages/vm/tools',
                        env=environment, check=True)
 
+    subprocess.run([sys.executable, str(ROOT / 'packages/vm/tests/backend_contracts.py')],
+                   cwd=ROOT, env=environment, check=True)
+
 
 if __name__ == '__main__':
     main()

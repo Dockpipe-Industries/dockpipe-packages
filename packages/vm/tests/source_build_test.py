@@ -16,6 +16,33 @@ specification.loader.exec_module(source_build)
 
 
 class SourceBuildTests(unittest.TestCase):
+    def test_guest_services_build_is_offline_windows_and_preserves_sources(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            package = root / "packages/vm"
+            source = package / "guest-services/windows"
+            source.mkdir(parents=True)
+            for name in ("go.mod", "main.go", "guest_tools_install.go"):
+                (source / name).write_text("owned source\n")
+            original = {path.name: path.read_bytes() for path in source.iterdir()}
+            with mock.patch.object(source_build, "run") as run:
+                source_build.build_guest_services(package, root, {}, "/selected/go", root / "resolver")
+            arguments, directory, environment = run.call_args.args
+            self.assertEqual(directory, source)
+            self.assertEqual(arguments[0], "/selected/go")
+            self.assertIn("-mod=readonly", arguments)
+            self.assertEqual(environment["GOOS"], "windows")
+            self.assertEqual(environment["GOARCH"], "amd64")
+            self.assertEqual(environment["GOPROXY"], "off")
+            self.assertEqual(environment["GOSUMDB"], "off")
+            self.assertEqual(environment["GOWORK"], "off")
+            self.assertEqual({path.name: path.read_bytes() for path in source.iterdir()}, original)
+            with mock.patch.object(source_build, "run") as run:
+                with self.assertRaisesRegex(ValueError, "architecture"):
+                    source_build.build_guest_services(package, root,
+                        {"DOCKPIPE_VM_GUEST_AGENT_GOARCH": "invalid"}, "/selected/go", root / "resolver")
+                run.assert_not_called()
+
     def test_missing_go_fails_before_workspace_or_cli_mutation(self):
         with mock.patch.object(source_build.shutil, "which", return_value=None), \
                 mock.patch.object(source_build, "pinned_cli") as cli:

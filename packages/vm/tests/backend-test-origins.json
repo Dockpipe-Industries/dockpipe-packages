@@ -1,0 +1,85 @@
+{
+  "schema": 1,
+  "source_repository": "Dockpipe-Industries/dockpipe",
+  "assertion_ownership": "VM package tests; path rewrites only except reproducibility adapted to real owning service builder",
+  "files": [
+    {
+      "source": "tests/unit-tests/test_vm_darwin.sh",
+      "destination": "packages/vm/tests/test_vm_darwin.sh",
+      "source_sha256": "15db2923fdddb93b7fce8fcb54410a8dd03edd3b0b55c71f2f7781b82361bb0c",
+      "destination_sha256": "84054da8720394768d9a8683c63d24f6a7e22a567d0e3a9fe527e14bcc7b36c0"
+    },
+    {
+      "source": "tests/unit-tests/test_vm_guest_tools_media.sh",
+      "destination": "packages/vm/tests/test_vm_guest_tools_media.sh",
+      "source_sha256": "f3fe1b15fc87a6db65f273246addb52666524ebd1ffe6f5ce77bee898c60b660",
+      "destination_sha256": "6062439be50741522bdfdd2bfb818e55fecdb3cc2216177024ae69759ba61468"
+    },
+    {
+      "source": "tests/unit-tests/test_vm_session_reporter.sh",
+      "destination": "packages/vm/tests/test_vm_session_reporter.sh",
+      "source_sha256": "947402652fe8044ca71239893bebc35096bc307855c2386a9956135a78c2e4c3",
+      "destination_sha256": "da0729a11953cdd8583425f64d885e038f26a8cb22f2f0ea000b028f202e88d1"
+    },
+    {
+      "source": "tests/unit-tests/test_vm_boot_display.sh",
+      "destination": "packages/vm/tests/test_vm_boot_display.sh",
+      "source_sha256": "ea63a5156c83172385b806ee9a65b9040b58b2939c6576dd05d652ed1c59ca7e",
+      "destination_sha256": "7cc778fbcfe9a9fba9ab4a151965044b1953ad973489ca02da687a8561287302"
+    },
+    {
+      "source": "tests/unit-tests/test_vm_boot_display_args.sh",
+      "destination": "packages/vm/tests/test_vm_boot_display_args.sh",
+      "source_sha256": "44a7f2418608ef1b3c19173c64b0b35734a1f1d66a2011d74589a4357976c719",
+      "destination_sha256": "440e716aa15dbea8294412f8dbb82d32824a24e7344a753cf4457fef305626ff"
+    },
+    {
+      "source": "tests/unit-tests/test_vm_posix_cleanup.sh",
+      "destination": "packages/vm/tests/test_vm_posix_cleanup.sh",
+      "source_sha256": "61eef690ce44100ea4461c8cfc132691e4a74200db673aa7415904492a13d4f7",
+      "destination_sha256": "fb95a3917c8aecf41e597f23e2d8e3cc73254b9f458bbc911db67bd271c71811"
+    },
+    {
+      "source": "tests/unit-tests/test_vm_windows_media_paths.sh",
+      "destination": "packages/vm/tests/test_vm_windows_media_paths.sh",
+      "source_sha256": "cd04a5e547ea326caef1e1979a0c4e2b2611f7e914ea724da8fdc76e97e7f6a1",
+      "destination_sha256": "6ba180460b82d25ac470afcb3f751fa3b28220c188e52c2cef64178a5f6fad2d"
+    },
+    {
+      "source": "tests/unit-tests/test_vm_guest_preparation.sh",
+      "destination": "packages/vm/tests/test_vm_guest_preparation.sh",
+      "source_sha256": "d48b16c34549aebbfd8f57ba1ce99f5b902a67372d158f01c5b8fd39ba51f9cf",
+      "destination_sha256": "d9855dfd6f89695218348beed690b85fdec2d12311df7f097f5bc6abcf945ebb"
+    },
+    {
+      "source": "tests/unit-tests/test_windows_guest_services.sh",
+      "destination": "packages/vm/tests/test_windows_guest_services.sh",
+      "source_sha256": "7a8e9d47b849c074f03d6f905b4065dfecbce3304768a8cf1fda70b8af66eb25",
+      "destination_sha256": "4f85f9b8f88c5d159ab09ca9671a476fd970852e9f994c6a9c860c255a52b354"
+    },
+    {
+      "source": "tests/unit-tests/test_windows_guest_services.ps1",
+      "destination": "packages/vm/tests/test_windows_guest_services.ps1",
+      "source_sha256": "56bff7d1913c729b3e113b6eae0030e8ff583e7228c53434cabdd3e347775df5",
+      "destination_sha256": "7e3e5e4247b7e2a3c11daf59a1834a8ac9b4b5280a394aa1c83071ad3cf60b56"
+    },
+    {
+      "source": "tests/unit-tests/test_windows_guest_agent_repair.ps1",
+      "destination": "packages/vm/tests/test_windows_guest_agent_repair.ps1",
+      "source_sha256": "6658339ea4c80b46e263f5c34ac29202c1fd5aef87ff0305d4b63a287d601fa1",
+      "destination_sha256": "79fb2c61e68075d36c4f5f56425559d730d67b0a9464b55f1102e8891729264b"
+    },
+    {
+      "source": "tests/unit-tests/test_vm_windows_exit_status.ps1",
+      "destination": "packages/vm/tests/test_vm_windows_exit_status.ps1",
+      "source_sha256": "6f523c0b1f69a3d18b8c7b85e2e233d0ca4f08f8e6de1777b8b14cd826fe3ca0",
+      "destination_sha256": "df9dfe86053dea20c2e20dad7162c35e78f9201e641be00531c4535d9dd823a6"
+    },
+    {
+      "source": "release/packaging/tests/test_guest_agent_reproducibility.py",
+      "destination": "packages/vm/tests/test_guest_agent_reproducibility.py",
+      "source_sha256": "509bd97045f11c05c5fad7b4f0194478cc5460651264172820f0d30b75c473f9",
+      "destination_sha256": "77c634b52fed71a9b03ac8f4ed5eaadd33cc23ed23dda1cd00d0ed98a4482b13"
+    }
+  ]
+}

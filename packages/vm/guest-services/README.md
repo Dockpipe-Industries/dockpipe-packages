@@ -1,0 +1,13 @@
+# Windows guest services
+
+`windows/` owns the Windows guest-services agent and Guest Tools bootstrap installer.
+The QEMU source-build hook builds this standard-library-only module for Windows and
+places `dockpipe-guest-agent.exe` beside the resolver's provisioning scripts. Authored
+source is never changed or removed by the build.
+
+This agent is separate from `tools/cmd/dockpipe-guest-agent`, which owns the signed
+Linux qualification protocol. Neither implementation replaces the other.
+
+`backend-origin.json` records the source paths and SHA-256 values captured during
+migration from Dockpipe. The runner's only migration change replaces adjacent SDK
+lookup with the explicitly selected generic SDK or the pinned CLI's `sdk` command.
