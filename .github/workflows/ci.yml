@@ -23,8 +23,6 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
-    env:
-      DOCKPIPE_GLOBAL_ROOT: ${{ runner.temp }}/dockpipe-runtime
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
@@ -44,14 +42,13 @@ jobs:
         run: python3 tooling/fetch_sdk_release.py --output "$RUNNER_TEMP/sdk-inputs"
       - name: Build and test through Dockpipe
         env:
+          DOCKPIPE_GLOBAL_ROOT: ${{ runner.temp }}/dockpipe-runtime
           DOCKPIPE_GO_SDK_INPUTS: ${{ runner.temp }}/sdk-inputs
         run: |
           "$DOCKPIPE_BIN" --workflow-file workflows/codeql.build/config.yml --
           "$DOCKPIPE_BIN" --workflow-file workflows/catalog.test/config.yml --
   test-windows:
     runs-on: windows-latest
-    env:
-      DOCKPIPE_GLOBAL_ROOT: ${{ runner.temp }}/dockpipe-runtime
     permissions:
       contents: read
     steps:
@@ -75,6 +72,7 @@ jobs:
       - name: Test through the native Dockpipe workflow
         shell: pwsh
         env:
+          DOCKPIPE_GLOBAL_ROOT: ${{ runner.temp }}/dockpipe-runtime
           DOCKPIPE_GO_SDK_INPUTS: ${{ runner.temp }}/sdk-inputs
         run: |
           & $env:DOCKPIPE_BIN --workflow-file workflows/ci.windows/config.yml --

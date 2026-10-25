@@ -31,6 +31,20 @@ class WorkflowContractTest(unittest.TestCase):
         self.assertNotIn('if', self.jobs['test'])
         self.assertNotIn('if', self.jobs['test-windows'])
 
+    def test_runner_state_is_scoped_to_runtime_execution_steps(self):
+        for name in ['test', 'test-windows']:
+            job = self.jobs[name]
+            self.assertNotIn('runner.', str(job.get('env', {})))
+            runtime_steps = [
+                step for step in job['steps']
+                if '--workflow-file' in step.get('run', '')
+            ]
+            self.assertEqual(len(runtime_steps), 1)
+            self.assertEqual(
+                runtime_steps[0]['env']['DOCKPIPE_GLOBAL_ROOT'],
+                '${{ runner.temp }}/dockpipe-runtime',
+            )
+
     def test_only_explicit_staging_dispatch_can_reach_provider_jobs(self):
         prepare = self.jobs['catalog-prepare']
         self.assertEqual(prepare['needs'], ['test', 'test-windows', 'catalog-promotion-contracts'])
