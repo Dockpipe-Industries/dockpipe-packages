@@ -8,12 +8,14 @@ DOCKPIPE="$DOCKPIPE_BIN"
 unset DOCKPIPE_REPO_ROOT
 cd "$REPO_ROOT"
 
+# run.sh already compiles this package; do not request the legacy core-source closure.
+
 # Node is available (the Claude image is Node-based)
-out=$("$DOCKPIPE" --no-data --workflow claude -- node -e "console.log('node ok')")
+out=$("$DOCKPIPE" --no-data --no-compile-deps --workflow claude -- node -e "console.log('node ok')")
 [[ "$out" == *"node ok"* ]] || { echo "Expected node ok, got: $out"; exit 1; }
 
 # Claude CLI is installed (we only check it exists; no API call)
-out=$("$DOCKPIPE" --no-data --workflow claude -- which claude 2>/dev/null || true)
+out=$("$DOCKPIPE" --no-data --no-compile-deps --workflow claude -- which claude 2>/dev/null || true)
 [[ "$out" == *"claude"* ]] || { echo "Expected claude in PATH, got: $out"; exit 1; }
 
 echo "test_agent_dev_tooling OK"

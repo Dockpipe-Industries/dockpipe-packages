@@ -78,12 +78,14 @@ class GuestAgentReproducibilityTest(unittest.TestCase):
                     metadata_lines = metadata.splitlines()[1:]
                     self.assertFalse(any(line.startswith('\tbuild\tvcs') for line in metadata_lines))
                     self.assertNotIn(str(root), '\n'.join(metadata_lines))
+                    # Go 1.26 builds this tool on first use, so use the build deadline.
                     build_id = self.run_command([str(go), 'tool', 'buildid', str(binary)],
-                                                environment, stage, 10)
+                                                environment, stage)
                     results.append((hashlib.sha256(data).hexdigest(), metadata_lines, build_id))
                     for original in (PACKAGE / SOURCE).iterdir():
                         if original.is_file():
                             self.assertEqual((source / original.name).read_bytes(), original.read_bytes())
+            self.assertEqual(len(results), 2, 'Both extraction builds must complete')
             self.assertEqual(results[0], results[1])
 
         for path, checksum in before.items():
