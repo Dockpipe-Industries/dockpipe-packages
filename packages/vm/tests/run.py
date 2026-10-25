@@ -15,7 +15,8 @@ def test_commands(package, host, environment):
         sys.path.insert(0, str(repository / 'tooling'))
         import vm_go
         return ([(package / 'tools', arguments) for arguments in vm_go.test_arguments(host)]
-                + [(package, [sys.executable, str(package / 'tests/test_runtime_compatibility.py')])])
+                + [(package, [sys.executable, str(package / 'tests/test_runtime_compatibility.py')]),
+                   (package, [sys.executable, str(package / 'tests/backend_contracts.py')])])
     if host != 'Darwin':
         raise ValueError('VM package tests have no qualified contract for this host')
     selected = environment.get('DOCKPIPE_BIN', '')

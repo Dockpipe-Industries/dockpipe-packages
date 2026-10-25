@@ -3,11 +3,17 @@
 Select `DOCKPIPE_BIN` as the absolute path to a pinned installed Dockpipe CLI.
 Run source commands from this package repository; no sibling core checkout is required.
 
+## Host and guest guides
+
+- [macOS backend](docs/vm-darwin.md)
+- [Boot display geometry](docs/vm-display-geometry.md)
+- [Guest preparation](docs/vm-guest-preparation.md)
+
 ## Runtime compatibility and reproducible builds
 
-The QEMU resolver and every installable VM workflow at version 1.3.6 declare
-`min_dockpipe_version: 0.6.26-0`. This is a runtime compatibility floor: it admits
-0.6.26 prereleases and stable releases, and rejects 0.6.25 before loading or
+The QEMU resolver and every installable VM workflow at version 1.3.8 declare
+`min_dockpipe_version: 0.6.29-0`. This is a runtime compatibility floor: it admits
+0.6.29 prereleases and stable releases, and rejects 0.6.28 before loading or
 executing the newer package. Each workflow has its own manifest so exporting or
 installing it separately preserves the floor; the `vm` family manifest alone
 cannot protect installed slices. The existing Linux qualification controller's
@@ -1008,3 +1014,49 @@ Run package tests with:
 ```bash
 "$DOCKPIPE_BIN" package test --workdir . --only vm
 ```
+
+
+### macOS host launch prerequisite (since 1.3.7)
+
+The VM 1.3.8 installables require Dockpipe 0.6.29-0 or newer. Both boot apps
+require the QEMU resolver; Linux guest qualification remains Debian-only.
+The Windows VM control plane supports a macOS host through the generic Darwin
+VM runtime, emulating x86_64 with TCG and CPU `max` on Intel or Apple Silicon.
+It does not imply that an installed Windows guest has been qualified on macOS.
+
+Supply Bash 4.3 or newer and select its absolute executable path with
+`DOCKPIPE_HOST_BASH_BIN`. Supply GNU `timeout` or `gtimeout` for bounded session
+reporting, native QEMU/qemu-img, firmware and swtpm when TPM is enabled.
+Dockpipe does not install these prerequisites or alter global PATH. They belong
+to this optional VM toolchain; the desktop host does not require them.
+The VM runtime rejects HVF and host PCI passthrough on Darwin in this release.
+Terminal launches default to Cocoa. Launcher launches use the installed qualified
+package display factory and its private broker. A valid explicit short private
+`XDG_RUNTIME_DIR` is admitted; otherwise the package uses an owned per-user
+`/private/tmp` parent. It rejects invalid explicit runtime directories.
+
+Publication requires a new source-bound three-platform native candidate using
+actual public CLI and Go SDK pins matching the selected source. Earlier native candidates, including 1.3.7/e70, remain immutable. The floor includes installed-archive integrity and default boot-display fixes; producer locks and named-workflow proofs must still bind exact artifacts.
+
+
+For double-click launcher sessions, Windows VM's Advanced → Host Tools page has
+an optional **Host Bash Executable** file picker. Its `Advanced.HostBashPath`
+input maps to `DOCKPIPE_HOST_BASH_BIN`, defaults to empty and uses the existing
+generic absolute-executable admission. See the [workflow example](workflows/windows-vm/README.md#select-the-host-bash-executable).
+
+## Version 1.3.8 payload boundary
+
+The five VM installables form one coherent 1.3.8 cohort. The QEMU resolver now
+owns its backend scripts and Windows guest-services executable; its manager and
+launcher are built against the independently pinned public Go SDK. These payload
+changes receive new package names rather than replacing published 1.3.7 archives.
+The runtime floor remains unchanged. New CLI and SDK pins are adopted only after
+their actual public artifacts pass qualification.
+
+## Package-owned VM backend
+
+The QEMU resolver supplies its host execution adapter and provisioning assets.
+`runtime: vm` selects generic substrate defaults; `resolver: qemu` selects this
+package's implementation. VM scripts never come from the CLI's SDK directory.
+Windows guest services and the signed Linux qualification agent remain separate
+implementations; see [guest services](guest-services/README.md).

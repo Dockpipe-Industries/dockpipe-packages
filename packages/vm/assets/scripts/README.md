@@ -26,3 +26,13 @@ limit even with a short state base. Published artifacts still use the public
 package compiler/output boundary; no system long-path setting is changed. The
 private staging directory is removed on success and failure. Other platforms
 retain package-scoped staging.
+
+The QEMU resolver also owns its VM backend, provisioning scripts and three VM
+helpers under `resolvers/qemu/assets/scripts/`. Its host adapter resolves through
+the public `scripts/qemu/...` namespace. The generic shell SDK comes from the
+selected CLI; SDK filesystem layout does not locate VM assets.
+
+The source producer cross-builds the distinct standard-library-only Windows
+agent from `guest-services/windows/` into the staged resolver. The existing signed
+Linux qualification agent under `tools/` is unchanged. The guest-services build
+is offline, preserves authored sources and uses the selected host Go tool.

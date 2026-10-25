@@ -4,7 +4,7 @@ catalog_type: app
 categories: [virtual-machines, development]
 category: app
 vault: none
-platforms: [windows, deb]
+platforms: [windows, deb, macos]
 dependencies:
   host:
     - id: qemu
@@ -25,6 +25,13 @@ dependencies:
       install:
         windows: Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
         deb: sudo apt-get update && sudo apt-get install -y openssh-client
+    - id: bash
+      command: bash
+      description: The optional VM runtime requires Bash 4.3 or newer; select its absolute path with DOCKPIPE_HOST_BASH_BIN. The runtime checks the selected interpreter before loading its SDK.
+    - id: vm-report-timeout
+      command: timeout
+      required: false
+      description: VM launcher reporting requires GNU timeout or gtimeout. On macOS supply GNU coreutils; the runtime refuses a missing reporter prerequisite before launch.
 view:
   entry:
     type: choice
@@ -117,6 +124,10 @@ view:
       title: Advanced
       description: Less common passthrough and guest wrapper overrides.
       sections:
+        - id: host-tools
+          title: Host Tools
+          fields:
+            - Advanced.HostBashPath
         - id: passthrough
           title: PCI Passthrough
           fields:

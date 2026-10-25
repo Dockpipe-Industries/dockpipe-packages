@@ -7,6 +7,8 @@ import sys
 import tarfile
 import tempfile
 import unittest
+
+import yaml
 from unittest.mock import patch
 
 SCRIPTS = Path(__file__).resolve().parent.parent / 'assets/scripts'
@@ -19,7 +21,7 @@ class NativeStoreTest(unittest.TestCase):
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory()
         self.addCleanup(self.temporary.cleanup)
-        self.root = Path(self.temporary.name)
+        self.root = Path(self.temporary.name).resolve()
         self.commit = 'a' * 40
 
     def asset(self, name='input.tar.gz', format='tar.gz'):
@@ -136,6 +138,44 @@ class NativeStoreTest(unittest.TestCase):
         with tarfile.open(first) as archive:
             self.assertEqual(set(archive.getnames()), {'packages-store-manifest.json', entry['tarball']})
 
+    def test_vm_family_rejects_an_old_or_mixed_version_and_runtime_floor(self):
+        manifest = {'packages': {'resolvers': [], 'workflows': []}}
+        for kind, name in sorted(native_store.VM_FAMILY):
+            manifest['packages'][kind + 's'].append(
+                {'name': name, 'version': '1.3.8', 'min_dockpipe_version': '0.6.29-0'})
+        native_store.verify_vm_family(manifest)
+        resolver = manifest['packages']['resolvers'][0]
+        for version in ('1.3.7', '1.3.9'):
+            with self.subTest(version=version):
+                resolver['version'] = version
+                with self.assertRaisesRegex(ValueError, 'coherent1.3.8'):
+                    native_store.verify_vm_family(manifest)
+        resolver['version'] = '1.3.8'
+        resolver['min_dockpipe_version'] = '0.6.28'
+        with self.assertRaisesRegex(ValueError, 'coherent1.3.8'):
+            native_store.verify_vm_family(manifest)
+
+    def test_authoring_vm_manifests_preserve_one_cohort_and_runtime_floor(self):
+        repository = Path(__file__).resolve().parents[4]
+        paths = ['packages/vm/package.yml', 'packages/vm/resolvers/qemu/package.yml']
+        paths.extend('packages/vm/workflows/' + name + '/package.yml'
+                     for name in ('linux-vm', 'windows-vm', 'vm-manage', 'vm-resolution'))
+        for path in paths:
+            with self.subTest(path=path):
+                declaration = yaml.safe_load((repository / path).read_text())
+                self.assertEqual(declaration['version'], '1.3.8')
+                self.assertEqual(declaration['min_dockpipe_version'], '0.6.29-0')
+
+    def test_ci_and_codeql_use_the_native_go_toolchain(self):
+        repository = Path(__file__).resolve().parents[4]
+        for name in ('ci.yml', 'codeql.yml'):
+            workflow = yaml.safe_load((repository / '.github/workflows' / name).read_text())
+            selections = [step['with']['go-version'] for job in workflow['jobs'].values()
+                          for step in job.get('steps', [])
+                          if step.get('uses', '').startswith('actions/setup-go@')]
+            self.assertTrue(selections, name)
+            self.assertEqual(set(selections), {'1.26.10'}, name)
+
     def test_changed_immutable_name_requires_package_version_bump(self):
         directory, entry = self.store('resolver')
         with self.assertRaisesRegex(ValueError, 'new package version'):
@@ -153,36 +193,36 @@ class NativeStoreTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             native_store.combine({'resolver': directory}, [['resolver', 'qemu']], 'linux-amd64', self.root / 'core', {})
 
-    def test_runtime_core_requires_separately_bootstrapped_exact_archive(self):
-        profile = self.lock()['profiles']['linux-amd64']
-        data = b'verified-compiled-runtime-core'
-        name = 'dockpipe-core-0.6.25.tar.gz'
-        profile['inputs']['runtime_core'] = self.asset(name, 'file')
-        profile['inputs']['runtime_core'].update(sha256=hashlib.sha256(data).hexdigest(), size_bytes=len(data))
-        global_root = self.root / 'global'
-        directory = global_root / 'packages/core'
-        directory.mkdir(parents=True)
-        archive = directory / name
-        archive.write_bytes(data)
-        self.assertEqual(native_store.require_runtime_core(profile, str(global_root)), global_root)
-        archive.write_bytes(b'wrong')
-        with self.assertRaises(ValueError):
-            native_store.require_runtime_core(profile, str(global_root))
+    def test_runtime_uses_a_fresh_empty_private_store(self):
+        work = self.root / 'work'
+        work.mkdir()
+        runtime = native_store.prepare_runtime_root(work)
+        self.assertEqual(list(runtime.iterdir()), [])
+        self.assertEqual(runtime, work / 'runtime-global')
+        with self.assertRaisesRegex(ValueError, 'fresh'):
+            native_store.prepare_runtime_root(work)
 
-    def test_runtime_core_cannot_fall_back_to_global_default_or_competing_archive(self):
+    def test_runtime_cannot_follow_an_ambient_store_alias(self):
+        work = self.root / 'work'
+        work.mkdir()
+        ambient = self.root / 'ambient'
+        ambient.mkdir()
+        (work / 'runtime-global').symlink_to(ambient, target_is_directory=True)
+        with self.assertRaises(ValueError):
+            native_store.prepare_runtime_root(work)
+
+    def test_cli_archive_must_match_owning_source_pin(self):
         profile = self.lock()['profiles']['linux-amd64']
-        with self.assertRaises(ValueError):
-            native_store.require_runtime_core(profile, '')
-        data = b'core'
-        profile['inputs']['runtime_core'] = self.asset('dockpipe-core-1.0.0.tar.gz', 'file')
-        profile['inputs']['runtime_core'].update(sha256=hashlib.sha256(data).hexdigest(), size_bytes=len(data))
-        global_root = self.root / 'global'
-        directory = global_root / 'packages/core'
-        directory.mkdir(parents=True)
-        (directory / 'dockpipe-core-1.0.0.tar.gz').write_bytes(data)
-        (directory / 'dockpipe-core-2.0.0.tar.gz').write_bytes(data)
-        with self.assertRaises(ValueError):
-            native_store.require_runtime_core(profile, str(global_root))
+        (self.root / 'dockpipe.config.json').write_text(json.dumps({'dockpipe_version': profile['cli_version']}))
+        source_lock = {'schema': 1, 'dockpipe': {'version': profile['cli_version'], 'artifacts': {
+            'linux/amd64': {key: profile['inputs']['cli'][key] for key in ('url', 'sha256', 'size_bytes')}}}}
+        path = self.root / 'dockpipe.lock.json'
+        path.write_text(json.dumps(source_lock))
+        native_store.validate_cli_source_pin(self.root, profile, 'linux-amd64')
+        source_lock['dockpipe']['artifacts']['linux/amd64']['sha256'] = '0' * 64
+        path.write_text(json.dumps(source_lock))
+        with self.assertRaisesRegex(ValueError, 'archive differs'):
+            native_store.validate_cli_source_pin(self.root, profile, 'linux-amd64')
 
     def test_producer_orchestrates_owning_public_hook_and_noncore_store_exports(self):
         self.assert_producer_orchestration()
@@ -208,7 +248,7 @@ class NativeStoreTest(unittest.TestCase):
         inputs = {}
         file_roles = {'broker_provenance', 'go_sdk_archive', 'go_sdk_manifest',
                       'guest_tools', 'guest_descriptor', 'guest_release_manifest'}
-        for role in native_store.ROLES - {'runtime_core'}:
+        for role in native_store.ROLES:
             path = self.root / ('input-' + role)
             if role in file_roles:
                 path.write_bytes(b'input')
@@ -227,10 +267,12 @@ class NativeStoreTest(unittest.TestCase):
         (source / 'packages/vm').mkdir(parents=True)
         (source / 'packages/vm/package.yml').write_text('build:\n  source:\n    script: assets/scripts/build-source.py\n')
         (source / 'release').mkdir()
+        (source / 'dockpipe.config.json').write_text(json.dumps({'dockpipe_version': profile['cli_version']}))
+        (source / 'dockpipe.lock.json').write_text(json.dumps({'schema': 1, 'dockpipe': {
+            'version': profile['cli_version'], 'artifacts': {'linux/amd64': profile['inputs']['cli']}}}))
         sdk_hash = hashlib.sha256(b'input').hexdigest()
         (source / 'release/dependencies.lock.json').write_text(json.dumps({
             'dockpipe_go_sdk': {'archive_sha256': sdk_hash, 'manifest_sha256': sdk_hash},
-            'dockpipe_runtime_core': profile['inputs']['runtime_core'],
         }))
         commands = []
         def invoke(arguments, repository, environment):
@@ -248,21 +290,20 @@ class NativeStoreTest(unittest.TestCase):
             for kind, name in sorted(native_store.VM_FAMILY):
                 if kind + 's' != group:
                     continue
-                artifact_name = 'dockpipe-' + kind + '-' + name + '-1.3.6.tar.gz'
+                artifact_name = 'dockpipe-' + kind + '-' + name + '-1.3.8.tar.gz'
                 (destination / artifact_name).write_bytes(b'compiled fixture')
-                entries.append(dict(name=name, version='1.3.6', min_dockpipe_version='0.6.26-0',
+                entries.append(dict(name=name, version='1.3.8', min_dockpipe_version='0.6.29-0',
                                     tarball=artifact_name, size_bytes=16,
                                     sha256=hashlib.sha256(b'compiled fixture').hexdigest()))
             (destination / 'packages-store-manifest.json').write_text(json.dumps(
                 {'schema': 1, 'platform': 'linux-amd64', 'packages': {group: entries}}))
-        extracted = [inputs[role] for role in profile['inputs'] if role != 'runtime_core']
+        extracted = [inputs[role] for role in profile['inputs']]
         with (
             patch.dict(os.environ, ambient_environment or {}, clear=True),
             patch.object(native_store.platform, 'system', return_value='Linux'),
             patch.object(native_store.platform, 'machine', return_value='x86_64'),
         ):
             with (
-                patch.object(native_store, 'require_runtime_core', return_value=self.root / 'global'),
                 patch.object(native_store, 'acquire', return_value=self.root / 'cached'),
                 patch.object(native_store, 'extract', side_effect=extracted),
                 patch.object(native_store, 'validate_guest_release'),

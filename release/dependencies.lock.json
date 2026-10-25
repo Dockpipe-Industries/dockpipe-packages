@@ -1,17 +1,10 @@
 {
   "schema": 1,
   "dockpipe_go_sdk": {
-    "version": "0.1.0-source.90db6efa41c56d31",
-    "source_commit": "c604b291d463906acf0a05ef8cfe2efc071bdbaa",
-    "source_digest": "90db6efa41c56d3179c0f5ab7819a6b6a60ea9676d76daf136715a17bb106661",
-    "manifest_sha256": "bdb299b23b5e2ac9e5d8d7d2c1637105eeeca50d42842de4724d6abf4ff6ec6d",
-    "archive_sha256": "91b8a7490d75ec7323d792d02e5e44026dc502afbfa491ae762d01f40528cd43"
-  },
-  "dockpipe_runtime_core": {
-    "version": "0.6.25",
-    "release": "v0.6.25-staging.39554459680.1.2a984e78d9da",
-    "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/v0.6.25-staging.39554459680.1.2a984e78d9da/dockpipe-core-0.6.25.tar.gz",
-    "size_bytes": 2785294,
-    "sha256": "a141b4e2aeccc79d57f77ecdc542c3c2acb88dfbcda67f1520db5539cd193277"
+    "version": "0.1.0-source.2130fcfe0504ccf4",
+    "source_commit": "aecdf031dc48a1f085778aecbc613f49d145a209",
+    "source_digest": "2130fcfe0504ccf4a33740775df2a4e89f6014e7e67613f9e5317c3e050c94dc",
+    "manifest_sha256": "2aafc16df9f3920c17d9769a606c81032542de2a31cfa8f83d4f2ee7ef826064",
+    "archive_sha256": "79446c926a8e067469d2db207b20fc9b5be572fd45cf3899484ae455e1038f73"
   }
 }

@@ -54,6 +54,7 @@ func TestGuestStatusRejectsFutureOrInvalidUpdateTime(t *testing.T) {
 			// temporary status file is real; execute the exact production script.
 			fixture := `
 [Console]::Error.WriteLine('::dockpipe-guest-status-fixture-start::')
+[Console]::Error.WriteLine('updatecheck='+$env:POWERSHELL_UPDATECHECK+' telemetry_optout='+$env:POWERSHELL_TELEMETRY_OPTOUT)
 function Get-ScheduledTask { param($TaskName,$ErrorAction) return $null }
 function Get-Service { param($Name) [pscustomobject]@{Status='Running'} }
 function Invoke-RestMethod { param($Uri,$TimeoutSec) [pscustomobject]@{name='dockpipe-guest-agent';status='ready'} }
@@ -62,7 +63,17 @@ function Invoke-RestMethod { param($Uri,$TimeoutSec) [pscustomobject]@{name='doc
 			defer cancel()
 			script := fixture + readGuestStatus + "\n[Console]::Error.WriteLine('::dockpipe-guest-status-fixture-end::')\n"
 			command := exec.CommandContext(ctx, powerShell, "-NoProfile", "-NonInteractive", "-EncodedCommand", encodePowerShell(script))
-			command.Env = append(os.Environ(), "ProgramData="+root, "ProgramFiles="+root, "COMPUTERNAME=fixture")
+			// This offline unit fixture must not initiate PowerShell telemetry
+			// or update requests while evaluating the local status script.
+			// Set documented controls before interpreter startup; retain the
+			// same per-case and production deadlines.
+			command.Env = append(os.Environ(),
+				"ProgramData="+root,
+				"ProgramFiles="+root,
+				"COMPUTERNAME=fixture",
+				"POWERSHELL_UPDATECHECK=Off",
+				"POWERSHELL_TELEMETRY_OPTOUT=1",
+			)
 			outputBuffer := &boundedBuffer{maximum: 64 * 1024}
 			diagnosticBuffer := &boundedBuffer{maximum: 8 * 1024}
 			command.Stdout = outputBuffer
@@ -76,10 +87,13 @@ function Invoke-RestMethod { param($Uri,$TimeoutSec) [pscustomobject]@{name='doc
 				systemTime = command.ProcessState.SystemTime()
 			}
 			t.Logf("guest status fixture interpreter=%s elapsed=%s user=%s system=%s context=%v updatecheck=%q telemetry_optout=%q stderr=%q",
-				powerShell, elapsed, userTime, systemTime, ctx.Err(), os.Getenv("POWERSHELL_UPDATECHECK"),
-				os.Getenv("POWERSHELL_TELEMETRY_OPTOUT"), diagnosticBuffer.Bytes())
+				powerShell, elapsed, userTime, systemTime, ctx.Err(), "Off",
+				"1", diagnosticBuffer.Bytes())
 			if err != nil {
 				t.Fatalf("guest status fixture failed: %v", err)
+			}
+			if !strings.Contains(string(diagnosticBuffer.Bytes()), "updatecheck=Off telemetry_optout=1") {
+				t.Fatal("PowerShell fixture did not observe its explicit offline environment")
 			}
 			output := outputBuffer.Bytes()
 			var result guestStatus

@@ -1,0 +1,32 @@
+schema: 2
+description: Package-owned proposals and acceptance work imported from Dockpipe; entries do not authorize
+  implementation.
+tasks:
+- id: TASK-014
+  topic: Native Dev Container discovery and lifecycle for Pipeon and CLI
+  path: docs/agents/tasks/native-devcontainer-support/index.yaml
+  dispatch:
+    readiness: unclassified
+    ownership: unclaimed
+- id: TASK-016
+  topic: Guided game-development package and Unreal integration
+  path: docs/agents/tasks/guided-game-development-package/index.yaml
+  dispatch:
+    readiness: deferred
+    ownership: unclaimed
+- id: TASK-018
+  topic: Cross-platform MIDI package and dual-host workflow
+  path: docs/agents/tasks/midi-dual-host-workflow/index.yaml
+  dispatch:
+    readiness: deferred
+    ownership: unclaimed
+- id: TASK-038
+  topic: Native Terraform MCP Executor with Scoped Authorization
+  path: docs/agents/tasks/standalone-terraform-mcp-executor/index.yaml
+  dispatch:
+    readiness: unclassified
+    ownership: unclaimed
+maintenance:
+- Keep open work here and detailed state in task-local indexes.
+- Deferred proposals remain deferred until selected. Completed work moves to closed history.
+- Generic runtime and host contracts remain Dockpipe dependencies.

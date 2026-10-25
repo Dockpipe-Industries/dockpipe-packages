@@ -99,7 +99,7 @@ class PrepareCITest(unittest.TestCase):
         self.assertIn('needs: [inputs, native]', source)
         self.assertIn("github.event_name == 'push' && github.ref == 'refs/heads/dev'", source)
         self.assertEqual(source.count('contents: write'), 1)
-        self.assertIn('tooling/bootstrap_runtime_core.py', source)
+        self.assertNotIn('tooling/bootstrap_runtime_core.py', source)
         self.assertIn('effective-lock.json', source)
         self.assertIn('publish_candidate.py --candidate-dir', source)
         self.assertNotIn('pull_request_target', source)

@@ -1,0 +1,60 @@
+{
+  "schema": 1,
+  "repository": "Dockpipe-Industries/dockpipe",
+  "files": [
+    {
+      "source": "src/core/assets/scripts/vmimage-run.sh",
+      "destination": "packages/vm/resolvers/qemu/assets/scripts/vmimage-run.sh",
+      "source_sha256": "4c55d75d0cd950c204c38812b0f790d306f64aa671c43d442cc4ef7de524eac7",
+      "destination_sha256": "f235efa4dce32d4b62d7e4c4a952feab257a9f14ff18ffc56c659a77fe6e577b"
+    },
+    {
+      "source": "src/core/assets/scripts/vmimage-run-qemu-windows.ps1",
+      "destination": "packages/vm/resolvers/qemu/assets/scripts/vmimage-run-qemu-windows.ps1",
+      "source_sha256": "8bc803e442f49379ca5be5675eb914997d555a6dfebbf62f39b525818a673d0c",
+      "destination_sha256": "8bc803e442f49379ca5be5675eb914997d555a6dfebbf62f39b525818a673d0c"
+    },
+    {
+      "source": "src/core/assets/scripts/provision-windows-ssh.ps1",
+      "destination": "packages/vm/resolvers/qemu/assets/scripts/provision-windows-ssh.ps1",
+      "source_sha256": "8284c00486eef61e81826eaac8bdab6ff8d20b56697f1e975cd897d6cad5350a",
+      "destination_sha256": "8284c00486eef61e81826eaac8bdab6ff8d20b56697f1e975cd897d6cad5350a"
+    },
+    {
+      "source": "src/core/assets/scripts/dockpipe-guest-agent.ps1",
+      "destination": "packages/vm/resolvers/qemu/assets/scripts/dockpipe-guest-agent.ps1",
+      "source_sha256": "6aee90adeef9e6fe02318d94fcf30fcef2caf97dc9bc1ce9606f2a873e7e8ca4",
+      "destination_sha256": "6aee90adeef9e6fe02318d94fcf30fcef2caf97dc9bc1ce9606f2a873e7e8ca4"
+    },
+    {
+      "source": "src/core/assets/scripts/lib/vm-session-reporter.sh",
+      "destination": "packages/vm/resolvers/qemu/assets/scripts/lib/vm-session-reporter.sh",
+      "source_sha256": "175967331d9f2c2a21e5608bb411d7579f6453a741b7273679b9718056a21804",
+      "destination_sha256": "175967331d9f2c2a21e5608bb411d7579f6453a741b7273679b9718056a21804"
+    },
+    {
+      "source": "src/core/assets/scripts/lib/vm-guest-tools-media.sh",
+      "destination": "packages/vm/resolvers/qemu/assets/scripts/lib/vm-guest-tools-media.sh",
+      "source_sha256": "010d2cdef1d53d4674dc8fe78b04ec7a4bfb0db9ed1ca47d7a0669235665b7f4",
+      "destination_sha256": "010d2cdef1d53d4674dc8fe78b04ec7a4bfb0db9ed1ca47d7a0669235665b7f4"
+    },
+    {
+      "source": "src/core/assets/scripts/lib/vm-boot-display.sh",
+      "destination": "packages/vm/resolvers/qemu/assets/scripts/lib/vm-boot-display.sh",
+      "source_sha256": "1263ba210cacba45873e5ecd1136e69cbb1ca29ac63fd3622b3dce6d3293921f",
+      "destination_sha256": "1263ba210cacba45873e5ecd1136e69cbb1ca29ac63fd3622b3dce6d3293921f"
+    },
+    {
+      "source": "src/core/assets/scripts/dockpipe-guest-agent-src/main.go",
+      "destination": "packages/vm/guest-services/windows/main.go",
+      "source_sha256": "504832848228025f822fa8f7f2300ade73d0d8826e450c5a6e379f13580d0a7d",
+      "destination_sha256": "504832848228025f822fa8f7f2300ade73d0d8826e450c5a6e379f13580d0a7d"
+    },
+    {
+      "source": "src/core/assets/scripts/dockpipe-guest-agent-src/guest_tools_install.go",
+      "destination": "packages/vm/guest-services/windows/guest_tools_install.go",
+      "source_sha256": "f1490467375b92cd422f5916b36fe6617194bab734a099abb8d9a2095ece97b8",
+      "destination_sha256": "f1490467375b92cd422f5916b36fe6617194bab734a099abb8d9a2095ece97b8"
+    }
+  ]
+}

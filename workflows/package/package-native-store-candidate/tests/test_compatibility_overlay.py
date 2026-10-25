@@ -6,6 +6,8 @@ from pathlib import Path
 import tempfile
 import unittest
 
+import yaml
+
 import test_native_store as fixtures
 import compatibility_overlay
 import native_store
@@ -90,16 +92,35 @@ class CompatibilityOverlayTest(unittest.TestCase):
     def test_native_family_requires_all_five_coherent_versions_and_runtime_minimums(self):
         manifest = {'packages': {'workflows': [], 'resolvers': []}}
         for kind, name in native_store.VM_FAMILY:
-            manifest['packages'][kind + 's'].append({'name': name, 'version': '1.3.6',
-                                                   'min_dockpipe_version': '0.6.26-0'})
+            manifest['packages'][kind + 's'].append({'name': name, 'version': '1.3.8',
+                                                   'min_dockpipe_version': '0.6.29-0'})
         native_store.verify_vm_family(manifest)
         manifest['packages']['workflows'][0]['version'] = '1.3.5'
         with self.assertRaisesRegex(ValueError, 'coherent'):
             native_store.verify_vm_family(manifest)
-        manifest['packages']['workflows'][0]['version'] = '1.3.6'
+        manifest['packages']['workflows'][0]['version'] = '1.3.8'
         manifest['packages']['workflows'].pop()
         with self.assertRaisesRegex(ValueError, 'all five'):
             native_store.verify_vm_family(manifest)
+
+    def test_actual_source_cohort_is_admitted_and_previous_runtime_floor_rejected(self):
+        catalog = Path(__file__).resolve().parents[4]
+        family = catalog / 'packages/vm'
+        manifest = {'packages': {'workflows': [], 'resolvers': []}}
+        for kind, name in sorted(native_store.VM_FAMILY):
+            directory = family / 'resolvers/qemu' if kind == 'resolver' else family / 'workflows' / name
+            source = yaml.safe_load((directory / 'package.yml').read_text())
+            self.assertEqual(source['min_dockpipe_version'], '0.6.29-0')
+            manifest['packages'][kind + 's'].append(source)
+        native_store.verify_vm_family(manifest)
+        for group in manifest['packages'].values():
+            for artifact in group:
+                original = artifact['min_dockpipe_version']
+                artifact['min_dockpipe_version'] = '0.6.28-0'
+                with self.subTest(name=artifact['name']):
+                    with self.assertRaisesRegex(ValueError, 'coherent'):
+                        native_store.verify_vm_family(manifest)
+                artifact['min_dockpipe_version'] = original
 
     def test_existing_native_identity_refuses_overwrite(self):
         path = self.store / 'packages-store-manifest.json'

@@ -94,3 +94,56 @@ func TestDisplayDarwinTerminalPassthrough(t *testing.T) {
 		t.Fatal("macOS terminal arguments were changed")
 	}
 }
+
+func TestDisplayDarwinRuntimeExplicitAdmission(t *testing.T) {
+	root, err := filepath.EvalSymlinks(t.TempDir())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Chmod(root, 0700); err != nil {
+		t.Fatal(err)
+	}
+	// A native temporary path may be long. Allocate this fixture in the
+	// same short canonical system parent used by the production default.
+	short, err := os.MkdirTemp("/private/tmp", "dp-test-")
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { os.RemoveAll(short) })
+	t.Setenv("XDG_RUNTIME_DIR", short)
+	if got, err := displayRuntimeRoot(); err != nil || got != short {
+		t.Fatalf("explicit private runtime = %q, %v", got, err)
+	}
+	if err := os.Chmod(short, 0755); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := displayRuntimeRoot(); err == nil {
+		t.Fatal("public explicit runtime silently replaced by fallback")
+	}
+	t.Setenv("XDG_RUNTIME_DIR", filepath.Join(root, strings.Repeat("long", 30)))
+	if _, err := displayRuntimeRoot(); err == nil {
+		t.Fatal("missing or overlong runtime silently replaced by fallback")
+	}
+	long := filepath.Join(short, strings.Repeat("x", 80))
+	if err := os.Mkdir(long, 0700); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("XDG_RUNTIME_DIR", long)
+	if _, err := displayRuntimeRoot(); err == nil {
+		t.Fatal("existing overlong private runtime admitted")
+	}
+	link := filepath.Join(root, "runtime-link")
+	if err := os.Symlink(short, link); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("XDG_RUNTIME_DIR", link)
+	if _, err := displayRuntimeRoot(); err == nil {
+		t.Fatal("explicit runtime alias admitted")
+	}
+	t.Setenv("XDG_RUNTIME_DIR", "")
+	t.Setenv("HOME", "/Users/"+strings.Repeat("long-user-name", 15))
+	got, err := displayRuntimeRoot()
+	if err != nil || !strings.HasPrefix(got, "/private/tmp/dockpipe-display-") {
+		t.Fatalf("long-home default runtime = %q, %v", got, err)
+	}
+}
