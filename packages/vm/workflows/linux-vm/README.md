@@ -828,3 +828,10 @@ stop before hard power, the ticket nonce is never logged, and a missing later
 record does not prove the corresponding guest-side state absent. No executor
 schema, build, promotion, preparation, plan, authorization, live gate, disk
 inspection, recovery, or cleanup is part of this source-only change.
+
+The workflow archive includes its typed form models in `models/`. These models
+resolve relative to this workflow, including when the QEMU resolver is extracted
+into a separate package cache directory.
+
+Development input defaults read the corresponding `DOCKPIPE_VM_*` form values
+before falling back to their defaults. Qualification remains disabled explicitly.

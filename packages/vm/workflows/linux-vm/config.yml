@@ -6,7 +6,7 @@ category: app
 vault: none
 platforms: [deb]
 types:
-  - ../../resolvers/qemu/models/LinuxQemuVmResolverConfig.pipe
+  - models/LinuxQemuVmResolverConfig.pipe
 dependencies:
   host:
     - id: qemu
@@ -75,11 +75,21 @@ resolver: qemu
 vars:
   DOCKPIPE_VM_GUEST_PREPARATION: provided-only
 inputs:
-  General.ExecMode: bash
-  General.BootSource: image
-  General.Purpose: development
-  Storage.Persistence: ephemeral
-  Storage.DiskSize: 64G
+  General.ExecMode:
+    from: DOCKPIPE_VM_EXEC_MODE
+    value: bash
+  General.BootSource:
+    from: DOCKPIPE_VM_BOOT_SOURCE
+    value: image
+  General.Purpose:
+    from: DOCKPIPE_VM_PURPOSE
+    value: development
+  Storage.Persistence:
+    from: DOCKPIPE_VM_PERSISTENCE
+    value: ephemeral
+  Storage.DiskSize:
+    from: DOCKPIPE_VM_DISK_SIZE
+    value: 64G
   Qualification.Enabled: false
 steps:
   - id: guest-command

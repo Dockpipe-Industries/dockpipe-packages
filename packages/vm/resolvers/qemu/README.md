@@ -2,12 +2,12 @@
 
 Packaged QEMU resolver for the `vm` runtime family.
 
-Version 0.7.0 publishes two adjacent typed roots. The existing
-`QemuVmResolverConfig` preserves the Windows defaults and current
-`DOCKPIPE_VM_*` bindings. `LinuxQemuVmResolverConfig` adds generic Linux
-development fields and a fail-closed offline qualification contract. Both
-compose the generic `vm` runtime; package-owned qualification planning does not
-change the runtime or execute QEMU.
+The adjacent `QemuVmResolverConfig` preserves the Windows defaults and current
+`DOCKPIPE_VM_*` bindings. The Linux workflow owns its `LinuxQemuVmResolverConfig`
+and related form models under `workflows/linux-vm/models`, so its compiled archive
+can resolve typed inputs independently of the resolver archive's cache location.
+Both workflows compose the generic `vm` runtime; package-owned qualification
+planning does not change the runtime or execute QEMU.
 
 What it owns:
 

@@ -62,6 +62,75 @@ class RuntimeCompatibilityTests(unittest.TestCase):
         self.assertEqual(section["fields"], ["Advanced.HostBashPath"])
         self.assertNotIn("Advanced.HostBashPath", config.get("inputs", {}))
 
+    def test_linux_archive_binds_inputs_without_resolver_source(self):
+        selected_cli = os.environ.get("DOCKPIPE_BIN", "")
+        binary = Path(selected_cli)
+        self.assertTrue(selected_cli and binary.is_absolute() and binary.is_file(),
+                        "select the pinned DOCKPIPE_BIN for the archive consumer test")
+        with tempfile.TemporaryDirectory(prefix="vm-linux-archive-inputs-") as temporary:
+            root = Path(temporary)
+            source = root / "producer/workflows/linux-vm"
+            shutil.copytree(PACKAGE / "workflows/linux-vm", source,
+                            ignore=shutil.ignore_patterns(".dockpipe", ".pipelang"))
+            environment = {name: value for name, value in os.environ.items()
+                           if not name.startswith("DOCKPIPE_")}
+            for name in ("BASH_ENV", "ENV", "PYTHONPATH", "PYTHONHOME"):
+                environment.pop(name, None)
+            environment.update(DOCKPIPE_BIN=str(binary), DOCKPIPE_HOST_PYTHON_BIN=sys.executable,
+                               DOCKPIPE_GLOBAL_ROOT=str(root / "global"),
+                               DOCKPIPE_SYSTEM_ROOT=str(root / "system"))
+            for kind in ("CACHE", "STATE", "CONFIG", "DATA"):
+                environment["XDG_" + kind + "_HOME"] = str(root / kind.lower())
+
+            def invoke(*arguments):
+                result = subprocess.run([str(binary), *map(str, arguments)], cwd=root,
+                                        env=environment, capture_output=True, text=True, timeout=30)
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+            invoke("package", "compile", "workflows", "--workdir", root / "producer",
+                   "--from", source, "--force")
+            archives = list((root / "producer/bin/.dockpipe/internal/packages/workflows").glob("*.tar.gz"))
+            self.assertEqual(len(archives), 1)
+            consumer = root / "consumer"
+            with tarfile.open(archives[0]) as archive:
+                for member in archive.getmembers():
+                    destination = consumer / member.name
+                    self.assertTrue(destination.resolve().is_relative_to(consumer))
+                    if member.isdir():
+                        destination.mkdir(parents=True, exist_ok=True)
+                    else:
+                        self.assertTrue(member.isfile())
+                        self.assertLessEqual(member.size, 8 << 20)
+                        destination.parent.mkdir(parents=True, exist_ok=True)
+                        destination.write_bytes(archive.extractfile(member).read())
+            shutil.rmtree(root / "producer")
+            workflow = consumer / "workflows/linux-vm"
+            config_path = workflow / "config.yml"
+            config = yaml.safe_load(config_path.read_text())
+            self.assertTrue((workflow / config["types"][0]).is_file())
+            # Keep the real archived types and typed defaults. A host observer
+            # isolates binding from VM startup and records the resulting values.
+            config.pop("runtime")
+            config.pop("resolver")
+            config.pop("dependencies")
+            config["docker_preflight"] = False
+            config["steps"] = [{"id": "observe-inputs", "kind": "host", "run": "capture.py"}]
+            config_path.write_text(yaml.safe_dump(config, sort_keys=False))
+            keys = ["DOCKPIPE_VM_BOOT_SOURCE", "DOCKPIPE_VM_CDROM",
+                    "DOCKPIPE_VM_INSTALL_DISK", "DOCKPIPE_VM_DISK_SIZE"]
+            (workflow / "capture.py").write_text(
+                "import json, os\nfrom pathlib import Path\n"
+                "Path('captured.json').write_text(json.dumps({key: os.environ.get(key) "
+                "for key in " + repr(keys) + "}))\n")
+            invoke("--workflow-file", config_path, "--workdir", consumer, "--no-compile-deps",
+                   "--env", "DOCKPIPE_VM_BOOT_SOURCE=installer-iso",
+                   "--env", "DOCKPIPE_VM_CDROM=/disposable/installer.iso",
+                   "--env", "DOCKPIPE_VM_INSTALL_DISK=/disposable/linux.qcow2",
+                   "--env", "DOCKPIPE_VM_DISK_SIZE=8G")
+            captured = json.loads((consumer / "captured.json").read_text())
+            self.assertEqual(captured, dict(zip(keys, ["installer-iso", "/disposable/installer.iso",
+                                                       "/disposable/linux.qcow2", "8G"])))
+
     def test_pinned_cli_compiles_picker_and_propagates_host_bash_input(self):
         selected_cli = os.environ.get("DOCKPIPE_BIN", "")
         binary = Path(selected_cli)
