@@ -857,7 +857,7 @@ vmimage_confirm_user_supplied_media_rights() {
     vmimage_prompt_confirm \
       "vmimage.media-rights" \
       "Use User-Supplied VM Media?" \
-      "Dockpipe does not ship or download Windows installers, licenses, or vendor driver media. Continue only if you supplied these image files yourself and have the rights to use them." \
+      "Dockpipe does not ship or download guest installers, licenses, or vendor driver media. Continue only if you supplied these image files yourself and have the rights to use them." \
       no \
       credential-use \
       vm-media \
@@ -1422,6 +1422,11 @@ vmimage_boot_source() {
       printf 'installer-iso\n'
       return 0
       ;;
+    "")
+      ;;
+    *)
+      vmimage_die "unsupported DOCKPIPE_VM_BOOT_SOURCE=${source} (use image or installer-iso)"
+      ;;
   esac
   if [[ -n "${DOCKPIPE_VM_CDROM:-}" ]]; then
     printf 'installer-iso\n'
@@ -1435,8 +1440,8 @@ vmimage_boot_source() {
   choice="$(
     vmimage_prompt_choice \
       "vmimage.boot-source" \
-      "Windows VM Source" \
-      "How do you want to start this Windows VM?" \
+      "VM Source" \
+      "How do you want to start this VM?" \
       "Install from ISO" \
       "Boot existing disk image" \
       "Install from ISO"
@@ -1468,8 +1473,8 @@ vmimage_ensure_prompted_image_inputs() {
     image_mode="$(
       vmimage_prompt_choice \
         "vmimage.image-mode" \
-        "Windows VM Image Mode" \
-        "How do you want to use this existing Windows disk image?" \
+        "VM Image Mode" \
+        "How do you want to use this existing guest disk image?" \
         "Open interactive desktop" \
         "Open interactive desktop" \
         "Connect over SSH"
@@ -1499,8 +1504,8 @@ vmimage_ensure_prompted_installer_inputs() {
   if [[ -z "${DOCKPIPE_VM_CDROM:-}" ]]; then
     vmimage_prompt_file_value \
       DOCKPIPE_VM_CDROM \
-      "Choose Windows Installer ISO" \
-      "Choose the Windows installer ISO you want Dockpipe to boot." \
+      "Choose Installer ISO" \
+      "Choose the guest installer ISO you want Dockpipe to boot." \
       open-file \
       "Disk Images (*.iso);;All Files (*)"
   fi
@@ -1508,7 +1513,7 @@ vmimage_ensure_prompted_installer_inputs() {
     vmimage_prompt_file_value \
       DOCKPIPE_VM_DISK \
       "Choose Install Disk Destination" \
-      "Choose where Dockpipe should create or reuse the VM disk image for this Windows install." \
+      "Choose where Dockpipe should create or reuse the installation disk. Installation writes persist; existing contents may be replaced by the guest installer." \
       save-file \
       "VM Images (*.qcow2 *.img *.raw);;All Files (*)" \
       false
@@ -1533,7 +1538,7 @@ vmimage_ensure_prompted_installer_inputs() {
 vmimage_ensure_prompted_inputs() {
   vmimage_validate_guest_preparation || return 1
   local source
-  source="$(vmimage_boot_source)"
+  source="$(vmimage_boot_source)" || return 1
   export DOCKPIPE_VM_BOOT_SOURCE="$source"
   vmimage_validate_guest_preparation || return 1
   case "$source" in
@@ -2402,35 +2407,79 @@ vmimage_prepare_disk() {
   printf '%s|qcow2\n' "$overlay"
 }
 
+# One format decision must govern both creation and the later QEMU drive.
+vmimage_install_disk_format() {
+  local disk="$1" format
+  format="$(vmimage_base_format "$disk")"
+  if [[ -n "${DOCKPIPE_VM_DISK_CREATE_FORMAT:-}" && "$DOCKPIPE_VM_DISK_CREATE_FORMAT" != "$format" ]]; then
+    vmimage_die "disk creation format conflicts with the launch format ${format}; use a matching disk extension or DOCKPIPE_VM_DISK_FORMAT"
+  fi
+  printf '%s\n' "$format"
+}
+
+vmimage_validate_installer_inputs() {
+  vmimage_require DOCKPIPE_VM_CDROM
+  vmimage_require DOCKPIPE_VM_DISK
+  local iso disk size
+  iso="$(vmimage_resolve_path "$DOCKPIPE_VM_CDROM")"
+  disk="$(vmimage_resolve_path "$DOCKPIPE_VM_DISK")"
+  [[ -f "$iso" && -r "$iso" ]] || vmimage_die "installer ISO must be a readable regular file: $iso"
+  if [[ -e "$disk" || -L "$disk" ]]; then
+    [[ -f "$disk" && -r "$disk" && -w "$disk" ]] || vmimage_die "installation disk must be a readable, writable regular file: $disk"
+    [[ ! "$iso" -ef "$disk" ]] || vmimage_die "installer ISO and destination disk must be different files"
+  else
+    size="${DOCKPIPE_VM_DISK_SIZE:-64G}"
+    [[ "$size" =~ ^[0-9]+([.][0-9]+)?[kKmMgGtTpPeE]?$ && "$size" =~ [1-9] ]] || vmimage_die "new disk size must be positive bytes or a size such as 64G"
+    vmimage_install_disk_format "$disk" >/dev/null
+  fi
+}
+
+# Publish a completed new image exclusively. A competing destination is never
+# overwritten, and failed/interrupted creation removes only our temporary file.
+vmimage_create_install_disk() (
+  local disk="$1" format="$2" qemu_img_bin="$3" size="$4"
+  local temporary_disk native_temporary_disk
+  mkdir -p "$(dirname "$disk")" || return 1
+  temporary_disk="$(mktemp "${disk}.dockpipe-create.XXXXXX")" || return 1
+  trap 'rm -f "$temporary_disk"' EXIT
+  trap 'exit 130' INT
+  trap 'exit 143' TERM
+  native_temporary_disk="$(vmimage_qemu_media_path "$temporary_disk")" || return 1
+  "$qemu_img_bin" create -f "$format" "$native_temporary_disk" "$size" >/dev/null || return $?
+  if [[ "$(vmimage_host_os)" == "darwin" ]]; then
+    command link "$temporary_disk" "$disk" || vmimage_die "installation destination appeared during creation or could not be linked; existing file preserved: $disk"
+  else
+    ln -T "$temporary_disk" "$disk" || vmimage_die "installation destination appeared during creation or could not be linked; existing file preserved: $disk"
+  fi
+)
+
 vmimage_ensure_disk_exists_for_install() {
   local disk="$1"
-  [[ -e "$disk" ]] && return 0
-  local qemu_img_bin
-  qemu_img_bin="$(vmimage_qemu_img_bin || true)"
-  [[ -n "$qemu_img_bin" ]] || vmimage_die "$(vmimage_default_qemu_img_bin) is required to create a VM disk image"
-  local native_disk
-  native_disk="$(vmimage_qemu_media_path "$disk")" || return 1
-  if ! vmimage_confirm_prompts_enabled; then
-    mkdir -p "$(dirname "$disk")"
-    local fmt="${DOCKPIPE_VM_DISK_CREATE_FORMAT:-qcow2}"
-    "$qemu_img_bin" create -f "$fmt" "$native_disk" "${DOCKPIPE_VM_DISK_SIZE:-64G}" >/dev/null || return $?
+  if [[ -e "$disk" || -L "$disk" ]]; then
+    [[ -f "$disk" && -r "$disk" && -w "$disk" ]] || vmimage_die "installation disk must be a readable, writable regular file: $disk"
+    DOCKPIPE_VM_PERSISTENCE=persistent vmimage_confirm_persistent_disk_use
     return 0
   fi
-  local answer
-  answer="$(
-    vmimage_prompt_confirm \
-      "vmimage.create-disk" \
-      "Create VM Disk Image?" \
-      "Dockpipe will create a new VM disk image at ${disk} with size ${DOCKPIPE_VM_DISK_SIZE:-64G} for the Windows install." \
-      yes \
-      host-mutation \
-      vm-disk-create \
-      yes
-  )" || vmimage_die "prompt failed for VM disk creation"
-  [[ "$answer" == "yes" ]] || vmimage_die "stopped before creating VM disk image"
-  mkdir -p "$(dirname "$disk")"
-  local fmt="${DOCKPIPE_VM_DISK_CREATE_FORMAT:-qcow2}"
-  "$qemu_img_bin" create -f "$fmt" "$native_disk" "${DOCKPIPE_VM_DISK_SIZE:-64G}" >/dev/null || return $?
+  local qemu_img_bin format size
+  qemu_img_bin="$(vmimage_qemu_img_bin || true)"
+  [[ -n "$qemu_img_bin" ]] || vmimage_die "$(vmimage_default_qemu_img_bin) is required to create a VM disk image"
+  format="$(vmimage_install_disk_format "$disk")" || return 1
+  size="${DOCKPIPE_VM_DISK_SIZE:-64G}"
+  if vmimage_confirm_prompts_enabled; then
+    local answer
+    answer="$(
+      vmimage_prompt_confirm \
+        "vmimage.create-disk" \
+        "Create VM Disk Image?" \
+        "Dockpipe will create a new ${format} VM disk at ${disk} with size ${size}. Installation writes persist in this disk." \
+        yes \
+        host-mutation \
+        vm-disk-create \
+        yes
+    )" || vmimage_die "prompt failed for VM disk creation"
+    [[ "$answer" == "yes" ]] || vmimage_die "stopped before creating VM disk image"
+  fi
+  vmimage_create_install_disk "$disk" "$format" "$qemu_img_bin" "$size"
 }
 
 vmimage_write_pid_sidecar() {
@@ -3396,12 +3445,15 @@ vmimage_run_qemu_common() {
   fi
   vmimage_require_host_dependencies
   vmimage_ensure_prompted_inputs
-  vmimage_prepare_state_split
   local boot_source
-  boot_source="$(vmimage_boot_source)"
+  boot_source="$(vmimage_boot_source)" || return 1
+  if [[ "$boot_source" == "installer-iso" ]]; then
+    vmimage_validate_installer_inputs || return 1
+  fi
+  vmimage_prepare_state_split
   vmimage_apply_windows_installer_compat_defaults "$backend" "$boot_source"
   vmimage_apply_windows_image_compat_defaults "$backend" "$boot_source"
-  if [[ "$boot_source" == "image" && -n "${DOCKPIPE_VM_SSH_USER:-}" ]]; then
+  if [[ "$boot_source" == "image" && -n "${DOCKPIPE_VM_SSH_USER:-}" && "$(vmimage_guest_preparation)" == "automatic" ]]; then
     vmimage_windows_ensure_ssh_key
   fi
   if vmimage_windows_should_unattend "$boot_source"; then

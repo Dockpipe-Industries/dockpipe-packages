@@ -128,7 +128,9 @@ import os
 from pathlib import Path
 import sys
 arguments = Path(sys.argv[1]).read_bytes().rstrip(b'\0').decode().split('\0')
-assert arguments == ['create', '-f', 'qcow2', os.environ['expected_disk'], '64G'], arguments
+assert arguments[:3] == ['create', '-f', 'raw'], arguments
+assert arguments[3].startswith(os.environ['expected_disk'] + '.dockpipe-create.'), arguments
+assert arguments[4:] == ['64G'], arguments
 PY
 rm -f "$fixture/arguments"
 if vmimage_prepare_disk 'C:relative.raw' > "$fixture/out" 2> "$fixture/error"; then

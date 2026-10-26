@@ -11,13 +11,13 @@ public Class LinuxVmStorage
     [EnvName = "DOCKPIPE_VM_DISK_SIZE"]
     public string DiskSize = "64G";
 
-    /// <summary>Optional existing development guest disk.</summary>
+    /// <summary>Existing guest disk or installation destination. Installer writes always persist.</summary>
     [EnvName = "DOCKPIPE_VM_DISK"]
     [Control = "file"]
     [FileMode = "save-file"]
     public string Disk = "";
 
-    /// <summary>Development persistence mode.</summary>
+    /// <summary>Existing-image persistence mode; installer mode always uses persistent storage.</summary>
     [EnvName = "DOCKPIPE_VM_PERSISTENCE"]
     public string Persistence = "ephemeral";
 

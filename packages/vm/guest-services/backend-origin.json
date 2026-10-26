@@ -6,7 +6,7 @@
       "source": "src/core/assets/scripts/vmimage-run.sh",
       "destination": "packages/vm/resolvers/qemu/assets/scripts/vmimage-run.sh",
       "source_sha256": "4c55d75d0cd950c204c38812b0f790d306f64aa671c43d442cc4ef7de524eac7",
-      "destination_sha256": "f235efa4dce32d4b62d7e4c4a952feab257a9f14ff18ffc56c659a77fe6e577b"
+      "destination_sha256": "1236a4fe1df4085f52bcf12c3590bbfcba2be96166d2d705b97a7419a71aea20"
     },
     {
       "source": "src/core/assets/scripts/vmimage-run-qemu-windows.ps1",
