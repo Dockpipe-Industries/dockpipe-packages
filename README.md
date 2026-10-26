@@ -27,6 +27,10 @@ Read the selected package's manifest and documentation before running its comman
 For installation, use the runtime's [package quickstart](https://github.com/Dockpipe-Industries/dockpipe/blob/master/docs/packages/package-quickstart.md).
 Source migration does not publish a new package version or replace existing pinned releases.
 
+## Future packages
+
+See the [package backlog](docs/backlog.md) for proposed packages and discovery work.
+
 ## Build and test
 
 Choose an absolute pinned `DOCKPIPE_BIN`. Typed models require the separately
