@@ -29,7 +29,7 @@ view:
           fields: [Image.Url, Image.Sha256, Image.Override]
         - id: development-disk
           title: Development disk
-          fields: [Storage.Disk, Storage.Persistence]
+          fields: [Storage.InstallerIso, Storage.Disk, Storage.DiskSize, Storage.Persistence]
     - id: machine
       title: Execution
       sections:
@@ -48,14 +48,17 @@ view:
         - id: protocol
           title: Mutual pinning
           fields: [Protocol.ControllerPublicKey, Protocol.GuestPublicKey, Protocol.HarnessSha256]
-description: Boot your Linux guest image through QEMU and run a development command over SSH. Requires a prepared compatible image.
+description: Boot your Linux guest image through QEMU and run a development command over SSH. Use a prepared compatible image or explicitly select installer-iso and supply an installer ISO.
 runtime: vm
 resolver: qemu
+vars:
+  DOCKPIPE_VM_GUEST_PREPARATION: provided-only
 inputs:
   General.ExecMode: bash
   General.BootSource: image
   General.Purpose: development
   Storage.Persistence: ephemeral
+  Storage.DiskSize: 64G
   Qualification.Enabled: false
 steps:
   - id: guest-command

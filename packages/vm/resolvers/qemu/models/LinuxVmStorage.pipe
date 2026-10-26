@@ -1,6 +1,16 @@
 /// <summary>Linux guest and qualification disk settings.</summary>
 public Class LinuxVmStorage
 {
+    /// <summary>Linux installer ISO, used when BootSource is installer-iso.</summary>
+    [EnvName = "DOCKPIPE_VM_CDROM"]
+    [Control = "file"]
+    [FileMode = "open-file"]
+    public string InstallerIso = "";
+
+    /// <summary>Size of a new installer destination disk.</summary>
+    [EnvName = "DOCKPIPE_VM_DISK_SIZE"]
+    public string DiskSize = "64G";
+
     /// <summary>Optional existing development guest disk.</summary>
     [EnvName = "DOCKPIPE_VM_DISK"]
     [Control = "file"]
