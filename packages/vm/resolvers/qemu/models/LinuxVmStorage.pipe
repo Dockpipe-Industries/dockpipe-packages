@@ -9,12 +9,21 @@ public Class LinuxVmStorage
 
     /// <summary>Size of a new installer destination disk.</summary>
     [EnvName = "DOCKPIPE_VM_DISK_SIZE"]
+    [Control = "text"]
     public string DiskSize = "64G";
 
-    /// <summary>Existing guest disk or installation destination. Installer writes always persist.</summary>
-    [EnvName = "DOCKPIPE_VM_DISK"]
+    /// <summary>Installation destination. Writes persist and existing contents may be replaced.</summary>
+    [EnvName = "DOCKPIPE_VM_INSTALL_DISK"]
+    [DisplayName = "Destination disk"]
     [Control = "file"]
     [FileMode = "save-file"]
+    public string InstallerDisk = "";
+
+    /// <summary>Existing bootable guest disk.</summary>
+    [EnvName = "DOCKPIPE_VM_DISK"]
+    [DisplayName = "Existing disk"]
+    [Control = "file"]
+    [FileMode = "open-file"]
     public string Disk = "";
 
     /// <summary>Existing-image persistence mode; installer mode always uses persistent storage.</summary>

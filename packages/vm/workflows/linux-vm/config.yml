@@ -49,7 +49,7 @@ view:
       sections:
         - id: install-media
           title: Installer and destination
-          fields: [Storage.InstallerIso, Storage.Disk, Storage.DiskSize]
+          fields: [Storage.InstallerIso, Storage.InstallerDisk, Storage.DiskSize]
     - id: machine
       title: Execution
       sections:

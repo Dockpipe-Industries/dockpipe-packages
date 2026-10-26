@@ -1501,6 +1501,11 @@ vmimage_ensure_prompted_image_inputs() {
 }
 
 vmimage_ensure_prompted_installer_inputs() {
+  # A dedicated destination control can coexist with a prepared-image picker.
+  # Keep DOCKPIPE_VM_DISK as the backend contract for existing callers.
+  if [[ -n "${DOCKPIPE_VM_INSTALL_DISK:-}" ]]; then
+    export DOCKPIPE_VM_DISK="$DOCKPIPE_VM_INSTALL_DISK"
+  fi
   if [[ -z "${DOCKPIPE_VM_CDROM:-}" ]]; then
     vmimage_prompt_file_value \
       DOCKPIPE_VM_CDROM \

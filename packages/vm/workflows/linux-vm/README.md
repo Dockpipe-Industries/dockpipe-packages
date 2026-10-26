@@ -13,9 +13,15 @@ environment or adding a generic execution surface.
 ## Linux development installation
 
 Choose **Install from ISO** in the Linux VM source selector, supply your local Linux
-installer ISO, and choose a destination disk. Dockpipe neither downloads the ISO
+installer ISO, and choose a destination disk. The existing-image picker opens an
+existing file; the separate installer destination picker can choose a new file. Dockpipe neither downloads the ISO
 nor installs Linux unattended. The host needs QEMU and qemu-img; the resolver's
 configured firmware and TPM policy can additionally require OVMF and swtpm.
+
+`Storage.InstallerDisk` maps to `DOCKPIPE_VM_INSTALL_DISK`; installer mode uses it
+as the backend `DOCKPIPE_VM_DISK` when supplied. Existing CLI callers can still
+supply `DOCKPIPE_VM_DISK` directly. The destination field does not override the
+existing-image selection when booting in image mode.
 
 A new `.qcow2` destination is created as qcow2; `.raw` and `.img` destinations are
 created as raw. The creation and launch formats must agree. Advanced environment

@@ -22,7 +22,7 @@ export DOCKPIPE_VM_GUEST_PREPARATION=provided-only
 export DOCKPIPE_VM_BOOT_SOURCE=installer-iso
 export DOCKPIPE_VM_CDROM="$fixture/install.iso"
 export DOCKPIPE_VM_DISK_SIZE=64G
-unset DOCKPIPE_VM_DISK_FORMAT DOCKPIPE_VM_DISK_CREATE_FORMAT
+unset DOCKPIPE_VM_DISK_FORMAT DOCKPIPE_VM_DISK_CREATE_FORMAT DOCKPIPE_VM_INSTALL_DISK
 unset DOCKPIPE_VM_WINDOWS_INSTALL_MODE DOCKPIPE_VM_SSH_USER
 printf 'installer fixture\n' > "$DOCKPIPE_VM_CDROM"
 
@@ -205,7 +205,11 @@ export DOCKPIPE_VM_CDROM="$fixture/directory.qcow2"
 expect_failure 'installer ISO must be' vmimage_run_qemu_common qemu-kvm
 [[ ! -e "$fixture/state-prepared" ]]
 export DOCKPIPE_VM_CDROM="$fixture/install.iso"
+export DOCKPIPE_VM_INSTALL_DISK="$fixture/new.qcow2"
+export DOCKPIPE_VM_DISK="$fixture/stale-image.qcow2"
 vmimage_run_qemu_common qemu-kvm
+[[ "$DOCKPIPE_VM_DISK" == "$DOCKPIPE_VM_INSTALL_DISK" ]]
+[[ ! -e "$fixture/stale-image.qcow2" ]]
 [[ "$DOCKPIPE_VM_PERSISTENCE" == persistent ]]
 [[ ! -e "$fixture/windows-key" ]]
 python3 - "$fixture/arguments" "$DOCKPIPE_VM_DISK" "$DOCKPIPE_VM_CDROM" <<'ARGS'
