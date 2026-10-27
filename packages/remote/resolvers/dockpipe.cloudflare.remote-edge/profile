@@ -1,2 +1,6 @@
 # Generic remote edge setup entrypoint, relative to this resolver profile.
 DOCKPIPE_REMOTE_EDGE_SETUP=assets/scripts/setup.sh
+
+# Optional read-only dependency lifecycle inventory contract.
+DOCKPIPE_DEPENDENCY_LIFECYCLE_PROTOCOL=dockpipe.dependency.inventory/v1
+DOCKPIPE_DEPENDENCY_LIFECYCLE_WORKFLOW=assets/workflows/dependency-inspect/config.yml
