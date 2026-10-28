@@ -30,3 +30,8 @@ The policy is independent of the host backend and adds no guest-OS selector.
 Package metadata owns Linux media choices and input defaults. Qualify a local candidate against the pinned VM package that supplies this
 script and the selected Dockpipe release. Setting the variable against an older
 package does not establish support.
+
+For the manual installation and subsequent SSH flow, see the
+[Linux development installation guide](../workflows/linux-vm/README.md#linux-development-installation).
+In provided-only image mode, the host uses its existing SSH identity or agent; it
+does not generate the builtin Windows SSH identity.

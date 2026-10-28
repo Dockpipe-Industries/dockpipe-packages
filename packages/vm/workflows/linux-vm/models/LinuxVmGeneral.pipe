@@ -5,7 +5,7 @@ public Class LinuxVmGeneral
     [EnvName = "DOCKPIPE_VM_EXEC_MODE"]
     public string ExecMode = "bash";
 
-    /// <summary>Boot source for the Linux guest.</summary>
+    /// <summary>Boot source: image for a prepared disk, or installer-iso with Storage.InstallerIso.</summary>
     [EnvName = "DOCKPIPE_VM_BOOT_SOURCE"]
     public string BootSource = "image";
 

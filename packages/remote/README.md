@@ -3,7 +3,7 @@
 Provider adapters for `dockpipe remote`. Core owns delivery, pairing, execution, and results.
 Resolvers own provider login, endpoint setup, and tunnel configuration. DorkPipe retains scheduling.
 
-`dockpipe.cloudflare.remote-edge` is the Cloudflare adapter (version 0.3.1). Browser login, named tunnel, and DNS setup are implemented;
+`dockpipe.cloudflare.remote-edge` is the Cloudflare adapter (version 0.3.2). Browser login, named tunnel, and DNS setup are implemented;
 setup prints progress and pairing guidance and preserves the desktop browser session. Core can
 deliver selected workflows, assets and explicit package dependencies to workers that opt in with
 `--allow-delivery`. Local loopback delivery is tested; live account and macOS service qualification
@@ -20,3 +20,229 @@ tunnel credential when resuming after a setup failure.
 
 See [Remote nodes](https://github.com/Dockpipe-Industries/dockpipe/blob/master/docs/runtime/remote-nodes.md) for setup, pairing, limits, recovery,
 credential handling, build/distribution, and verification.
+
+## Read-only dependency inspection
+
+The resolver profile exposes the optional `dockpipe.dependency.inventory/v1` hook at
+`assets/workflows/dependency-inspect/config.yml`. Core supplies the private, new
+absolute output file through `DOCKPIPE_DEPENDENCY_OUTPUT` and the bounded machine
+identity through `DOCKPIPE_DEPENDENCY_MACHINE`. The hook uses the packaged helper:
+
+```text
+cloudflare-edge lifecycle-inspect --output /absolute/new-report.json --machine machine-id
+```
+
+This mode never logs in, installs, updates, starts, stops or restarts cloudflared.
+It discovers executable candidates from at most 64 absolute PATH entries, known
+installation locations and the packaged helper's directory. Symlinks and hard
+links are deduplicated, with at most 32 installed executables. Each version probe
+runs only `--version`, with a two-second timeout, a 4 KiB output limit and a minimal
+environment that excludes credentials and dynamic-loader overrides. The entire
+scan has a 30-second budget; partial coverage is reported as a gap.
+
+On Linux, up to 4,096 process-directory entries and 64 readable cloudflared image
+handles are inspected through `/proc/<pid>/exe`. No process command line,
+environment, credentials or tunnel configuration is read. A fixed PATH binary is
+not evidence that a running process uses it. Active version proof uses the process
+image handle and checks image identity before and after the version probe. Installed
+and running images are reported separately, including replaced or deleted images.
+The report is limited to 1 MiB and is created exclusively with owner-only mode.
+
+The package owns this advisory assessment:
+[Cloudflare's eMudhra advisory](https://blog.cloudflare.com/emudhra-certificate-compromise/)
+names cloudflared `2026.10.2` as fixed. Older stable calendar releases are affected.
+The macOS provider floor is conservatively `2026.10.3`; macOS `2026.10.2` remains
+unknown because its distribution channel is unconfirmed. Prereleases, vendor
+suffixes, malformed versions and unproven active images remain unknown. These
+assessments cover this advisory only.
+
+Process namespaces, hidden users, container images, package-manager inventories,
+service definitions and undiscovered locations remain explicit coverage gaps.
+Renamed executables are not identified as cloudflared process images. macOS and
+Windows executable discovery is portable source support only; active process
+inspection and native qualification are pending. No missing installation or fixed
+installed candidate clears those gaps. This hook provides inventory only; update
+planning and execution require a separate implementation and authorization.
+
+## Explicit standalone cloudflared update and recovery
+
+The resolver now implements `dockpipe.dependency.change/v1` through its packaged
+`dependency-change` workflow. The initial apply method is **Linux private
+standalone binaries only**. The operator attests that the target is independently
+owned; it must be named `cloudflared`, singly linked, owned by the current user,
+mode 0500 or 0700, and inside a private directory. The executable mode is preserved through update and recovery. System installations,
+package-manager files, services/containers/bundled distributions and non-Linux
+replacement are not qualified. Use the original installation owner for those
+methods. No automatic elevation, download, package-manager call or restart occurs.
+
+Prepare an exact request after obtaining the correct native standalone release
+from [Cloudflare's downloads](https://developers.cloudflare.com/tunnel/downloads/)
+and verifying its checksum through trusted release evidence. A supplied checksum
+proves byte integrity, not publisher authenticity. This manual artifact lane does
+not replace signature or platform trust verification and must not be used for
+an artifact of unknown origin. Manager installations must use the same manager,
+as required by [Cloudflare's update guide](https://developers.cloudflare.com/tunnel/guides/update-cloudflared/).
+
+```json
+{
+  "schema": "dockpipe.dependency.change/v1",
+  "resolver": "dockpipe.cloudflare.remote-edge",
+  "provider_version": "0.3.2",
+  "machine": "local",
+  "parameters": {
+    "owner": "private-standalone",
+    "target": "/private/tools/cloudflared",
+    "artifact": "/private/downloads/cloudflared",
+    "expected_sha256": "<installed binary SHA-256>",
+    "sha256": "<verified artifact SHA-256>",
+    "expected_version": "2026.10.2",
+    "version": "2026.10.4",
+    "pin": "2026.10.4"
+  }
+}
+```
+
+The paths are placeholders, not default installation locations. Both input files
+must be private regular files in private directories. No package/host lock is
+inferred from a producer lockfile. This lane cannot adopt an ecosystem-managed
+installation or override its locks. The optional exact `pin` must equal the
+candidate version. Stable versions only; the candidate must be newer and meet
+the advisory floor. Correct architecture is checked by executing the verified
+staged candidate's bounded version probe before mutation.
+
+```sh
+dockpipe dependency update --request change.json --dry-run
+dockpipe dependency update --request change.json --approve APPLY_ID
+dockpipe dependency recover --request change.json --dry-run
+dockpipe dependency recover --request change.json --approve RECOVERY_ID
+```
+
+The returned approvals bind every input and the operation; apply approval cannot
+approve recovery. The provider locks the target's private update state, copies and
+hashes the candidate, preserves and synchronizes the previous binary, journals
+before replacement, rechecks expected installed bytes, atomically renames and
+synchronizes the directory, and verifies the installed version. Interrupted
+replacement is reconciled by comparing installed bytes to both approved digests.
+Unknown bytes or corrupt backups are preserved for manual investigation. A failed
+postcondition attempts bounded safe recovery and returns a failure even if the
+old binary was restored. Recovered transactions cannot silently apply again.
+
+Journals and backups remain beside the target under
+`.dockpipe-cloudflared-update/`, with separate transaction identities and a shared
+lock. Retain this private evidence until activation/recovery is resolved. A later
+transaction can proceed only after the active transaction reaches a reconciled
+terminal state. Repeating an installed transaction checks its actual current
+version instead of replacing again. A pending/ambiguous transaction blocks new
+updates; no blind replay or background recovery agent is introduced.
+
+Rollback to a version below the advisory floor is blocked. For a deliberately
+approved emergency exception, add
+`"emergency_recovery": "allow-vulnerable-rollback"`, review recovery again, and use
+the **new recovery approval**. This policy is separately approval-bound while
+preserving the original installation transaction identity, and its use is recorded
+in the recovery journal. This restores vulnerable bytes and does not remediate
+exposure; prefer a verified forward fix via the installation owner.
+
+Success is `installed-activation-pending` or `recovered-activation-pending`.
+Existing connector processes retain their current executable images. Tunnel IDs,
+credentials, config and connections are untouched; no running-version, connector
+readiness, broker reachability, application TLS or end-to-end health claim is
+made. Activation and live recovery need the separately approved broker/service
+maintenance and redundant/out-of-band management work in TASK-050/052. In
+particular, restarting the connector carrying a remote update is not supported.
+
+## Broker-owned activation and health
+
+Activation is a separate approved operation after a successful standalone update.
+Upgrade/restart the Dockpipe broker explicitly **before** installing new dependency
+bytes, so the broker can pin its original native process image. The broker must
+support `dockpipe.remote.edge-activation/v1`; an older service does not gain this
+capability merely because the CLI was replaced. Do not use an ad-hoc service
+restart as activation after changing installed bytes.
+
+```json
+{
+  "schema": "dockpipe.dependency.change/v1",
+  "resolver": "dockpipe.cloudflare.remote-edge",
+  "provider_version": "0.3.2",
+  "machine": "local",
+  "parameters": {
+    "update_request": "/private/update.json",
+    "update_approval": "<exact original apply approval>",
+    "broker_state": "/private/broker",
+    "expected_edge_digest": "<SHA-256 of the unchanged normalized EdgeConfig>",
+    "tunnel_config_sha256": "<SHA-256 of the exact tunnel-config.json bytes>",
+    "metrics_address": "127.0.0.1:45000",
+    "maintenance": "allow-connector-replacement",
+    "startup_seconds": "10",
+    "stable_seconds": "3",
+    "recovery_seconds": "120"
+  }
+}
+```
+
+These are placeholders. Choose a free unprivileged loopback port. The edge digest
+is SHA-256 of the existing `EdgeConfig` JSON projection (`schema`, `endpoint`,
+`executable`, `arguments` in that order, compact encoding); it is not the raw file
+hash. Never print or submit credentials. Only configuration paths and exact binary
+identities enter the private activation record. The provider validates the original
+apply approval, current installed journal, candidate and fallback checksums,
+unchanged Dockpipe-managed tunnel arguments and configuration digest. It does not
+log in, recreate a tunnel, change DNS, alter ingress or read credential contents.
+
+```sh
+dockpipe dependency activate --request activation.json --dry-run
+dockpipe dependency activate --request activation.json --approve ACTIVATE_ID
+dockpipe dependency activation-status --request activation.json
+```
+
+The resolver supplies `tunnel --metrics <loopback-address> ... run <tunnel-id>` and
+the `/ready` URL. These Cloudflare-specific details stay here; Core accepts a
+provider-declared readiness URL and supervises a generic edge process. The
+provider uses the existing normal workflow hook and current trusted CLI, with the
+broker's existing OS-authenticated operator protocol. Core and resolver source are
+independent: the helper still builds against the checksum-pinned published SDK,
+while the new broker protocol is negotiated at runtime. Unsupported broker/host
+versions fail without restarting a connector.
+
+The broker starts the candidate while retaining the previous process. It checks
+that readiness belongs to the candidate PID and that the active executable matches
+the approved digest. Only then does explicit maintenance permit old-connector
+shutdown. After shutdown, a fresh signed public HTTPS broker round trip must pass
+stably. This verifies the connector and broker path, not every application origin
+or external TLS trust path. A single connector may have a brief interruption;
+zero downtime is not promised. Existing/uncertain jobs block activation and new
+submissions pause while its recovery window is active.
+
+The default 120-second recovery window begins at broker acceptance. Two consecutive
+failed five-second health observations within that window trigger one approved
+fallback. Both readiness and signed public broker identity must validate after
+restoration. The broker retains this bounded recovery when the CLI or GUI closes;
+status refresh never replays an admitted operation. A healthy result includes
+activation ID, last check and recovery deadline. `activation-recovered` means the
+upgrade failed but the old connector was verified; it remains a failing activation
+command. Expired or unsuccessful recovery stops automatic attempts and preserves
+private evidence for local intervention. Linux parent-death containment prevents
+these direct native connector children surviving an abrupt broker crash.
+
+Rollback below the advisory floor requires the activation request's explicit
+`"emergency_recovery": "allow-vulnerable-rollback"` policy and a newly reviewed
+activation approval; installation approval alone cannot grant it. A vulnerable
+fallback is an emergency availability exception, not security remediation.
+Private per-request receipts under `edge-activation-requests/` allow health queries
+even if installed files/configuration later drift; the broker still authenticates
+and signs every status response.
+
+The GUI's **Review activation**, **Activate reviewed connector**, and **Refresh
+activation health** actions call these same CLI operations from an immutable private
+request snapshot. They keep no independent watchdog or policy. Initial activation
+support is local Linux standalone native cloudflared managed by this broker;
+package-manager/service/Docker ownership, non-Linux activation and M6/real Cloudflare
+cutover qualification remain separate work. Isolated test health is never reported
+as real tunnel qualification.
+
+The 0.3.2 activation adapter also recognizes existing 0.3.1 standalone v1
+installation journals after validating their original exact apply approval,
+transaction identity and both hashes. It does not rewrite that historical version
+or approval. Other unknown provider versions fail closed; apply/recover continue
+to require the selected exact provider version.

@@ -14,6 +14,20 @@ import (
 )
 
 func main() {
+	if len(os.Args) > 1 && (os.Args[1] == "lifecycle-inspect" || os.Args[1] == "lifecycle-change") {
+		ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+		defer cancel()
+		handler := cloudflare.InspectCommand
+		if os.Args[1] == "lifecycle-change" {
+			handler = cloudflare.ChangeCommand
+		}
+		if err := handler(ctx, os.Args[2:]); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+		return
+	}
+
 	state := flag.String("state", "", "private resolver state")
 	output := flag.String("output", "", "edge contract output")
 	hostname := flag.String("hostname", "", "Cloudflare-managed hostname")

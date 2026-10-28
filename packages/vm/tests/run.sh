@@ -21,7 +21,7 @@ python3 tests/test_runtime_compatibility.py
 python3 tests/test_flatpak_management_profiles.py
 grep -Fq 'const version = "1.3.5"' tools/cmd/dockpipe-qemu-controller/main.go
 grep -Fq 'models/QemuVmResolverConfig' resolvers/qemu/types.yml
-grep -Fq 'models/LinuxQemuVmResolverConfig' resolvers/qemu/types.yml
+grep -Fq 'models/LinuxQemuVmResolverConfig.pipe' workflows/linux-vm/config.yml
 grep -Fq 'runtime: vm' workflows/windows-vm/config.yml
 grep -Fq 'resolver: qemu' workflows/windows-vm/config.yml
 grep -Fq 'runtime: vm' workflows/linux-vm/config.yml

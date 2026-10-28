@@ -1,0 +1,7 @@
+name: dependency-inspect
+description: Read-only local cloudflared dependency inventory and advisory assessment.
+docker_preflight: false
+steps:
+  - id: inspect
+    kind: host
+    run: assets/inspect.sh
