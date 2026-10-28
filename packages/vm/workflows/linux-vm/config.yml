@@ -6,7 +6,7 @@ category: app
 vault: none
 platforms: [deb]
 types:
-  - ../../resolvers/qemu/models/LinuxQemuVmResolverConfig.pipe
+  - models/LinuxQemuVmResolverConfig.pipe
 dependencies:
   host:
     - id: qemu
@@ -16,46 +16,80 @@ dependencies:
         deb: sudo apt-get install -y qemu-system-x86 qemu-utils
     - id: ssh
       command: ssh
-      description: Required for development guest commands; qualification disables networking and SSH.
+      description: Required for SSH commands in prepared Linux guests. Manual installation does not connect over SSH; qualification disables it.
       install:
         deb: sudo apt-get install -y openssh-client
 view:
+  entry:
+    type: choice
+    field: General.BootSource
+    title: Linux VM source
+    description: Install Linux manually from an ISO, or boot a prepared disk.
+    options:
+      - value: image
+        label: Boot existing disk image
+        pages: [image, machine, qualification]
+      - value: installer-iso
+        label: Install from ISO
+        pages: [install, machine, qualification]
   pages:
     - id: image
-      title: Linux image
+      title: Existing Linux disk
+      description: Use a bootable disk. SSH commands require an existing guest account, SSH server, and operator-provided key authentication. Leave the SSH user empty to choose an interactive desktop.
       sections:
-        - id: immutable-image
-          title: Immutable source
-          fields: [Image.Url, Image.Sha256, Image.Override]
         - id: development-disk
-          title: Development disk
+          title: Disk and persistence
           fields: [Storage.Disk, Storage.Persistence]
+        - id: guest-command
+          title: SSH command
+          fields: [General.ExecMode, Advanced.SshUser, Advanced.GuestCommand]
+    - id: install
+      title: Linux installer
+      description: Installation is manual in the VM window. Changes always persist directly to the destination disk. Reusing a disk can replace its contents; disk size applies only to a new disk. Closing the VM ends this run without executing an SSH command.
+      sections:
+        - id: install-media
+          title: Installer and destination
+          fields: [Storage.InstallerIso, Storage.InstallerDisk, Storage.DiskSize]
     - id: machine
       title: Execution
       sections:
         - id: general
-          title: General
-          fields: [General.ExecMode, General.BootSource, General.Purpose]
-        - id: advanced
-          title: Development only
-          fields: [Advanced.SshUser, Advanced.NetDevice, Advanced.GuestCommand]
+          title: Development guest
+          fields: [General.Purpose, Advanced.NetDevice]
     - id: qualification
       title: Offline qualification contract
+      description: These fields describe the separate offline qualification contract. The development launcher does not download or prepare an image from them. Qualification remains disabled.
       sections:
+        - id: immutable-image
+          title: Qualification image reference
+          fields: [Image.Url, Image.Sha256, Image.Override]
         - id: identity
           title: Stable identities
           fields: [Qualification.Enabled, Qualification.Disposable, Qualification.MachineUuid, Qualification.DiskSerial, Qualification.RunId, Qualification.Scenario, Qualification.DurabilityBoundary]
         - id: protocol
           title: Mutual pinning
           fields: [Protocol.ControllerPublicKey, Protocol.GuestPublicKey, Protocol.HarnessSha256]
-description: Boot your Linux guest image through QEMU and run a development command over SSH. Requires a prepared compatible image.
+description: Install Linux manually from your ISO into a persistent disk, or boot a prepared Linux disk for interactive use or SSH commands.
 runtime: vm
 resolver: qemu
+vars:
+  DOCKPIPE_VM_GUEST_PREPARATION: provided-only
 inputs:
-  General.ExecMode: bash
-  General.BootSource: image
-  General.Purpose: development
-  Storage.Persistence: ephemeral
+  General.ExecMode:
+    from: DOCKPIPE_VM_EXEC_MODE
+    value: bash
+  General.BootSource:
+    from: DOCKPIPE_VM_BOOT_SOURCE
+    value: image
+  General.Purpose:
+    from: DOCKPIPE_VM_PURPOSE
+    value: development
+  Storage.Persistence:
+    from: DOCKPIPE_VM_PERSISTENCE
+    value: ephemeral
+  Storage.DiskSize:
+    from: DOCKPIPE_VM_DISK_SIZE
+    value: 64G
   Qualification.Enabled: false
 steps:
   - id: guest-command

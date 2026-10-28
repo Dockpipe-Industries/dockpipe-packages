@@ -1,0 +1,40 @@
+/// <summary>Linux guest and qualification disk settings.</summary>
+public Class LinuxVmStorage
+{
+    /// <summary>Linux installer ISO, used when BootSource is installer-iso.</summary>
+    [EnvName = "DOCKPIPE_VM_CDROM"]
+    [Control = "file"]
+    [FileMode = "open-file"]
+    public string InstallerIso = "";
+
+    /// <summary>Size of a new installer destination disk.</summary>
+    [EnvName = "DOCKPIPE_VM_DISK_SIZE"]
+    [Control = "text"]
+    public string DiskSize = "64G";
+
+    /// <summary>Installation destination. Writes persist and existing contents may be replaced.</summary>
+    [EnvName = "DOCKPIPE_VM_INSTALL_DISK"]
+    [DisplayName = "Destination disk"]
+    [Control = "file"]
+    [FileMode = "save-file"]
+    public string InstallerDisk = "";
+
+    /// <summary>Existing bootable guest disk.</summary>
+    [EnvName = "DOCKPIPE_VM_DISK"]
+    [DisplayName = "Existing disk"]
+    [Control = "file"]
+    [FileMode = "open-file"]
+    public string Disk = "";
+
+    /// <summary>Existing-image persistence mode; installer mode always uses persistent storage.</summary>
+    [EnvName = "DOCKPIPE_VM_PERSISTENCE"]
+    public string Persistence = "ephemeral";
+
+    /// <summary>Qualification data disk size; fixed at 4 GiB.</summary>
+    [EnvName = "DOCKPIPE_VM_QUALIFICATION_DATA_DISK_BYTES"]
+    public string QualificationDataDiskBytes = "4294967296";
+
+    /// <summary>Qualification mount point; fixed for evidence comparability.</summary>
+    [EnvName = "DOCKPIPE_VM_QUALIFICATION_MOUNT"]
+    public string QualificationMount = "/var/lib/dockpipe-qualification";
+}

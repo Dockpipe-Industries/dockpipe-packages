@@ -1,0 +1,6 @@
+schema: 1
+kind: workflow
+name: dependency-inspect
+version: 0.3.2
+license: Apache-2.0
+hidden: true

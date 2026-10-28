@@ -8,6 +8,7 @@ Run source commands from this package repository; no sibling core checkout is re
 - [macOS backend](docs/vm-darwin.md)
 - [Boot display geometry](docs/vm-display-geometry.md)
 - [Guest preparation](docs/vm-guest-preparation.md)
+- [Linux installation and prepared disks](workflows/linux-vm/README.md#linux-development-installation)
 
 ## Runtime compatibility and reproducible builds
 

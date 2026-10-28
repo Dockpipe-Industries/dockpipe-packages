@@ -16,6 +16,7 @@ LINUX_TESTS = (
     'test_vm_posix_cleanup.sh',
     'test_vm_windows_media_paths.sh',
     'test_vm_guest_preparation.sh',
+    'test_linux_installer.sh',
     'test_windows_guest_services.sh',
 )
 WINDOWS_TESTS = (

@@ -1,0 +1,7 @@
+name: dependency-change
+description: Explicit standalone cloudflared update and recovery.
+docker_preflight: false
+steps:
+  - id: change
+    kind: host
+    run: assets/change.sh

@@ -10,6 +10,54 @@ role and `PATH=/usr/bin:/bin`, allowing the reviewed
 `systemd-detect-virt --vm` lookup without inheriting the guest-agent service
 environment or adding a generic execution surface.
 
+## Linux development installation
+
+Choose **Install from ISO** in the Linux VM source selector, supply your local Linux
+installer ISO, and choose a destination disk. The existing-image picker opens an
+existing file; the separate installer destination picker can choose a new file. Dockpipe neither downloads the ISO
+nor installs Linux unattended. The host needs QEMU and qemu-img; the resolver's
+configured firmware and TPM policy can additionally require OVMF and swtpm.
+
+`Storage.InstallerDisk` maps to `DOCKPIPE_VM_INSTALL_DISK`; installer mode uses it
+as the backend `DOCKPIPE_VM_DISK` when supplied. Existing CLI callers can still
+supply `DOCKPIPE_VM_DISK` directly. The destination field does not override the
+existing-image selection when booting in image mode.
+
+A new `.qcow2` destination is created as qcow2; `.raw` and `.img` destinations are
+created as raw. The creation and launch formats must agree. Advanced environment
+overrides `DOCKPIPE_VM_DISK_CREATE_FORMAT` and `DOCKPIPE_VM_DISK_FORMAT` must match
+when both are used. New disks default to `64G`; positive byte counts and QEMU size
+suffixes such as `M`, `G`, and `T` are accepted. Disk size is ignored for an
+existing destination; this control does not resize it.
+
+The ISO must be a readable regular file. An existing destination must be a
+readable, writable regular file and must differ from the ISO. It is reused
+without host-side formatting or truncation. When confirmation prompts are enabled,
+Dockpipe asks before reusing it because the guest installer can replace its
+contents. New disk creation also uses the existing confirmation policy. In
+noninteractive runs, selecting installer mode explicitly authorizes persistent
+writes; supply only an intended destination.
+
+Installation always writes directly to the destination, regardless of the
+existing-image persistence setting. New images are prepared beside the destination
+and published exclusively, so failed creation or a competing destination does not
+replace an existing file. The VM boots the ISO once in its graphical window;
+subsequent guest reboots prefer the installed disk. Closing the VM ends the run.
+The SSH user and guest command are not used during manual installation. QEMU exit
+alone does not establish that Linux installed successfully.
+
+After installation, select **Boot existing disk image**, choose the installed disk,
+and clear the installer ISO from saved inputs. Use persistent storage to retain
+later changes, or ephemeral storage for a temporary overlay. Leave the SSH user
+empty to choose an interactive desktop, or supply the installed guest account to
+run commands over SSH. For SSH, enable an SSH server in the guest and authorize an
+operator-owned public key there; the host uses its normal SSH keys or agent.
+`provided-only` does not generate a Windows identity, bootstrap, or Guest Tools.
+
+The immutable image URL, checksum, override and qualification fields belong to the
+separate offline qualification contract. They do not download, select or provision
+a development disk. Qualification remains disabled in this workflow.
+
 ## Immutable Ubuntu profile
 
 The reviewed profile is Ubuntu 24.04 LTS amd64 release stamp `20260801`:
@@ -780,3 +828,10 @@ stop before hard power, the ticket nonce is never logged, and a missing later
 record does not prove the corresponding guest-side state absent. No executor
 schema, build, promotion, preparation, plan, authorization, live gate, disk
 inspection, recovery, or cleanup is part of this source-only change.
+
+The workflow archive includes its typed form models in `models/`. These models
+resolve relative to this workflow, including when the QEMU resolver is extracted
+into a separate package cache directory.
+
+Development input defaults read the corresponding `DOCKPIPE_VM_*` form values
+before falling back to their defaults. Qualification remains disabled explicitly.

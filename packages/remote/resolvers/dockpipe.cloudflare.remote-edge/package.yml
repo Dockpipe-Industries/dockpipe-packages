@@ -1,7 +1,7 @@
 schema: 1
 kind: resolver
 name: dockpipe.cloudflare.remote-edge
-version: 0.3.1
+version: 0.3.2
 title: Cloudflare Tunnel remote access
 description: Connect a Dockpipe broker through Cloudflare Tunnel with browser sign-in and DNS setup. Requires your own Cloudflare account and domain.
 capability: remote.edge
