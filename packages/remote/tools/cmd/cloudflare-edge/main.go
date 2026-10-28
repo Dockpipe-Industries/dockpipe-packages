@@ -14,10 +14,14 @@ import (
 )
 
 func main() {
-	if len(os.Args) > 1 && os.Args[1] == "lifecycle-inspect" {
+	if len(os.Args) > 1 && (os.Args[1] == "lifecycle-inspect" || os.Args[1] == "lifecycle-change") {
 		ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 		defer cancel()
-		if err := cloudflare.InspectCommand(ctx, os.Args[2:]); err != nil {
+		handler := cloudflare.InspectCommand
+		if os.Args[1] == "lifecycle-change" {
+			handler = cloudflare.ChangeCommand
+		}
+		if err := handler(ctx, os.Args[2:]); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}

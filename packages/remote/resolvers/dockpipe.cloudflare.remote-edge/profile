@@ -4,3 +4,7 @@ DOCKPIPE_REMOTE_EDGE_SETUP=assets/scripts/setup.sh
 # Optional read-only dependency lifecycle inventory contract.
 DOCKPIPE_DEPENDENCY_LIFECYCLE_PROTOCOL=dockpipe.dependency.inventory/v1
 DOCKPIPE_DEPENDENCY_LIFECYCLE_WORKFLOW=assets/workflows/dependency-inspect/config.yml
+
+# Explicit local update/recovery through the normal workflow runner.
+DOCKPIPE_DEPENDENCY_CHANGE_PROTOCOL=dockpipe.dependency.change/v1
+DOCKPIPE_DEPENDENCY_CHANGE_WORKFLOW=assets/workflows/dependency-change/config.yml
