@@ -4,7 +4,7 @@ import "time"
 
 const InventorySchema = "dockpipe.dependency.inventory/v1"
 const LifecycleProviderID = "dockpipe.cloudflare.remote-edge"
-const LifecycleProviderVersion = "0.3.1"
+const LifecycleProviderVersion = "0.3.2"
 const advisoryURL = "https://blog.cloudflare.com/emudhra-certificate-compromise/"
 
 type InventoryProvider struct {

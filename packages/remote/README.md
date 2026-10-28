@@ -3,7 +3,7 @@
 Provider adapters for `dockpipe remote`. Core owns delivery, pairing, execution, and results.
 Resolvers own provider login, endpoint setup, and tunnel configuration. DorkPipe retains scheduling.
 
-`dockpipe.cloudflare.remote-edge` is the Cloudflare adapter (version 0.3.1). Browser login, named tunnel, and DNS setup are implemented;
+`dockpipe.cloudflare.remote-edge` is the Cloudflare adapter (version 0.3.2). Browser login, named tunnel, and DNS setup are implemented;
 setup prints progress and pairing guidance and preserves the desktop browser session. Core can
 deliver selected workflows, assets and explicit package dependencies to workers that opt in with
 `--allow-delivery`. Local loopback delivery is tested; live account and macOS service qualification
@@ -87,7 +87,7 @@ as required by [Cloudflare's update guide](https://developers.cloudflare.com/tun
 {
   "schema": "dockpipe.dependency.change/v1",
   "resolver": "dockpipe.cloudflare.remote-edge",
-  "provider_version": "0.3.1",
+  "provider_version": "0.3.2",
   "machine": "local",
   "parameters": {
     "owner": "private-standalone",
@@ -150,3 +150,99 @@ readiness, broker reachability, application TLS or end-to-end health claim is
 made. Activation and live recovery need the separately approved broker/service
 maintenance and redundant/out-of-band management work in TASK-050/052. In
 particular, restarting the connector carrying a remote update is not supported.
+
+## Broker-owned activation and health
+
+Activation is a separate approved operation after a successful standalone update.
+Upgrade/restart the Dockpipe broker explicitly **before** installing new dependency
+bytes, so the broker can pin its original native process image. The broker must
+support `dockpipe.remote.edge-activation/v1`; an older service does not gain this
+capability merely because the CLI was replaced. Do not use an ad-hoc service
+restart as activation after changing installed bytes.
+
+```json
+{
+  "schema": "dockpipe.dependency.change/v1",
+  "resolver": "dockpipe.cloudflare.remote-edge",
+  "provider_version": "0.3.2",
+  "machine": "local",
+  "parameters": {
+    "update_request": "/private/update.json",
+    "update_approval": "<exact original apply approval>",
+    "broker_state": "/private/broker",
+    "expected_edge_digest": "<SHA-256 of the unchanged normalized EdgeConfig>",
+    "tunnel_config_sha256": "<SHA-256 of the exact tunnel-config.json bytes>",
+    "metrics_address": "127.0.0.1:45000",
+    "maintenance": "allow-connector-replacement",
+    "startup_seconds": "10",
+    "stable_seconds": "3",
+    "recovery_seconds": "120"
+  }
+}
+```
+
+These are placeholders. Choose a free unprivileged loopback port. The edge digest
+is SHA-256 of the existing `EdgeConfig` JSON projection (`schema`, `endpoint`,
+`executable`, `arguments` in that order, compact encoding); it is not the raw file
+hash. Never print or submit credentials. Only configuration paths and exact binary
+identities enter the private activation record. The provider validates the original
+apply approval, current installed journal, candidate and fallback checksums,
+unchanged Dockpipe-managed tunnel arguments and configuration digest. It does not
+log in, recreate a tunnel, change DNS, alter ingress or read credential contents.
+
+```sh
+dockpipe dependency activate --request activation.json --dry-run
+dockpipe dependency activate --request activation.json --approve ACTIVATE_ID
+dockpipe dependency activation-status --request activation.json
+```
+
+The resolver supplies `tunnel --metrics <loopback-address> ... run <tunnel-id>` and
+the `/ready` URL. These Cloudflare-specific details stay here; Core accepts a
+provider-declared readiness URL and supervises a generic edge process. The
+provider uses the existing normal workflow hook and current trusted CLI, with the
+broker's existing OS-authenticated operator protocol. Core and resolver source are
+independent: the helper still builds against the checksum-pinned published SDK,
+while the new broker protocol is negotiated at runtime. Unsupported broker/host
+versions fail without restarting a connector.
+
+The broker starts the candidate while retaining the previous process. It checks
+that readiness belongs to the candidate PID and that the active executable matches
+the approved digest. Only then does explicit maintenance permit old-connector
+shutdown. After shutdown, a fresh signed public HTTPS broker round trip must pass
+stably. This verifies the connector and broker path, not every application origin
+or external TLS trust path. A single connector may have a brief interruption;
+zero downtime is not promised. Existing/uncertain jobs block activation and new
+submissions pause while its recovery window is active.
+
+The default 120-second recovery window begins at broker acceptance. Two consecutive
+failed five-second health observations within that window trigger one approved
+fallback. Both readiness and signed public broker identity must validate after
+restoration. The broker retains this bounded recovery when the CLI or GUI closes;
+status refresh never replays an admitted operation. A healthy result includes
+activation ID, last check and recovery deadline. `activation-recovered` means the
+upgrade failed but the old connector was verified; it remains a failing activation
+command. Expired or unsuccessful recovery stops automatic attempts and preserves
+private evidence for local intervention. Linux parent-death containment prevents
+these direct native connector children surviving an abrupt broker crash.
+
+Rollback below the advisory floor requires the activation request's explicit
+`"emergency_recovery": "allow-vulnerable-rollback"` policy and a newly reviewed
+activation approval; installation approval alone cannot grant it. A vulnerable
+fallback is an emergency availability exception, not security remediation.
+Private per-request receipts under `edge-activation-requests/` allow health queries
+even if installed files/configuration later drift; the broker still authenticates
+and signs every status response.
+
+The GUI's **Review activation**, **Activate reviewed connector**, and **Refresh
+activation health** actions call these same CLI operations from an immutable private
+request snapshot. They keep no independent watchdog or policy. Initial activation
+support is local Linux standalone native cloudflared managed by this broker;
+package-manager/service/Docker ownership, non-Linux activation and M6/real Cloudflare
+cutover qualification remain separate work. Isolated test health is never reported
+as real tunnel qualification.
+
+The 0.3.2 activation adapter also recognizes existing 0.3.1 standalone v1
+installation journals after validating their original exact apply approval,
+transaction identity and both hashes. It does not rewrite that historical version
+or approval. Other unknown provider versions fail closed; apply/recover continue
+to require the selected exact provider version.

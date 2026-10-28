@@ -47,7 +47,7 @@ func TestLifecycleInventoryMultipleInstallationsAndUnprovenActiveImage(t *testin
 	if err != nil {
 		t.Fatal(err)
 	}
-	if report.Schema != InventorySchema || report.Provider.ID != LifecycleProviderID || report.Provider.Version != "0.3.1" || report.Machine != "machine-01" {
+	if report.Schema != InventorySchema || report.Provider.ID != LifecycleProviderID || report.Provider.Version != "0.3.2" || report.Machine != "machine-01" {
 		t.Fatalf("incorrect report binding: %+v", report)
 	}
 	if len(report.Observations) != 3 || len(report.Gaps) == 0 {

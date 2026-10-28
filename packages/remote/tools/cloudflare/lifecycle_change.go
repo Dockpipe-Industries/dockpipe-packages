@@ -64,6 +64,23 @@ func ChangeCommand(ctx context.Context, arguments []string) error {
 	if err := remoteio.ReadPrivate(*input, &request); err != nil {
 		return err
 	}
+	if *operation == "activate" || *operation == "activation-plan" || *operation == "activation-status" {
+		var result changeResult
+		var err error
+		if *operation == "activation-status" {
+			result, err = activationStatus(ctx, request)
+		} else {
+			result, err = activateBroker(ctx, request, *operation == "activation-plan")
+		}
+		if err != nil {
+			return err
+		}
+		data, err := json.Marshal(result)
+		if err != nil {
+			return err
+		}
+		return writeInventoryReport(*output, data)
+	}
 	updater := binaryUpdater{probe: probeExecutableVersion, validate: validateInstalledVersion}
 	result, err := updater.execute(ctx, request, *operation)
 	if err != nil {
@@ -150,21 +167,7 @@ func (updater binaryUpdater) execute(ctx context.Context, request changeRequest,
 		return result, err
 	}
 	defer unlock()
-	// Recovery policy can be approved after a failure without changing the
-	// immutable installation transaction identity. Core approval still binds it.
-	journalRequest := request
-	journalRequest.Parameters = make(map[string]string, len(request.Parameters))
-	for key, value := range request.Parameters {
-		if key != "emergency_recovery" {
-			journalRequest.Parameters[key] = value
-		}
-	}
-	data, err := json.Marshal(journalRequest)
-	if err != nil {
-		return result, err
-	}
-	digest := sha256.Sum256(data)
-	requestDigest := hex.EncodeToString(digest[:])
+	requestDigest := changeTransactionDigest(request)
 	activePath := filepath.Join(state, "active.json")
 	var active struct {
 		Digest string `json:"digest"`
@@ -336,4 +339,17 @@ func (updater binaryUpdater) validateCandidate(ctx context.Context, target, vers
 		return errors.New("installed candidate digest changed during validation")
 	}
 	return nil
+}
+
+func changeTransactionDigest(request changeRequest) string {
+	journalRequest := request
+	journalRequest.Parameters = make(map[string]string, len(request.Parameters))
+	for key, value := range request.Parameters {
+		if key != "emergency_recovery" {
+			journalRequest.Parameters[key] = value
+		}
+	}
+	data, _ := json.Marshal(journalRequest)
+	digest := sha256.Sum256(data)
+	return hex.EncodeToString(digest[:])
 }
