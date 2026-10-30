@@ -15,8 +15,8 @@ jobs:
       id-token: write
       attestations: write
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v6
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.13.7'
       - name: Install only the hash-locked source verifier dependency
@@ -37,7 +37,7 @@ jobs:
             source-output/dockpipe-catalog-linux-amd64.tar.gz
             source-output/candidate.json
             source-output/consumer-proof.json
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: source-catalog-${{ github.sha }}
           path: |
