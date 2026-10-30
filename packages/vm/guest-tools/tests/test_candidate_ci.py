@@ -64,6 +64,78 @@ class CandidateAcquisitionTest(unittest.TestCase):
             with self.subTest(base=base), self.assertRaisesRegex(ValueError, 'CLI candidate pin is required'):
                 ci.require_public_cli_candidate(root)
 
+    def test_repository_staging_pin_has_reviewed_native_environment_source(self):
+        repository = TOOLING.parents[3]
+        expected_source = 'b107ea64782c5a153440fb786791f1500a55416e'
+        identity = ('0.6.33', 'v0.6.33-staging.40247668385.1.b107ea64782c')
+        self.assertEqual(ci.REVIEWED_STAGING_CLI_SOURCES[identity], expected_source)
+
+        lock = json.loads((repository / 'dockpipe.lock.json').read_bytes())
+        self.assertEqual((lock['dockpipe']['version'], lock['dockpipe']['release']), identity)
+        expected_entry = lock['dockpipe']['artifacts']['windows/amd64']
+        with mock.patch.object(ci.urllib.request, 'urlopen') as transport:
+            self.assertEqual(ci.require_public_cli_candidate(repository), expected_entry)
+            transport.assert_not_called()
+
+    def test_staging_pin_rejects_unreviewed_identity_before_tool_acquisition(self):
+        repository = TOOLING.parents[3]
+        original = json.loads((repository / 'dockpipe.lock.json').read_bytes())
+        root = Path(self.temporary.name)
+        changes = (
+            ('schema', 2),
+            ('config_version', '0.6.34'),
+            ('version', '0.6.34'),
+            ('release', 'v0.6.33'),
+            ('release', 'v0.6.33-staging.40247668385.2.b107ea64782c'),
+            ('release', 'v0.6.33-staging.40247668386.1.b107ea64782c'),
+            ('release', 'v0.6.33-staging.40247668385.1.aaaaaaaaaaaa'),
+            ('release', 'v0.6.34-staging.40247668385.1.b107ea64782c'),
+        )
+        for field, value in changes:
+            lock = json.loads(json.dumps(original))
+            config_version = original['dockpipe']['version']
+            if field == 'schema':
+                lock['schema'] = value
+            elif field == 'config_version':
+                config_version = value
+            else:
+                lock['dockpipe'][field] = value
+            (root / 'dockpipe.config.json').write_text(json.dumps({
+                'dockpipe_version': config_version,
+            }))
+            (root / 'dockpipe.lock.json').write_text(json.dumps(lock))
+            with self.subTest(field=field, value=value):
+                with mock.patch.object(ci.urllib.request, 'urlopen') as transport:
+                    with self.assertRaisesRegex(ValueError, 'CLI candidate pin is required'):
+                        ci.require_public_cli_candidate(root)
+                    transport.assert_not_called()
+
+    def test_reviewed_staging_pin_still_requires_bounded_official_windows_archive(self):
+        repository = TOOLING.parents[3]
+        original = json.loads((repository / 'dockpipe.lock.json').read_bytes())
+        root = Path(self.temporary.name)
+        (root / 'dockpipe.config.json').write_text(json.dumps({
+            'dockpipe_version': original['dockpipe']['version'],
+        }))
+        changes = (
+            ('url', 'https://example.invalid/cli.zip'),
+            ('executable', 'other.exe'),
+            ('sha256', None),
+            ('size_bytes', True),
+            ('size_bytes', 0),
+            ('size_bytes', (64 << 20) + 1),
+            ('executable_size_bytes', True),
+            ('executable_size_bytes', 0),
+            ('executable_size_bytes', (64 << 20) + 1),
+        )
+        for field, value in changes:
+            lock = json.loads(json.dumps(original))
+            lock['dockpipe']['artifacts']['windows/amd64'][field] = value
+            (root / 'dockpipe.lock.json').write_text(json.dumps(lock))
+            with self.subTest(field=field, value=value):
+                with self.assertRaisesRegex(ValueError, 'exact owning public archive'):
+                    ci.require_public_cli_candidate(root)
+
     def test_locked_official_bytes_only(self):
         with mock.patch.object(ci.urllib.request, 'urlopen', return_value=io.BytesIO(b'abc')):
             ci.download(self.entry, self.output)
