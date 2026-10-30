@@ -1,0 +1,39 @@
+name: dockpipe.cloudflare.r2bulk
+title: Transfer immutable objects to Cloudflare R2
+catalog_type: workflow
+categories: [storage, publishing]
+namespace: dockpipe-cloudflare
+description: Upload an immutable file-to-key manifest with bounded concurrency and durable resume state. Verify current HEAD identity and explicitly requested HTTP headers. Skip and dry run are provider-free.
+platforms: [windows, deb, macos]
+docker_preflight: false
+dependencies:
+  host:
+    - id: bash
+      command: bash
+      description: Launches the explicitly selected Python runtime.
+    - id: python3
+      command: python3
+      description: Python 3.10+ with the package's pinned requirements installed. No dependency installation occurs during upload.
+vars:
+  R2_BULK_SKIP: "false"
+  R2_BULK_DRY_RUN: "false"
+  R2_BULK_PYTHON: "python3"
+  R2_BULK_MANIFEST: ""
+  R2_BULK_STATE: ""
+  R2_BULK_TRUSTED_RECEIPTS: ""
+  R2_BULK_OBJECT_WORKERS: "4"
+  R2_BULK_MULTIPART_WORKERS: "1"
+  R2_BULK_PART_MIB: "16"
+  R2_BULK_MAX_REQUESTS: "4"
+  R2_BUCKET: ""
+  R2_ENDPOINT_URL: ""
+steps:
+  - id: preflight
+    kind: host
+    run: assets/scripts/preflight.sh
+  - id: transfer
+    kind: host
+    run: assets/scripts/transfer.sh
+  - id: verify
+    kind: host
+    run: assets/scripts/verify.sh

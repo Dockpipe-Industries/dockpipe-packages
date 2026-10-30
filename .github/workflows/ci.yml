@@ -40,6 +40,12 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: python3 tooling/fetch_sdk_release.py --output "$RUNNER_TEMP/sdk-inputs"
+      - name: Prepare the hash-locked bulk workflow test runtime
+        run: |
+          python3 -m venv "$RUNNER_TEMP/r2bulk-test-runtime"
+          "$RUNNER_TEMP/r2bulk-test-runtime/bin/python" -m pip install --require-hashes --no-deps -r packages/cloud/storage/resolvers/r2/dockpipe.cloudflare.r2bulk/requirements.lock
+          "$RUNNER_TEMP/r2bulk-test-runtime/bin/python" -m pip check
+          printf 'R2_BULK_PYTHON=%s\n' "$RUNNER_TEMP/r2bulk-test-runtime/bin/python" >> "$GITHUB_ENV"
       - name: Build and test through Dockpipe
         env:
           DOCKPIPE_GLOBAL_ROOT: ${{ runner.temp }}/dockpipe-runtime
