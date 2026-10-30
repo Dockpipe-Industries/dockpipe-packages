@@ -3,8 +3,8 @@ title: Transfer immutable objects to Cloudflare R2
 catalog_type: workflow
 categories: [storage, publishing]
 namespace: dockpipe-cloudflare
-description: Upload an explicit file-to-key manifest with bounded concurrency and durable resume state. Verify HEAD size and SHA metadata or explicitly trusted prior full-download receipts.
-platforms: [deb, macos]
+description: Upload an immutable file-to-key manifest with bounded concurrency and durable resume state. Verify current HEAD identity and explicitly requested HTTP headers. Skip and dry run are provider-free.
+platforms: [windows, deb, macos]
 docker_preflight: false
 dependencies:
   host:
@@ -15,6 +15,8 @@ dependencies:
       command: python3
       description: Python 3.10+ with the package's pinned requirements installed. No dependency installation occurs during upload.
 vars:
+  R2_BULK_SKIP: "false"
+  R2_BULK_DRY_RUN: "false"
   R2_BULK_PYTHON: "python3"
   R2_BULK_MANIFEST: ""
   R2_BULK_STATE: ""

@@ -2,7 +2,7 @@
 """Bounded manifest-to-S3 transfers. No archive creation or download verification."""
 import concurrent.futures
 import contextlib
-import fcntl
+import errno
 import hashlib
 import json
 import os
@@ -14,8 +14,61 @@ import threading
 from urllib.parse import urlsplit
 
 
+WINDOWS = os.name == "nt"
+
+
 class BulkError(Exception):
     """An expected input, remote identity or transfer failure."""
+
+
+def state_durability():
+    if WINDOWS:
+        return "file-fsync-and-atomic-replace"
+    return "file-and-directory-fsync"
+
+
+@contextlib.contextmanager
+def exclusive_state_lock(lock):
+    if WINDOWS:
+        import msvcrt
+        lock.seek(0, os.SEEK_END)
+        if lock.tell() == 0:
+            lock.write(b"\0")
+            lock.flush()
+        lock.seek(0)
+        try:
+            msvcrt.locking(lock.fileno(), msvcrt.LK_NBLCK, 1)
+        except OSError as error:
+            if error.errno in (errno.EACCES, errno.EAGAIN, errno.EDEADLK):
+                raise BulkError("Another bulk process owns this state") from error
+            raise
+        try:
+            yield
+        finally:
+            lock.seek(0)
+            msvcrt.locking(lock.fileno(), msvcrt.LK_UNLCK, 1)
+    else:
+        import fcntl
+        try:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError as error:
+            raise BulkError("Another bulk process owns this state") from error
+        try:
+            yield
+        finally:
+            fcntl.flock(lock, fcntl.LOCK_UN)
+
+
+def fsync_directory(path):
+    # Windows does not expose POSIX directory fsync through this API. File fsync
+    # and atomic replacement remain required; receipts identify the weaker bound.
+    if WINDOWS:
+        return
+    directory = os.open(path, os.O_RDONLY)
+    try:
+        os.fsync(directory)
+    finally:
+        os.close(directory)
 
 
 def canonical_hash(value):
@@ -45,6 +98,21 @@ def bounded_integer(environment, name, default, minimum, maximum):
     if not minimum <= value <= maximum:
         raise BulkError(f"{name} must be between {minimum} and {maximum}")
     return value
+
+
+def environment_flag(environment, name):
+    value = environment.get(name, "false")
+    if value not in ("true", "false"):
+        raise BulkError(f"{name} must be true or false")
+    return value == "true"
+
+
+def publishing_headers(entry):
+    headers = {}
+    for field, header in (("content_type", "ContentType"), ("cache_control", "CacheControl")):
+        if field in entry:
+            headers[header] = entry[field]
+    return headers
 
 
 class BulkUpload:
@@ -97,8 +165,17 @@ class BulkUpload:
             publish_last = entry.get("publish_last", False)
             if type(publish_last) is not bool:
                 raise BulkError("publish_last must be a boolean")
-            self.objects.append({"source": str(source), "key": key, "size": size,
-                                 "sha256": digest, "publish_last": publish_last})
+            normalized = {"source": str(source), "key": key, "size": size,
+                          "sha256": digest, "publish_last": publish_last}
+            for field in ("content_type", "cache_control"):
+                if field not in entry:
+                    continue
+                value = entry[field]
+                if (not isinstance(value, str) or not value.strip() or len(value) > 1024
+                        or any(ord(character) < 32 or ord(character) > 126 for character in value)):
+                    raise BulkError(f"{field} must be a nonempty printable ASCII header of at most 1024 characters")
+                normalized[field] = value
+            self.objects.append(normalized)
         if self.state_path == self.manifest_path:
             raise BulkError("State must not overwrite the manifest")
         self.trusted = {}
@@ -129,11 +206,7 @@ class BulkUpload:
     def locked(self):
         self.state_path.parent.mkdir(parents=True, exist_ok=True)
         lock_path = safe_path(str(self.state_path) + ".lock", Path.cwd())
-        with lock_path.open("a+") as lock:
-            try:
-                fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-            except BlockingIOError as error:
-                raise BulkError("Another bulk process owns this state") from error
+        with lock_path.open("a+b") as lock, exclusive_state_lock(lock):
             if self.state_path.exists():
                 state = read_json(self.state_path)
                 if state.get("schema") != 1 or state.get("identity") != self.identity:
@@ -142,6 +215,7 @@ class BulkUpload:
             yield
 
     def save(self):
+        self.state["durability"] = state_durability()
         descriptor, name = tempfile.mkstemp(prefix=".r2-bulk-", dir=self.state_path.parent)
         try:
             with os.fdopen(descriptor, "w", encoding="utf-8") as stream:
@@ -150,11 +224,7 @@ class BulkUpload:
                 stream.flush()
                 os.fsync(stream.fileno())
             os.replace(name, self.state_path)
-            directory = os.open(self.state_path.parent, os.O_RDONLY)
-            try:
-                os.fsync(directory)
-            finally:
-                os.close(directory)
+            fsync_directory(self.state_path.parent)
         finally:
             if os.path.exists(name):
                 os.unlink(name)
@@ -164,6 +234,7 @@ class BulkUpload:
             self.state["objects"][entry["key"]] = {
                 "size": entry["size"], "sha256": entry["sha256"],
                 "verification": verification, "etag": head.get("ETag"),
+                **{field: entry[field] for field in ("content_type", "cache_control") if field in entry},
             }
             self.save()
         print(json.dumps({"key": entry["key"], "status": verification}), flush=True)
@@ -179,6 +250,9 @@ class BulkUpload:
             raise
 
     def remote_verification(self, entry, head):
+        for header, expected in publishing_headers(entry).items():
+            if head.get(header) != expected:
+                raise BulkError(f"Remote {header} mismatch; refusing overwrite: {entry['key']}")
         if head["ContentLength"] != entry["size"]:
             raise BulkError(f"Remote size mismatch; refusing overwrite: {entry['key']}")
         etag = head.get("ETag", "").strip('"')
@@ -252,7 +326,8 @@ class BulkUpload:
             # Filename uploads stream seekable parts from disk instead of buffering
             # file-object multipart chunks in memory. Sources must remain immutable.
             client.upload_file(str(source), self.bucket, entry["key"],
-                                  ExtraArgs={"Metadata": {"sha256": digest}}, Config=config)
+                               ExtraArgs={"Metadata": {"sha256": digest}, **publishing_headers(entry)},
+                               Config=config)
             after = os.fstat(stream.fileno())
         current = source.stat()
         if (before.st_ino, before.st_size, before.st_mtime_ns, before.st_ctime_ns) != (
@@ -321,7 +396,8 @@ class BulkUpload:
         self.save()
         print(json.dumps({"phase": "verified-head", "objects": len(self.objects),
                           "bytes": sum(entry["size"] for entry in self.objects),
-                          "full_get_performed": False}), flush=True)
+                          "full_get_performed": False,
+                          "durability": state_durability()}), flush=True)
 
 
 def sdk(upload):
@@ -352,9 +428,20 @@ def main():
         phase = sys.argv[1] if len(sys.argv) == 2 else ""
         if phase not in ("preflight", "transfer", "verify", "status"):
             raise BulkError("Usage: r2-bulk.py preflight|transfer|verify|status")
+        if environment_flag(os.environ, "R2_BULK_SKIP"):
+            print(json.dumps({"phase": "skipped", "stage": phase, "provider_operations": False}))
+            return 0
+        dry_run = environment_flag(os.environ, "R2_BULK_DRY_RUN")
         upload = BulkUpload(os.environ)
         with upload.locked():
-            if phase == "status":
+            if dry_run and phase != "status":
+                upload.state["phase"] = "dry-run"
+                upload.save()
+                print(json.dumps({"phase": "dry-run", "stage": phase,
+                                  "objects": len(upload.objects),
+                                  "bytes": sum(entry["size"] for entry in upload.objects),
+                                  "identity": upload.identity, "provider_operations": False}))
+            elif phase == "status":
                 print(json.dumps(upload.state, sort_keys=True))
             elif phase == "preflight":
                 upload.save()

@@ -72,7 +72,7 @@ native producer, dependency closure and installed acceptance gates.
 
 ## Explicit immutable-object bulk workflow
 
-The separate `dockpipe.cloudflare.r2bulk` 0.1.0 source candidate owns its own
+The separate `dockpipe.cloudflare.r2bulk` 0.1.1 source candidate owns its own
 manifest-based S3 transfer helper, pinned Python SDK lock and offline contracts.
 It does not replace the published archive helper or change any existing workflow
 identity. See [the bulk workflow contract](resolvers/r2/dockpipe.cloudflare.r2bulk/README.md)
@@ -80,3 +80,7 @@ for immutable source/key mappings, bounded workers, durable resume, trusted remo
 receipts and completion-marker ordering. Its SHA256/ETag and HEAD checks do not
 claim a full download or reconstruction test. Source validation and local archive
 compilation do not authorize package publication or invent a released consumer pin.
+
+The focused `package-r2bulk-release` producer qualifies and publishes this workflow
+independently, with source provenance and exact artifact checksums. Its immutable
+package release does not advance a catalog or channel pointer.
