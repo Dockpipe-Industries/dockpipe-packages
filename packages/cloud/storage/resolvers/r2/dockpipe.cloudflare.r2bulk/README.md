@@ -1,6 +1,6 @@
 # Manifest bulk upload to R2
 
-`dockpipe.cloudflare.r2bulk` 0.1.0 is a separate package-owned workflow. It uploads
+`dockpipe.cloudflare.r2bulk` 0.1.1 is a separate package-owned workflow. It uploads
 existing files to explicit immutable object keys without creating archives. The
 existing `dockpipe.cloudflare.r2upload` archive workflow is unchanged. This source
 version is a local candidate until separately qualified and published; it is not
@@ -14,7 +14,7 @@ or reconstruction test.
 
 ## Dependency and consumer contract
 
-Use Python 3.10+ on Linux or macOS. Prepare an explicit virtual environment and
+Use Python 3.10+ on Linux, macOS or Windows with Bash available for the host stages. Prepare an explicit virtual environment and
 install the accompanying `requirements.lock` with `pip install --require-hashes
 -r requirements.lock`. Set `R2_BULK_PYTHON` to that environment's absolute Python executable. The workflow
 never installs dependencies or resolves credentials itself. The SDK uses standard
@@ -34,7 +34,9 @@ path for the exact manifest and destination. Example manifest:
       "key": "objects/immutable-content-key",
       "size": 3,
       "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
-      "publish_last": false
+      "publish_last": false,
+      "content_type": "application/octet-stream",
+      "cache_control": "public, max-age=31536000, immutable"
     }
   ]
 }
@@ -48,6 +50,41 @@ immutable for the invocation. A source stat change during upload fails the run.
 State is bound to exact canonical source mappings, destination and trusted receipts;
 changing those inputs requires a different state path. Duplicate sources with
 different keys are permitted; mapping and CAS deduplication belong to the consumer.
+
+Optional `content_type` and `cache_control` fields set the object's HTTP
+Content-Type and Cache-Control headers. Values must contain 1–1024 printable ASCII
+characters and cannot be whitespace only. Explicit values become part of the plan
+identity and are checked against current HEAD responses before reuse or completion,
+including resume and trusted-receipt paths. Mismatches fail without overwrite.
+When a field is omitted, the SDK default is retained and that header is not checked;
+existing manifests and their state identities remain compatible. Adding or changing
+an explicit header requires a new state file and cannot repair an existing immutable
+object with different headers.
+
+Bulk manifests contain immutable objects only. Consumers keep mutable catalogs,
+latest pointers, release manifests and signature publication in their existing
+ordered publisher, after this workflow succeeds. `publish_last` defers immutable
+completion markers until payload verification; markers can run concurrently and
+their order in the manifest does not define a mutable metadata transaction.
+
+## Skip and dry run
+
+`R2_BULK_SKIP` and `R2_BULK_DRY_RUN` accept only `true` or `false` and default to
+`false`. Set `R2_BULK_SKIP=true` for an already-decided consumer skip: every stage
+returns success with `phase: skipped` before validating destination, manifest or
+SDK configuration. It performs no provider operations and writes no state. Skip
+takes precedence over dry run. It does not create a verified receipt, and any
+pre-existing state file remains unchanged.
+
+Set `R2_BULK_DRY_RUN=true` to validate the manifest, local source paths and sizes,
+resource bounds and state identity without loading the SDK or using credentials.
+Each workflow stage records and reports `phase: dry-run` and
+`provider_operations: false`. It does not hash source bytes, inspect remote objects
+or claim transfer verification. It requires the same valid local inputs as
+preflight. The flag is excluded from plan identity, so the same state path can be
+used for a later real execution. A consumer must respect skip/dry-run mode when
+checking its metadata-publication gate; only a successful real workflow produces
+`phase: verified-head`. `R2_BULK_STATE` names a JSON file, not a directory.
 
 ## Resume and verification
 
@@ -96,8 +133,12 @@ than current independent content verification; the receipt label preserves that
 limitation. Unknown objects with no usable metadata or receipt require explicit
 reconciliation outside this workflow. No ordinary upload stage downloads objects.
 
-Each completed object is recorded using an atomic replace, file fsync and directory
-fsync. A nonblocking advisory lock prevents concurrent processes sharing state.
+Each completed object is recorded using atomic replace and file fsync. POSIX hosts
+also fsync the state directory and report `durability: file-and-directory-fsync`.
+Windows uses a one-byte nonblocking `msvcrt` advisory lock instead of `fcntl`, and
+reports `durability: file-fsync-and-atomic-replace`: directory-fsync crash durability
+is not claimed there. A nonblocking advisory lock prevents concurrent processes
+sharing state.
 An interruption preserves completed records; a completed PUT whose response was
 lost can be recovered by its current HEAD metadata. Managed multipart transfer
 retries are bounded and normally abort failed uploads. Hard termination can leave
@@ -120,17 +161,35 @@ bounded by workers and part size. These bounds do not claim a measured RSS ceili
 The workflow runs all three in order; a failed stage returns nonzero. The final
 `verified-head` summary reports object/byte totals and `full_get_performed: false`.
 
-## Offline checks
+## Offline qualification
 
-With the pinned SDK Python selected:
+The archive owns its complete test suite and `test.script` hook. Select a Python
+with the exact locked dependencies and invoke the hook explicitly:
 
 ```sh
-python -B -m unittest discover -s packages/cloud/storage/tests -p test_r2_bulk.py -v
+R2_BULK_PYTHON=/absolute/path/to/pinned-venv/bin/python bash /absolute/path/to/dockpipe.cloudflare.r2bulk/tests/run.sh
 ```
+
+The hook fails on absent or mismatched locked dependencies before running tests.
+It is safe to run from an extracted release archive with no repository or sibling
+source checkout. In the configured producer repository the pinned Dockpipe CLI
+also discovers the hook with `dockpipe package test --workdir /absolute/repository
+--only dockpipe.cloudflare.r2bulk`; verify that it reports one executed package,
+not a zero-count no-op. Package discovery requires the repository's configured
+compile roots. A release producer can execute the archive-owned hook directly
+to qualify the exported artifact.
+
+Catalog test discovery remains available through
+`python -B -m unittest discover -s packages/cloud/storage/tests -p test_r2_bulk.py -v`.
+That direct unittest route permits SDK skips for lightweight development; skips
+cannot qualify a release.
 
 The suite checks fake-remote missing/existing/mismatch, corrupted ETags, trusted
 receipts, interruption/resume, marker ordering, concurrency, local corruption,
 path safety, state binding and locking. Real pinned boto3 plus botocore Stubber
-also exercises single-part and multipart request shapes and checksum settings
-without network. SDK tests explicitly skip when that dependency is absent; a skip
-is not SDK qualification. No live provider or native macOS proof is implied.
+exercises single-part and multipart request shapes, optional HTTP metadata,
+checksum settings and provider errors without network. Skip and dry-run tests
+prove that no SDK client is created and no verified phase is claimed. No live
+provider, native macOS or native Windows proof is implied. Windows lock acquisition,
+contention, release and weaker durability labels have mocked branch coverage;
+actual Windows filesystem and interruption behavior still require native validation.

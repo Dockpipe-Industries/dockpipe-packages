@@ -1,0 +1,16 @@
+name: package-r2bulk-release
+description: Build, qualify and explicitly publish the isolated R2 bulk workflow release.
+docker_preflight: false
+steps:
+  - id: build
+    kind: host
+    cwd: repo
+    cmd: python3 workflows/package/package-r2bulk-release/assets/scripts/release.py build
+  - id: qualify
+    kind: host
+    cwd: repo
+    cmd: python3 workflows/package/package-r2bulk-release/assets/scripts/release.py qualify
+  - id: publish
+    kind: host
+    cwd: repo
+    cmd: python3 workflows/package/package-r2bulk-release/assets/scripts/release.py publish
