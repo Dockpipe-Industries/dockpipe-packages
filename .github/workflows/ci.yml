@@ -24,8 +24,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
         with:
           go-version: '1.26.10'
       - name: Install catalog test prerequisites
@@ -62,7 +62,7 @@ jobs:
       - uses: actions/setup-go@v7
         with:
           go-version: '1.26.10'
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.13'
       - name: Verify locked installation integrity
@@ -88,8 +88,8 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v6
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.13.7'
       - name: Install the existing exact YAML verifier wheel
@@ -109,8 +109,8 @@ jobs:
     outputs:
       bundle_sha256: ${{ steps.prepare.outputs.bundle_sha256 }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v6
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.13.7'
       - name: Install the owning pinned YAML verifier dependency
@@ -129,7 +129,7 @@ jobs:
           --request "$CATALOG_PROMOTION_REQUEST"
           --request-sha256 "$CATALOG_PROMOTION_REQUEST_SHA256"
           --bundle "$RUNNER_TEMP/catalog-bundle"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: catalog-plan-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/catalog-bundle
@@ -144,11 +144,11 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v6
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.13.7'
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: catalog-plan-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/catalog-bundle
@@ -164,7 +164,7 @@ jobs:
           --bundle "$RUNNER_TEMP/catalog-bundle"
           --bundle-sha256 '${{ needs.catalog-prepare.outputs.bundle_sha256 }}'
           --state "$RUNNER_TEMP/catalog-upload" --execute
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: catalog-upload-${{ github.run_id }}-${{ github.run_attempt }}
@@ -189,16 +189,16 @@ jobs:
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             /workflows/package/package-catalog-staging-promote/assets/scripts/*.py
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.13.7'
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: catalog-plan-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/catalog-bundle
@@ -222,7 +222,7 @@ jobs:
               "--platform", os.environ["CATALOG_NATIVE_PLATFORM"],
               "--state", str(temporary / "catalog-consumer"),
           ], check=True)
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: catalog-consumer-${{ matrix.platform }}-${{ github.run_id }}-${{ github.run_attempt }}
@@ -238,27 +238,27 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v6
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.13.7'
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: catalog-plan-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/catalog-bundle
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: catalog-upload-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/catalog-receipts/upload
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: catalog-consumer-linux-amd64-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/catalog-receipts/linux-amd64
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: catalog-consumer-windows-amd64-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/catalog-receipts/windows-amd64
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: catalog-consumer-darwin-arm64-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/catalog-receipts/darwin-arm64
@@ -275,7 +275,7 @@ jobs:
           --bundle-sha256 '${{ needs.catalog-prepare.outputs.bundle_sha256 }}'
           --receipts "$RUNNER_TEMP/catalog-receipts"
           --state "$RUNNER_TEMP/catalog-promotion" --execute
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: catalog-promotion-result-${{ github.run_id }}-${{ github.run_attempt }}
