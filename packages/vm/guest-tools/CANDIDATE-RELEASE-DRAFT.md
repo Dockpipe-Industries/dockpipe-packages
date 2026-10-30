@@ -209,11 +209,21 @@ Python 3.13.7 is selected explicitly. The setup-python action is pinned to offic
 core's reviewed candidate lane pins.
 
 The workflow acquires Dockpipe through the owning `dockpipe.lock.json` and
-`tooling/bootstrap_dockpipe.py`. That lock still selects 0.6.25 staging in the
-base source. The candidate lane must adopt the reviewed public CLI with the
-native environment fix at numeric base 0.6.26 or newer before it can be declared qualified. The guard rejects the historical 0.6.0/0.6.25 CLI candidate bases as well as the old stable pin; adding a candidate suffix cannot establish feature compatibility. No task-local CLI,
-sibling source build, placeholder checksum or handwritten success receipt is
-accepted as a release dependency.
+`tooling/bootstrap_dockpipe.py`. The guard accepts CLI candidates with numeric
+base 0.6.26 or newer and their exact full-source candidate identities. It also
+accepts the reviewed version 0.6.33 release
+`v0.6.33-staging.40247668385.1.b107ea64782c`, mapped explicitly to source
+`b107ea64782c5a153440fb786791f1500a55416e`. That source contains the native
+Windows environment repair `f01897a4ce7eb8cf6d6d4141490264555a0844ef` and
+allocation fix `0684173fb7b304fed1d8d5d884aef921784cd90d`. Other staging
+release identities require review; numeric version alone does not admit them.
+The exact official Windows archive URL, checksum and bounded sizes remain
+required. The shared bootstrap verifies actual downloaded bytes and the native
+CLI version before building. Guard acceptance does not replace the hosted
+native build and qualification. Historical 0.6.0/0.6.25 candidate bases and the
+old stable pin remain rejected. No task-local CLI, sibling source build,
+placeholder checksum or handwritten success receipt is accepted as a release
+dependency.
 
 The five-input native provenance schema and six-asset release wire are complete,
 but installing this draft into source, running a fresh hosted build, verifying

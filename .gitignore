@@ -15,3 +15,6 @@
 *.tfstate
 *.tfstate.*
 **/.terraform/
+
+# Checksum-pinned external workflow dependencies
+/.toolchains/

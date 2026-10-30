@@ -14,6 +14,14 @@ import urllib.request
 import build_candidate
 
 
+# This reviewed source includes the native Windows environment repair f01897a4c
+# and allocation fix 0684173fb. Other staging releases need their own review.
+REVIEWED_STAGING_CLI_SOURCES = {
+    ('0.6.33', 'v0.6.33-staging.40247668385.1.b107ea64782c'):
+        'b107ea64782c5a153440fb786791f1500a55416e',
+}
+
+
 def download(entry, destination):
     if (not entry['url'].startswith('https://download.qt.io/online/qtsdkrepository/')
             or type(entry['size_bytes']) is not int or not 0 < entry['size_bytes'] <= 256 << 20
@@ -40,10 +48,18 @@ def require_public_cli_candidate(source):
     version = config.get('dockpipe_version')
     release = pin.get('release', '')
     match = re.fullmatch(r'cli-candidate-((?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*))-staging\.([0-9a-f]{40})', release)
-    if (lock.get('schema') != 1 or not match
-            or tuple(map(int, match[1].split('.'))) < (0, 6, 26)
-            or version != match[1] + '-staging.cli.sha' + match[2][:12]
-            or pin.get('version') != version):
+    candidate_matches = (
+        match is not None
+        and tuple(map(int, match[1].split('.'))) >= (0, 6, 26)
+        and version == match[1] + '-staging.cli.sha' + match[2][:12]
+    )
+    reviewed_source = REVIEWED_STAGING_CLI_SOURCES.get((version, release))
+    staging_matches = (
+        reviewed_source is not None
+        and release.endswith('.' + reviewed_source[:12])
+    )
+    if (lock.get('schema') != 1 or pin.get('version') != version
+            or not (candidate_matches or staging_matches)):
         raise ValueError('A verified public native-environment-repaired CLI candidate pin is required before tool acquisition')
     entry = pin.get('artifacts', {}).get('windows/amd64', {})
     expected_url = ('https://github.com/Dockpipe-Industries/dockpipe/releases/download/' + release
