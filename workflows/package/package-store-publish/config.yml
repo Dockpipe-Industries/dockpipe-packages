@@ -2,7 +2,7 @@ name: package-store-publish
 title: Publish a package store
 catalog_type: workflow
 categories: [publishing]
-description: Build release artifacts and upload them to your configured package store. Starts in dry-run mode and requires publishing credentials.
+description: Build package artifacts, verify immutable payloads with the release-locked bulk workflow, then publish ordered metadata. Starts in dry-run mode.
 platforms: [windows, deb, macos]
 vault: environment
 
@@ -20,9 +20,15 @@ dependencies:
       install:
         windows: winget install GoLang.Go
         deb: sudo apt-get update && sudo apt-get install -y golang-go
+    - id: python3
+      command: python3
+      description: Required for release bootstrap, publication plans and the bulk SDK runtime.
+      install:
+        windows: winget install Python.Python.3.12
+        deb: sudo apt-get update && sudo apt-get install -y python3 python3-venv
     - id: aws
       command: aws
-      description: Required for dockpipe release upload (AWS CLI v2 S3-compatible upload).
+      description: Required for ordered metadata publication (AWS CLI v2 S3-compatible upload).
       install:
         windows: winget install Amazon.AWSCLI
         deb: sudo apt-get update && sudo apt-get install -y awscli
@@ -60,11 +66,34 @@ steps:
     run:
       - assets/scripts/build-release-artifacts.sh
 
-  - id: upload-release-artifacts
+  - id: bootstrap-bulk-publication
+    kind: host
+    cwd: repo
+    outputs: bootstrap.env
+    scopes:
+      source: repo
+      artifacts: artifacts
+    cmd: python3 workflows/package/package-store-publish/assets/scripts/bootstrap.py
+
+  - id: prepare-bulk-publication
+    kind: host
+    cwd: repo
+    outputs: bulk-publication.env
+    scopes:
+      source: repo
+      artifacts: artifacts
+    run:
+      - assets/scripts/prepare-bulk-publication.sh
+
+  - id: immutable-payloads
+    workflow: dockpipe.cloudflare.r2bulk
+    package: dockpipe-cloudflare
+
+  - id: publish-store-metadata
     kind: host
     cwd: repo
     scopes:
       source: repo
       artifacts: artifacts
     run:
-      - assets/scripts/upload-release-artifacts.sh
+      - assets/scripts/publish-store-metadata.sh
