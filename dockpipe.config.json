@@ -7,7 +7,13 @@
     ]
   },
   "packages": {
-    "namespace": "dockpipeproject"
+    "namespace": "dockpipeproject",
+    "sources": [
+      {
+        "kind": "store",
+        "path": ".toolchains/r2bulk/packages"
+      }
+    ]
   },
   "secrets": {
     "vault": "op",
@@ -57,5 +63,5 @@
       }
     }
   },
-  "dockpipe_version": "0.6.29-staging.cli.sha324a2f2fd49e"
+  "dockpipe_version": "0.6.33"
 }
