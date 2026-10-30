@@ -1,0 +1,7 @@
+schema: 1
+kind: workflow
+name: dockpipe.cloudflare.r2bulk
+version: 0.1.0
+namespace: dockpipe-cloudflare
+license: Apache-2.0
+platforms: [deb, macos]

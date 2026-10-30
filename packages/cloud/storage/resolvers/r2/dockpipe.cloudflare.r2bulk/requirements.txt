@@ -1,0 +1,2 @@
+# Explicit runtime dependency. Install into the selected Python 3.11+ environment.
+boto3==1.40.6
