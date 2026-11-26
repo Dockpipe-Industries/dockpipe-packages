@@ -17,6 +17,7 @@ from catalog_public import PublicReader
 from catalog_s3 import S3Provider, file_digest
 from catalog_tools import owning_acquirer, extract_cli, prepare_aws
 from catalog_transaction import CatalogTransaction, PublicationStopped
+from catalog_viewer import admit_viewer, download_viewer
 
 
 def request_file(path, expected):
@@ -25,9 +26,11 @@ def request_file(path, expected):
     if digest != expected:
         raise PublicationStopped('Request differs from exact reviewed source bytes')
     document = json.loads(path.read_bytes())
-    if set(document) != {'schema', 'promotion', 'candidate', 'baseline_manifests',
-                         'baseline_pointer', 'cli', 'destination', 'aws_cli_archive',
-                         'named_workflow_qualification', 'runtime'} or document['schema'] != 1:
+    required = {'schema', 'promotion', 'candidate', 'baseline_manifests',
+                'baseline_pointer', 'cli', 'destination', 'aws_cli_archive',
+                'named_workflow_qualification', 'runtime'}
+    if (not required.issubset(document) or set(document) - required - {'viewer_candidate'}
+            or document['schema'] != 1):
         raise PublicationStopped('Promotion request has missing or unknown fields')
     return document
 
@@ -217,7 +220,12 @@ def prepare_stage(arguments):
                 raise PublicationStopped('Public native descriptor and actual release asset differ')
             if name.startswith('toolchain-receipt-'):
                 acquire(published, root / 'metadata-cache')
-    plan = prepare(request, root / 'inputs', acquire, reader)
+    viewer = request.get('viewer_candidate')
+    def acquire_viewer(output):
+        return download_viewer(viewer, api, source_root, output)
+
+    plan = prepare(request, root / 'inputs', acquire, reader,
+                   acquire_viewer=acquire_viewer if viewer is not None else None)
     for field, path in [('source_lock', 'release/native-store.lock.json'),
                         ('source_dependencies', 'release/dependencies.lock.json')]:
         pin = request['candidate'][field]
@@ -344,6 +352,9 @@ def main(argv=None):
         raise PublicationStopped('Explicit staging credential references are unresolved')
     api = GitHubReadOnly()
     candidate_before = admit_candidate(request['candidate'], api)
+    viewer = request.get('viewer_candidate')
+    if viewer is not None:
+        admit_viewer(viewer, api)
     executable, digest = prepare_aws(request['aws_cli_archive'], state / 'official-aws')
     temporary = state / 'temporary'
     temporary.mkdir(mode=0o700)
@@ -357,6 +368,8 @@ def main(argv=None):
     def consumers(current_plan):
         if admit_candidate(request['candidate'], api) != candidate_before:
             raise PublicationStopped('Product candidate changed before pointer commit')
+        if viewer is not None:
+            admit_viewer(viewer, api)
         from catalog_runtime_gate import admit_runtime
         acquire = owning_acquirer()
         source_lock = json.loads(acquire(request['candidate']['source_lock'], state / 'source-cache').read_bytes())
