@@ -3,10 +3,10 @@
   "platform": "windows-amd64",
   "compiler": {
     "id": "MSVC",
-    "version": "19.51.36260.0",
+    "version": "19.52.37029.0",
     "os_id": "windows",
     "os_version": "2025",
-    "acquisition_sha256": "e02640c0b61524f3c9d7db87ebd4d87dbf485ef0cd06c1688e10deebb684d593",
+    "acquisition_sha256": "f82505e3088c0769fe57aee41a9d7204a60db33019427b925134a8de595552be",
     "acquisition_mode": "hosted-exact"
   },
   "inputs": [

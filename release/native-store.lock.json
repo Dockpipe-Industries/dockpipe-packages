@@ -37,7 +37,7 @@
   ],
   "profiles": {
     "linux-amd64": {
-      "cli_version": "0.6.29-staging.cli.sha324a2f2fd49e",
+      "cli_version": "0.6.41-staging.cli.shaccc656b5a5eb",
       "guest_source_commit": "13ffe8ad8c59f1c8aa6ba75e2b229d9c26a34681",
       "inputs": {
         "source": {
@@ -48,9 +48,9 @@
           "root": null
         },
         "cli": {
-          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/cli-candidate-0.6.29-staging.324a2f2fd49ea6d58b31e8d5105489f63eccb635/dockpipe_0.6.29-staging.cli.sha324a2f2fd49e_linux_amd64.tar.gz",
-          "sha256": "96b068ad535fb6f977eb284768e38579f966cfb2aa9117230521a09b64b03190",
-          "size_bytes": 5251146,
+          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/cli-candidate-0.6.41-staging.ccc656b5a5ebedfdbb68596c11aa091ea8ff4a6d/dockpipe_0.6.41-staging.cli.shaccc656b5a5eb_linux_amd64.tar.gz",
+          "sha256": "61cb54f60fbf08ee3142df946d18d70beadd94dd024a34cf849b2bc7c5ec0bb6",
+          "size_bytes": 6912045,
           "format": "tar.gz",
           "root": ""
         },
@@ -384,7 +384,7 @@
             "id": "libpcre2-8-0-amd64",
             "destination": "gio",
             "asset": {
-              "url": "https://archive.ubuntu.com/ubuntu/pool/main/p/pcre2/libpcre2-8-0_10.39-3ubuntu0.1_amd64.deb",
+              "url": "https://snapshot.ubuntu.com/ubuntu/20261030T000000Z/pool/main/p/pcre2/libpcre2-8-0_10.39-3ubuntu0.1_amd64.deb",
               "sha256": "01a5a74f3d305cad32fffffdc200c2a92fd8e5a01bff97de76ac598fb444d53e",
               "size_bytes": 220512,
               "format": "deb",
@@ -957,7 +957,7 @@
             "package": "libpcre2-16-0:amd64",
             "version": "10.39-3ubuntu0.1",
             "asset": {
-              "url": "https://archive.ubuntu.com/ubuntu/pool/main/p/pcre2/libpcre2-16-0_10.39-3ubuntu0.1_amd64.deb",
+              "url": "https://snapshot.ubuntu.com/ubuntu/20261030T000000Z/pool/main/p/pcre2/libpcre2-16-0_10.39-3ubuntu0.1_amd64.deb",
               "sha256": "d4b3cd60636e869a0ca23d912d59df914779806cef7f52c0469fcd074c149d87",
               "size_bytes": 203294,
               "format": "deb",
@@ -970,7 +970,7 @@
             "package": "libpcre2-32-0:amd64",
             "version": "10.39-3ubuntu0.1",
             "asset": {
-              "url": "https://archive.ubuntu.com/ubuntu/pool/main/p/pcre2/libpcre2-32-0_10.39-3ubuntu0.1_amd64.deb",
+              "url": "https://snapshot.ubuntu.com/ubuntu/20261030T000000Z/pool/main/p/pcre2/libpcre2-32-0_10.39-3ubuntu0.1_amd64.deb",
               "sha256": "a46b16422d8124779cb45b69e1cf7a733de1a4aa892ded9b13efd115d684f528",
               "size_bytes": 193782,
               "format": "deb",
@@ -983,7 +983,7 @@
             "package": "libpcre2-dev:amd64",
             "version": "10.39-3ubuntu0.1",
             "asset": {
-              "url": "https://archive.ubuntu.com/ubuntu/pool/main/p/pcre2/libpcre2-dev_10.39-3ubuntu0.1_amd64.deb",
+              "url": "https://snapshot.ubuntu.com/ubuntu/20261030T000000Z/pool/main/p/pcre2/libpcre2-dev_10.39-3ubuntu0.1_amd64.deb",
               "sha256": "e87721e31a285bb60f6a502ad380a329e060702a8518864b77a49298d41e9818",
               "size_bytes": 730282,
               "format": "deb",
@@ -996,7 +996,7 @@
             "package": "libpcre2-posix3:amd64",
             "version": "10.39-3ubuntu0.1",
             "asset": {
-              "url": "https://archive.ubuntu.com/ubuntu/pool/main/p/pcre2/libpcre2-posix3_10.39-3ubuntu0.1_amd64.deb",
+              "url": "https://snapshot.ubuntu.com/ubuntu/20261030T000000Z/pool/main/p/pcre2/libpcre2-posix3_10.39-3ubuntu0.1_amd64.deb",
               "sha256": "03e09e2e2b2e9861f4f68e40d46d08c5da87a8d185443fec6445a0479b942828",
               "size_bytes": 6130,
               "format": "deb",
@@ -1791,7 +1791,7 @@
       }
     },
     "windows-amd64": {
-      "cli_version": "0.6.29-staging.cli.sha324a2f2fd49e",
+      "cli_version": "0.6.41-staging.cli.shaccc656b5a5eb",
       "guest_source_commit": "13ffe8ad8c59f1c8aa6ba75e2b229d9c26a34681",
       "inputs": {
         "source": {
@@ -1802,16 +1802,16 @@
           "root": null
         },
         "cli": {
-          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/cli-candidate-0.6.29-staging.324a2f2fd49ea6d58b31e8d5105489f63eccb635/dockpipe_0.6.29-staging.cli.sha324a2f2fd49e_windows_amd64.zip",
-          "sha256": "0adc1609e57f161277863303dde56839b4a60dc085af87864daf5243fd6e29a0",
-          "size_bytes": 5206205,
+          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/cli-candidate-0.6.41-staging.ccc656b5a5ebedfdbb68596c11aa091ea8ff4a6d/dockpipe_0.6.41-staging.cli.shaccc656b5a5eb_windows_amd64.zip",
+          "sha256": "5064eee277fe496a40d1ab2dcdf820f3f982ae59123e61b53ebe5f7525764a1b",
+          "size_bytes": 6734019,
           "format": "zip",
           "root": ""
         },
         "display_sdk": {
-          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/display-sdk-1.0.0-windows-amd64-staging.79bb110c712e0d71d8bcde4cecff725f3c107a49/DockPipeDisplaySDK-1.0.0-windows-amd64.tar.gz",
-          "sha256": "1bfff278ac8a9abc448c7a097b7711fb0f4964fbd42604b950e72b4875c5c597",
-          "size_bytes": 8590,
+          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/display-sdk-1.0.0-windows-amd64-staging.5f127e3732d7c367fcff891aa7aa9bc6b3e2fb3b/DockPipeDisplaySDK-1.0.0-windows-amd64.tar.gz",
+          "sha256": "a58fa0a10766ca713bcfa44b0c9bc68df4bce00c0a15bf686e766cf965204a26",
+          "size_bytes": 8609,
           "format": "tar.gz",
           "root": "DockPipeDisplaySDK-1.0.0-windows-amd64"
         },
@@ -1923,10 +1923,10 @@
         "platform": "windows-amd64",
         "compiler": {
           "id": "MSVC",
-          "version": "19.51.36260.0",
+          "version": "19.52.37029.0",
           "os_id": "windows",
           "os_version": "2025",
-          "acquisition_sha256": "e02640c0b61524f3c9d7db87ebd4d87dbf485ef0cd06c1688e10deebb684d593",
+          "acquisition_sha256": "f82505e3088c0769fe57aee41a9d7204a60db33019427b925134a8de595552be",
           "acquisition_mode": "hosted-exact"
         },
         "archives": [
@@ -2760,7 +2760,7 @@
       },
       "toolchain_recipe": {
         "path": "release/native-toolchain/windows-amd64.json",
-        "sha256": "3d4da1af344444205d5dfbc08ada820221d348b7540945a713e4826907134e2f"
+        "sha256": "03087b6c9c28f6dbb865fa6a7de58cad477ebc6ba4f02bd721a9fce1f11b844f"
       },
       "compatibility_overlay": {
         "source_commit": "30859228a77ba20a23a4b69ab81aae133d6ccfe9",
@@ -2788,7 +2788,7 @@
       }
     },
     "darwin-arm64": {
-      "cli_version": "0.6.29-staging.cli.sha324a2f2fd49e",
+      "cli_version": "0.6.41-staging.cli.shaccc656b5a5eb",
       "guest_source_commit": "13ffe8ad8c59f1c8aa6ba75e2b229d9c26a34681",
       "inputs": {
         "source": {
@@ -2799,9 +2799,9 @@
           "root": null
         },
         "cli": {
-          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/cli-candidate-0.6.29-staging.324a2f2fd49ea6d58b31e8d5105489f63eccb635/dockpipe_0.6.29-staging.cli.sha324a2f2fd49e_darwin_arm64.tar.gz",
-          "sha256": "907e9e92d549cc06bf65a1d0068b1aaea7ebd94a5422ea12798e89353f8fe89c",
-          "size_bytes": 4860890,
+          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/cli-candidate-0.6.41-staging.ccc656b5a5ebedfdbb68596c11aa091ea8ff4a6d/dockpipe_0.6.41-staging.cli.shaccc656b5a5eb_darwin_arm64.tar.gz",
+          "sha256": "db5f8a6e4ccd870b1bb60f70bac0c1e27c843729d46a8ff1c021f89ff1cefb1b",
+          "size_bytes": 6394939,
           "format": "tar.gz",
           "root": ""
         },

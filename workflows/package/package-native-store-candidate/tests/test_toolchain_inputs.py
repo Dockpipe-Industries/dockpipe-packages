@@ -44,7 +44,7 @@ class ToolchainInputsTest(unittest.TestCase):
         for target, profile in self.profiles.items():
             toolchain_inputs.validate_profile(profile, target)
         self.assertEqual(len(self.profiles['linux-amd64']['compiler_inputs']), 18)
-        self.assertEqual(self.profiles['windows-amd64']['compiler']['version'], '19.51.36260.0')
+        self.assertEqual(self.profiles['windows-amd64']['compiler']['version'], '19.52.37029.0')
 
     def test_toolchain_recipe_and_direct_input_are_mutually_exclusive(self):
         lock = self.fixture.lock()

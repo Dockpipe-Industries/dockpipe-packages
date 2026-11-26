@@ -59,8 +59,15 @@ def validate_asset(asset):
     if not isinstance(asset['url'], str):
         raise ValueError('Official input URL must be a string')
     url = urllib.parse.urlsplit(asset['url'])
-    if (url.scheme != 'https' or url.netloc not in PREFIXES or url.query or url.fragment
-            or not url.path.startswith(PREFIXES[url.netloc])
+    if url.netloc == 'snapshot.ubuntu.com':
+        admitted_path = asset['format'] == 'deb' and re.fullmatch(
+            r'/ubuntu/[0-9]{8}T[0-9]{6}Z/pool/[a-z]+/[a-z0-9+.-]+/[a-z0-9+.-]+/[a-zA-Z0-9+._~%-]+\.deb',
+            url.path)
+    else:
+        prefix = PREFIXES.get(url.netloc)
+        admitted_path = prefix is not None and url.path.startswith(prefix)
+
+    if (url.scheme != 'https' or url.query or url.fragment or not admitted_path
             or '..' in urllib.parse.unquote(url.path).split('/')):
         raise ValueError('Native archive must use its exact official upstream URL')
     if (not isinstance(asset['sha256'], str) or not re.fullmatch('[0-9a-f]{64}', asset['sha256'])
@@ -85,7 +92,7 @@ def validate(recipe, target):
             or type(recipe['schema']) is not int or recipe['schema'] != 1 or recipe['platform'] != target):
         raise ValueError('Unsupported native multiarchive recipe')
     expected = ({'id': 'GNU', 'version': '11.4.0', 'os_id': 'ubuntu', 'os_version': '22.04'}
-                if target == 'linux-amd64' else {'id': 'MSVC', 'version': '19.51.36260.0', 'os_id': 'windows', 'os_version': '2025', 'acquisition_mode': 'hosted-exact'})
+                if target == 'linux-amd64' else {'id': 'MSVC', 'version': '19.52.37029.0', 'os_id': 'windows', 'os_version': '2025', 'acquisition_mode': 'hosted-exact'})
     compiler = dict(recipe['compiler']) if isinstance(recipe['compiler'], dict) else {}
     if target == 'windows-amd64':
         acquisition = compiler.pop('acquisition_sha256', '')
@@ -474,7 +481,7 @@ def compiler_environment(recipe, toolchain, environment):
                 or not isinstance(receipt['tools'], dict) or set(receipt['tools']) != {'cl', 'dumpbin', 'lib', 'link'}
                 or not isinstance(receipt['sdk_tools'], dict) or set(receipt['sdk_tools']) != {'rc', 'mt'}):
             raise ValueError('Native MSVC preparation differs from its source-bound hosted ABI')
-        acquisition = Path(__file__).resolve().parents[5] / 'release/native-compiler/windows-hosted-19.51.json'
+        acquisition = Path(__file__).resolve().parents[5] / 'release/native-compiler/windows-hosted-19.52.json'
         if digest(acquisition) != expected['acquisition_sha256']:
             raise ValueError('Hosted compiler descriptor differs from its source-bound digest')
         acquisition_descriptor = json.loads(acquisition.read_bytes(), object_pairs_hook=unique_fields)
@@ -528,7 +535,7 @@ def compiler_environment(recipe, toolchain, environment):
         result['PATH'] = os.pathsep.join((str(compiler.parent), str(sdk_bin), result['PATH']))
         result_process = subprocess.run([str(compiler), '/Bv'], capture_output=True, text=True, timeout=15)
         if not re.search(r'Compiler Version ' + re.escape(expected['version'].removesuffix('.0')) + r'\b', result_process.stdout + result_process.stderr):
-            raise ValueError('Native recipe compiler differs from qualified MSVC19.51')
+            raise ValueError('Native recipe compiler differs from qualified MSVC19.52')
         if not result.get('INCLUDE') or not result.get('LIB'):
             raise ValueError('Explicit approved MSVC environment is required; no compiler installer fallback')
         result.update(CC=str(compiler), CXX=str(compiler), CMAKE_GENERATOR='Ninja',

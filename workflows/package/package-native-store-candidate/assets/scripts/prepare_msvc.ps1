@@ -87,20 +87,20 @@ if (-not [IO.Path]::IsPathRooted($WorkDirectory) -or (Test-Path -LiteralPath $Wo
     throw 'Use a fresh explicit hosted compiler receipt workspace.'
 }
 $source = [IO.Path]::GetFullPath($env:GITHUB_WORKSPACE)
-$expectedFile = Join-Path $source 'release/native-compiler/windows-hosted-19.51.json'
+$expectedFile = Join-Path $source 'release/native-compiler/windows-hosted-19.52.json'
 if ([IO.Path]::GetFullPath($AcquisitionFile) -ne [IO.Path]::GetFullPath($expectedFile)) {
     throw 'Select the source-bound hosted compiler descriptor.'
 }
 $descriptor = Get-Content -Raw -LiteralPath $AcquisitionFile | ConvertFrom-Json
 if ($descriptor.schema -ne 1 -or $descriptor.acquisition_mode -ne 'hosted-exact' -or
     $descriptor.runner_label -ne 'windows-2025-vs2026' -or
-    $descriptor.toolset_version -ne '14.51.36231' -or
-    $descriptor.compiler_version -ne '19.51.36260.0' -or
+    $descriptor.toolset_version -ne '14.52.37025' -or
+    $descriptor.compiler_version -ne '19.52.37029.0' -or
     $descriptor.windows_sdk_version -ne '10.0.26100.0') {
     throw 'Unsupported exact hosted Microsoft compiler profile.'
 }
 $installation = Join-Path $env:ProgramFiles 'Microsoft Visual Studio/18/Enterprise'
-$toolset = Join-Path $installation 'VC/Tools/MSVC/14.51.36231'
+$toolset = Join-Path $installation 'VC/Tools/MSVC/14.52.37025'
 $directory = Join-Path $toolset 'bin/Hostx64/x64'
 $compiler = Join-Path $directory 'cl.exe'
 $compilerHash = Assert-MicrosoftBinary $compiler $installation $descriptor.compiler_payload.compiler_sha256 $descriptor.compiler_version
@@ -126,7 +126,7 @@ foreach ($name in $previousCompilerVariables) {
     [Environment]::SetEnvironmentVariable($name, $null, 'Process')
 }
 $vcvars = (Get-ContainedFile (Join-Path $installation 'VC/Auxiliary/Build/vcvars64.bat') $installation).FullName
-$environment = & $env:ComSpec /d /c ('call "' + $vcvars + '" 10.0.26100.0 -vcvars_ver=14.51.36231 >nul && set')
+$environment = & $env:ComSpec /d /c ('call "' + $vcvars + '" 10.0.26100.0 -vcvars_ver=14.52.37025 >nul && set')
 if ($LASTEXITCODE -ne 0) {
     throw 'Exact hosted MSVC environment initialization failed.'
 }
@@ -142,7 +142,7 @@ foreach ($line in $environment) {
 }
 $sdk = Join-Path ${env:ProgramFiles(x86)} 'Windows Kits/10'
 if ([IO.Path]::GetFullPath($env:VCToolsInstallDir).TrimEnd('\', '/') -ne [IO.Path]::GetFullPath($toolset) -or
-    $env:VCToolsVersion.TrimEnd('\', '/') -ne '14.51.36231' -or
+    $env:VCToolsVersion.TrimEnd('\', '/') -ne '14.52.37025' -or
     [IO.Path]::GetFullPath($env:WindowsSdkDir).TrimEnd('\', '/') -ne [IO.Path]::GetFullPath($sdk) -or
     $env:WindowsSDKVersion.TrimEnd('\', '/') -ne '10.0.26100.0' -or
     [IO.Path]::GetFullPath($env:VCToolsRedistDir).TrimEnd('\', '/') -ne
@@ -184,7 +184,7 @@ if (-not $observation.WaitForExit(15000)) {
 }
 $observed = $stdout.GetAwaiter().GetResult() + $stderr.GetAwaiter().GetResult()
 $observation.Dispose()
-if ($observed.Length -gt 65536 -or $observed -notmatch 'Compiler Version 19\.51\.36260\b') {
+if ($observed.Length -gt 65536 -or $observed -notmatch 'Compiler Version 19\.52\.37029\b') {
     throw 'Hosted compiler execution differs from the exact admitted ABI.'
 }
 New-Item -ItemType Directory -Path $WorkDirectory | Out-Null
@@ -199,7 +199,7 @@ $receiptData = @{
     schema = 1
     acquisition_mode = 'hosted-exact'
     compiler_id = 'MSVC'
-    compiler_version = '19.51.36260.0'
+    compiler_version = '19.52.37029.0'
     windows_sdk_version = '10.0.26100.0'
     acquisition_sha256 = (Get-FileHash -LiteralPath $AcquisitionFile -Algorithm SHA256).Hash.ToLowerInvariant()
     installation = $installation
