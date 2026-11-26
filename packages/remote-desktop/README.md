@@ -317,8 +317,12 @@ Ubuntu 22.04 using the pinned standalone Dockpipe CLI, public DisplaySDK,
 Qt Multimedia kit, and the package's media input lock. It runs the native X11
 fixtures under Xvfb and exports a one-resolver store with its producer receipt
 and dependency inventory. The viewer workflow runs independently of VM catalog
-qualification. The resulting artifact is a candidate for the protected staging
-catalog promotion and carries the producer's distribution status.
+qualification. The protected catalog promotion accepts a `viewer_candidate`
+from a successful owning dev run with exact artifact, package and manifest pins.
+A source-bound distribution review must approve those same bytes. The catalog
+request promotes `resolver/dockpipe.desktop.native` only in its `linux-amd64`
+policy. The existing native consumer installs the viewer before the staging
+Marketplace pointer changes.
 
 ## Distribution and license qualification
 

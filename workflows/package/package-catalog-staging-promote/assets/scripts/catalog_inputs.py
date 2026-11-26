@@ -6,7 +6,7 @@ import tarfile
 import urllib.parse
 
 from catalog_declarations import read_declarations, dependency_closure
-from catalog_plan import build_plan, entries, relative_path
+from catalog_plan import VIEWER_IDENTITY, VIEWER_PLATFORM, build_plan, entries, relative_path
 from catalog_s3 import file_digest
 from catalog_transaction import PublicationStopped
 
@@ -66,7 +66,7 @@ def unpack_native(archive_path, destination, pin):
     return manifest
 
 
-def prepare(request, output, native_acquire, reader):
+def prepare(request, output, native_acquire, reader, acquire_viewer=None):
     """native_acquire is the existing owning exact-public-input acquisition helper."""
     output = Path(output)
     if not output.is_absolute() or output.exists():
@@ -84,12 +84,19 @@ def prepare(request, output, native_acquire, reader):
     for platform, pin in request['candidate']['artifacts'].items():
         path = native_acquire(pin, cache)
         candidates[platform] = unpack_native(path, output / ('native-' + platform), pin)
+    viewer = acquire_viewer(output / 'viewer') if acquire_viewer is not None else None
     metadata = {}
     closures = {}
     for platform, policy in request['promotion']['policy'].items():
         available = entries(baselines[platform])
         native = entries(candidates[platform]) if platform in candidates else {}
-        selected = {key: value for key, value in available.items() if key not in request['promotion']['owned']}
+        if viewer is not None and platform == VIEWER_PLATFORM:
+            if VIEWER_IDENTITY in native:
+                raise PublicationStopped('Viewer ownership overlaps the native VM candidate')
+            native[VIEWER_IDENTITY] = viewer
+        if any(decision['action'] == 'promote' and key not in native for key, decision in policy.items()):
+            raise PublicationStopped('Selected package has no admitted platform candidate')
+        selected = {key: value for key, value in available.items() if key not in policy}
         for key, decision in policy.items():
             if decision['action'] == 'promote':
                 selected[key] = native[key]
@@ -108,7 +115,8 @@ def prepare(request, output, native_acquire, reader):
             if entry is None:
                 raise PublicationStopped('Selected dependency is absent from exact platform catalog')
             if key in policy and policy[key]['action'] == 'promote':
-                archive = output / ('native-' + platform) / entry['tarball']
+                directory = 'viewer' if key == VIEWER_IDENTITY and viewer is not None else 'native-' + platform
+                archive = output / directory / entry['tarball']
             else:
                 parent_url = request['baseline_manifests'][platform]['url']
                 pin = {**entry, 'url': urllib.parse.urljoin(parent_url, entry['tarball'])}
@@ -129,7 +137,7 @@ def prepare(request, output, native_acquire, reader):
                 pending.append(matches[0])
         closures[platform] = {key: dependency_closure(key, selected, metadata[platform])
                               for key, decision in policy.items() if decision['action'] == 'promote'}
-    plan = build_plan(request['promotion'], baselines, candidates, metadata)
+    plan = build_plan(request['promotion'], baselines, candidates, metadata, viewer=viewer)
     plan['dependency_closures'] = closures
     plan['input_manifests'] = {platform: json.loads(item['bytes']) for platform in baselines
                                for item in plan['objects'] if item['role'] == 'store-manifest'
