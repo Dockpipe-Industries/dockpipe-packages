@@ -59,8 +59,15 @@ def validate_asset(asset):
     if not isinstance(asset['url'], str):
         raise ValueError('Official input URL must be a string')
     url = urllib.parse.urlsplit(asset['url'])
-    if (url.scheme != 'https' or url.netloc not in PREFIXES or url.query or url.fragment
-            or not url.path.startswith(PREFIXES[url.netloc])
+    if url.netloc == 'snapshot.ubuntu.com':
+        admitted_path = asset['format'] == 'deb' and re.fullmatch(
+            r'/ubuntu/[0-9]{8}T[0-9]{6}Z/pool/[a-z]+/[a-z0-9+.-]+/[a-z0-9+.-]+/[a-zA-Z0-9+._~%-]+\.deb',
+            url.path)
+    else:
+        prefix = PREFIXES.get(url.netloc)
+        admitted_path = prefix is not None and url.path.startswith(prefix)
+
+    if (url.scheme != 'https' or url.query or url.fragment or not admitted_path
             or '..' in urllib.parse.unquote(url.path).split('/')):
         raise ValueError('Native archive must use its exact official upstream URL')
     if (not isinstance(asset['sha256'], str) or not re.fullmatch('[0-9a-f]{64}', asset['sha256'])

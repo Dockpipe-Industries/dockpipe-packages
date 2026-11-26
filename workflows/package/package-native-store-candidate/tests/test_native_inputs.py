@@ -31,6 +31,20 @@ class NativeInputsTest(unittest.TestCase):
         self.assertEqual(len(self.recipes['linux-amd64']['archives']), 61)
         self.assertEqual(len(self.recipes['windows-amd64']['archives']), 30)
 
+    def test_ubuntu_snapshot_requires_dated_official_deb_path(self):
+        recipe = self.recipes['linux-amd64']
+        asset = next(entry['asset'] for entry in recipe['archives']
+                     if entry['id'] == 'libpcre2-8-0-amd64')
+        native_inputs.validate_asset(asset)
+        for url in (
+            asset['url'].replace('/20261030T000000Z/', '/latest/'),
+            asset['url'].replace('snapshot.ubuntu.com', 'snapshot.example.com'),
+            asset['url'].replace('/pool/', '/pool/../pool/'),
+            asset['url'].replace('.deb', '.tar.xz'),
+        ):
+            with self.subTest(url=url), self.assertRaisesRegex(ValueError, 'official upstream URL'):
+                native_inputs.validate_asset({**asset, 'url': url})
+
     def test_linux_qt_opengl_build_inputs_are_exact_and_owned(self):
         recipe = self.recipes['linux-amd64']
         packages = {entry['package']: entry for entry in recipe['archives']}
@@ -97,7 +111,7 @@ class NativeInputsTest(unittest.TestCase):
                 entry = archives[package]
                 self.assertEqual(entry['destination'], 'gio')
                 self.assertTrue(entry['asset']['url'].startswith(
-                    'https://archive.ubuntu.com/ubuntu/pool/'))
+                    'https://snapshot.ubuntu.com/ubuntu/20261030T000000Z/pool/main/p/pcre2/'))
                 libraries = [record for record in recipe['libraries']
                              if record['archive_id'] == entry['id']]
                 self.assertEqual([Path(record['path']).name for record in libraries], [soname])

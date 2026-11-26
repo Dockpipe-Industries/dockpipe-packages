@@ -384,7 +384,7 @@
             "id": "libpcre2-8-0-amd64",
             "destination": "gio",
             "asset": {
-              "url": "https://archive.ubuntu.com/ubuntu/pool/main/p/pcre2/libpcre2-8-0_10.39-3ubuntu0.1_amd64.deb",
+              "url": "https://snapshot.ubuntu.com/ubuntu/20261030T000000Z/pool/main/p/pcre2/libpcre2-8-0_10.39-3ubuntu0.1_amd64.deb",
               "sha256": "01a5a74f3d305cad32fffffdc200c2a92fd8e5a01bff97de76ac598fb444d53e",
               "size_bytes": 220512,
               "format": "deb",
@@ -957,7 +957,7 @@
             "package": "libpcre2-16-0:amd64",
             "version": "10.39-3ubuntu0.1",
             "asset": {
-              "url": "https://archive.ubuntu.com/ubuntu/pool/main/p/pcre2/libpcre2-16-0_10.39-3ubuntu0.1_amd64.deb",
+              "url": "https://snapshot.ubuntu.com/ubuntu/20261030T000000Z/pool/main/p/pcre2/libpcre2-16-0_10.39-3ubuntu0.1_amd64.deb",
               "sha256": "d4b3cd60636e869a0ca23d912d59df914779806cef7f52c0469fcd074c149d87",
               "size_bytes": 203294,
               "format": "deb",
@@ -970,7 +970,7 @@
             "package": "libpcre2-32-0:amd64",
             "version": "10.39-3ubuntu0.1",
             "asset": {
-              "url": "https://archive.ubuntu.com/ubuntu/pool/main/p/pcre2/libpcre2-32-0_10.39-3ubuntu0.1_amd64.deb",
+              "url": "https://snapshot.ubuntu.com/ubuntu/20261030T000000Z/pool/main/p/pcre2/libpcre2-32-0_10.39-3ubuntu0.1_amd64.deb",
               "sha256": "a46b16422d8124779cb45b69e1cf7a733de1a4aa892ded9b13efd115d684f528",
               "size_bytes": 193782,
               "format": "deb",
@@ -983,7 +983,7 @@
             "package": "libpcre2-dev:amd64",
             "version": "10.39-3ubuntu0.1",
             "asset": {
-              "url": "https://archive.ubuntu.com/ubuntu/pool/main/p/pcre2/libpcre2-dev_10.39-3ubuntu0.1_amd64.deb",
+              "url": "https://snapshot.ubuntu.com/ubuntu/20261030T000000Z/pool/main/p/pcre2/libpcre2-dev_10.39-3ubuntu0.1_amd64.deb",
               "sha256": "e87721e31a285bb60f6a502ad380a329e060702a8518864b77a49298d41e9818",
               "size_bytes": 730282,
               "format": "deb",
@@ -996,7 +996,7 @@
             "package": "libpcre2-posix3:amd64",
             "version": "10.39-3ubuntu0.1",
             "asset": {
-              "url": "https://archive.ubuntu.com/ubuntu/pool/main/p/pcre2/libpcre2-posix3_10.39-3ubuntu0.1_amd64.deb",
+              "url": "https://snapshot.ubuntu.com/ubuntu/20261030T000000Z/pool/main/p/pcre2/libpcre2-posix3_10.39-3ubuntu0.1_amd64.deb",
               "sha256": "03e09e2e2b2e9861f4f68e40d46d08c5da87a8d185443fec6445a0479b942828",
               "size_bytes": 6130,
               "format": "deb",
