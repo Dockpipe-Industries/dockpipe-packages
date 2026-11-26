@@ -59,7 +59,7 @@ jobs:
       - name: Admit exact preinstalled Microsoft compiler and desktop CRT on hosted Windows
         if: matrix.platform == 'windows-amd64'
         shell: pwsh
-        run: ./workflows/package/package-native-store-candidate/assets/scripts/prepare_msvc.ps1 -WorkDirectory "$env:RUNNER_TEMP/native-compiler" -AcquisitionFile "$env:GITHUB_WORKSPACE/release/native-compiler/windows-hosted-19.51.json"
+        run: ./workflows/package/package-native-store-candidate/assets/scripts/prepare_msvc.ps1 -WorkDirectory "$env:RUNNER_TEMP/native-compiler" -AcquisitionFile "$env:GITHUB_WORKSPACE/release/native-compiler/windows-hosted-19.52.json"
       - name: Enter the locked native Dockpipe workflow
         env:
           DOCKPIPE_NATIVE_PLATFORM: ${{ matrix.platform }}

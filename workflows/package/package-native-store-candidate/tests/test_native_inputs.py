@@ -246,8 +246,8 @@ class NativeInputsTest(unittest.TestCase):
     def test_hashed_hosted_descriptor_keeps_source_bytes_on_windows_checkout(self):
         source = Path(__file__).resolve().parents[4]
         attributes = (source / '.gitattributes').read_text().splitlines()
-        self.assertIn('release/native-compiler/windows-hosted-19.51.json text eol=lf', attributes)
-        descriptor = source / 'release/native-compiler/windows-hosted-19.51.json'
+        self.assertIn('release/native-compiler/windows-hosted-19.52.json text eol=lf', attributes)
+        descriptor = source / 'release/native-compiler/windows-hosted-19.52.json'
         expected = self.recipes['windows-amd64']['compiler']['acquisition_sha256']
         self.assertEqual(native_inputs.digest(descriptor), expected)
         self.assertNotEqual(hashlib.sha256(descriptor.read_bytes().replace(b'\n', b'\r\n')).hexdigest(), expected)
@@ -256,7 +256,7 @@ class NativeInputsTest(unittest.TestCase):
     def test_native_msvc_receipt_is_admitted_without_redistributing_compiler(self, runtime_admission):
         from types import SimpleNamespace
         installation = self.root / 'ProgramFiles/Microsoft Visual Studio/18/Enterprise'
-        directory = installation / 'VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64'
+        directory = installation / 'VC/Tools/MSVC/14.52.37025/bin/Hostx64/x64'
         directory.mkdir(parents=True)
         tools = {}
         for name in ('cl', 'dumpbin', 'lib', 'link'):
@@ -265,18 +265,18 @@ class NativeInputsTest(unittest.TestCase):
             tools[name] = {'path':path.relative_to(installation).as_posix(),
                            'sha256':native_inputs.digest(path)}
         acquisition = json.loads((Path(__file__).resolve().parents[4] /
-                                  'release/native-compiler/windows-hosted-19.51.json').read_bytes())
+                                  'release/native-compiler/windows-hosted-19.52.json').read_bytes())
         # This orchestration fixture supplies synthetic tools; exact real compiler bytes
         # are admitted independently against the source descriptor before execution.
         acquisition['compiler_payload']['compiler_sha256'] = tools['cl']['sha256']
         original_read_bytes = Path.read_bytes
         def read_fixture(path):
-            if path.name == 'windows-hosted-19.51.json':
+            if path.name == 'windows-hosted-19.52.json':
                 return json.dumps(acquisition).encode()
             return original_read_bytes(path)
         self.enterContext(patch.object(Path, 'read_bytes', read_fixture))
         recipe = self.recipes['windows-amd64']
-        receipt = {'schema':1,'compiler_id':'MSVC','compiler_version':'19.51.36260.0',
+        receipt = {'schema':1,'compiler_id':'MSVC','compiler_version':'19.52.37029.0',
                    'windows_sdk_version':'10.0.26100.0',
                    'acquisition_sha256':recipe['compiler']['acquisition_sha256'],
                    'acquisition_mode':'hosted-exact', 'installation':str(installation),
@@ -296,17 +296,17 @@ class NativeInputsTest(unittest.TestCase):
         environment = {'GITHUB_ACTIONS':'true', 'RUNNER_ENVIRONMENT':'github-hosted',
                        'PROGRAMFILES':str(self.root / 'ProgramFiles'),
                        'PROGRAMFILES(X86)':str(self.root / 'ProgramFilesX86'),
-                       'VCTOOLSINSTALLDIR':str(installation / 'VC/Tools/MSVC/14.51.36231'),
-                       'VCTOOLSVERSION':'14.51.36231', 'WINDOWSSDKDIR': str(sdk), 'WINDOWSSDKVERSION': '10.0.26100.0/',
+                       'VCTOOLSINSTALLDIR':str(installation / 'VC/Tools/MSVC/14.52.37025'),
+                       'VCTOOLSVERSION':'14.52.37025', 'WINDOWSSDKDIR': str(sdk), 'WINDOWSSDKVERSION': '10.0.26100.0/',
                        'DOCKPIPE_NATIVE_MSVC_ROOT':str(installation),
                        'DOCKPIPE_NATIVE_MSVC_RECEIPT':str(path), 'INCLUDE':'declared include',
                        'LIB':'declared library', 'GH_TOKEN':'must not reach compiler'}
         with patch.object(native_inputs.subprocess, 'run', return_value=SimpleNamespace(
-                stdout='Compiler Version 19.51.36260 for x64',stderr='')):
+                stdout='Compiler Version 19.52.37029 for x64',stderr='')):
             result = native_inputs.compiler_environment(recipe, self.root / 'tools', environment)
         original_acquisition = receipt['acquisition_sha256']
         descriptor_bytes = (Path(__file__).resolve().parents[4] /
-                            'release/native-compiler/windows-hosted-19.51.json').read_bytes()
+                            'release/native-compiler/windows-hosted-19.52.json').read_bytes()
         receipt['acquisition_sha256'] = hashlib.sha256(descriptor_bytes.replace(b'\n', b'\r\n')).hexdigest()
         path.write_text(json.dumps(receipt))
         with self.assertRaisesRegex(ValueError, 'source-bound hosted ABI'):
@@ -368,19 +368,19 @@ class NativeInputsTest(unittest.TestCase):
     def test_blocked_installer_assets_are_not_published_with_hosted_profile(self):
         source = Path(__file__).resolve().parents[4]
         files = {path.name for path in (source / 'release/native-compiler').iterdir()}
-        self.assertEqual(files, {'windows-hosted-19.51.json'})
-        descriptor = json.loads((source / 'release/native-compiler/windows-hosted-19.51.json').read_bytes())
+        self.assertEqual(files, {'windows-hosted-19.52.json'})
+        descriptor = json.loads((source / 'release/native-compiler/windows-hosted-19.52.json').read_bytes())
         self.assertEqual(descriptor['display_sdk']['source_sha'], '79bb110c712e0d71d8bcde4cecff725f3c107a49')
         self.assertEqual(descriptor['display_sdk']['compiler_version'], '19.51.36260.0')
         self.assertEqual(descriptor['compiler_payload']['compiler_sha256'],
-                         'b0a1818ebae6da7f18230a84e76ce839212584ac4c2ab55b97a0d5268085da57')
+                         '87b094e4fb3c646247b8eb515b5daa4fd73f991fe7cc42e98c0c9e3d3805d6fb')
         self.assertFalse(descriptor['policy']['installer_execution'])
         self.assertFalse(descriptor['policy']['system_installation'])
         self.assertFalse(descriptor['policy']['fallback'])
 
     def test_hosted_metadata_is_source_bound_without_installer_or_channel(self):
         source = Path(__file__).resolve().parents[4]
-        descriptor_path = source / 'release/native-compiler/windows-hosted-19.51.json'
+        descriptor_path = source / 'release/native-compiler/windows-hosted-19.52.json'
         descriptor = json.loads(descriptor_path.read_bytes())
         self.assertEqual(native_inputs.digest(descriptor_path),
                          self.recipes['windows-amd64']['compiler']['acquisition_sha256'])
@@ -392,7 +392,7 @@ class NativeInputsTest(unittest.TestCase):
         script = (fixtures.SCRIPTS / 'prepare_msvc.ps1').read_text()
         self.assertIn("$env:RUNNER_ENVIRONMENT -ne 'github-hosted'", script)
         self.assertIn('Get-AuthenticodeSignature', script)
-        self.assertIn('10.0.26100.0 -vcvars_ver=14.51.36231', script)
+        self.assertIn('10.0.26100.0 -vcvars_ver=14.52.37025', script)
         self.assertIn("@('cl', 'dumpbin', 'lib', 'link')", script)
         self.assertIn("@('rc', 'mt')", script)
         self.assertIn('ReparsePoint', script)

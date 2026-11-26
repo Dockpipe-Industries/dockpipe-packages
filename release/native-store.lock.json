@@ -1923,10 +1923,10 @@
         "platform": "windows-amd64",
         "compiler": {
           "id": "MSVC",
-          "version": "19.51.36260.0",
+          "version": "19.52.37029.0",
           "os_id": "windows",
           "os_version": "2025",
-          "acquisition_sha256": "e02640c0b61524f3c9d7db87ebd4d87dbf485ef0cd06c1688e10deebb684d593",
+          "acquisition_sha256": "9b73ceb039069f43d4a5040c880fced1eafe2fa5a3e35a5eb8fb1c6c9392a1c2",
           "acquisition_mode": "hosted-exact"
         },
         "archives": [
@@ -2760,7 +2760,7 @@
       },
       "toolchain_recipe": {
         "path": "release/native-toolchain/windows-amd64.json",
-        "sha256": "3d4da1af344444205d5dfbc08ada820221d348b7540945a713e4826907134e2f"
+        "sha256": "3e855a11037352ab26977530dffe138785534fea26cdaf2d8808950bafd81508"
       },
       "compatibility_overlay": {
         "source_commit": "30859228a77ba20a23a4b69ab81aae133d6ccfe9",

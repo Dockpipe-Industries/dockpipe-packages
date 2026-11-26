@@ -47,7 +47,7 @@ def validate_profile(profile, target):
         raise ValueError('Unsupported source-bound toolchain profile')
     expected = {'id': 'GNU', 'version': '11.4.0', 'os_id': 'ubuntu', 'os_version': '22.04'}
     if target == 'windows-amd64':
-        expected = {'id': 'MSVC', 'version': '19.51.36260.0', 'os_id': 'windows', 'os_version': '2025', 'acquisition_mode': 'hosted-exact',
+        expected = {'id': 'MSVC', 'version': '19.52.37029.0', 'os_id': 'windows', 'os_version': '2025', 'acquisition_mode': 'hosted-exact',
                     'acquisition_sha256': profile['compiler'].get('acquisition_sha256') if isinstance(profile['compiler'], dict) else None}
         if not re.fullmatch('[0-9a-f]{64}', expected['acquisition_sha256'] or ''):
             raise ValueError('Windows toolchain requires the frozen MSVC acquisition digest')
@@ -374,7 +374,7 @@ target_compile_features(native-proof PRIVATE cxx_std_17)
     if windows:
         import windows_runtime
         runtime_receipt = json.loads(Path(environment['DOCKPIPE_NATIVE_MSVC_RECEIPT']).read_bytes())['host_runtime']
-        acquisition = Path(__file__).resolve().parents[5] / 'release/native-compiler/windows-hosted-19.51.json'
+        acquisition = Path(__file__).resolve().parents[5] / 'release/native-compiler/windows-hosted-19.52.json'
         expected_runtime = json.loads(acquisition.read_bytes())['desktop_runtime']
         windows_runtime.stage_probe_runtime(environment['DOCKPIPE_NATIVE_MSVC_ROOT'], runtime_receipt,
                                             expected_runtime, build)
