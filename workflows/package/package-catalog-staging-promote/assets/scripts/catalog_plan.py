@@ -5,6 +5,9 @@ import json
 from pathlib import PurePosixPath
 import re
 
+VIEWER_PLATFORM = 'linux-amd64'
+VIEWER_IDENTITY = 'resolver/dockpipe.desktop.native'
+
 BASELINE_PLATFORMS = {'linux-amd64', 'linux-arm64', 'darwin-amd64', 'darwin-arm64',
                       'windows-amd64', 'linux-amd64-flatpak-org.kde.Platform-6.10'}
 NATIVE_PLATFORMS = {'linux-amd64', 'windows-amd64', 'darwin-arm64'}
@@ -139,7 +142,7 @@ def compose_platform(platform, baseline, candidate, owned, policy, metadata):
                       'uses_admitted_candidate': candidate is not None}
 
 
-def build_plan(request, baselines, candidates, metadata):
+def build_plan(request, baselines, candidates, metadata, viewer=None):
     source = request.get('product_source_sha', '')
     orchestration = request.get('orchestration_source_sha', '')
     if (not COMMIT.fullmatch(source) or not COMMIT.fullmatch(orchestration)
@@ -162,6 +165,17 @@ def build_plan(request, baselines, candidates, metadata):
     for candidate in candidates.values():
         if set(entries(candidate)) != set(owned):
             raise ValueError('Native candidate inventory must exactly match admitted ownership')
+
+    if viewer is not None:
+        if (VIEWER_IDENTITY in owned
+                or identity('resolver', viewer['name']) != VIEWER_IDENTITY
+                or request['policy'][VIEWER_PLATFORM].get(VIEWER_IDENTITY, {}).get('action') != 'promote'):
+            raise ValueError('The viewer must be explicitly promoted only on its qualified Linux platform')
+
+        linux_candidate = copy.deepcopy(candidates[VIEWER_PLATFORM])
+        linux_candidate['packages'].setdefault('resolvers', []).append(viewer)
+        candidates = {**candidates, VIEWER_PLATFORM: linux_candidate}
+
     prefix = relative_path('packages/catalog/candidates/' + source + '/' + orchestration)
     objects = []
     reports = {}
@@ -170,7 +184,8 @@ def build_plan(request, baselines, candidates, metadata):
     total = 0
     for platform in sorted(baselines):
         relative_path(platform)
-        manifest, report = compose_platform(platform, baselines[platform], candidates.get(platform), owned,
+        platform_owned = owned + [VIEWER_IDENTITY] if viewer is not None and platform == VIEWER_PLATFORM else owned
+        manifest, report = compose_platform(platform, baselines[platform], candidates.get(platform), platform_owned,
                                             request['policy'][platform], metadata.get(platform, {}))
         reports[platform] = report
         payload = json_bytes(manifest)

@@ -5,7 +5,7 @@ import sys
 import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'assets' / 'scripts'))
-from catalog_plan import build_plan, compose_platform
+from catalog_plan import BASELINE_PLATFORMS, NATIVE_PLATFORMS, VIEWER_IDENTITY, build_plan, compose_platform
 from catalog_transaction import CatalogTransaction, PublicationStopped, StoredObject, fingerprint_inventory
 
 
@@ -59,6 +59,45 @@ class CompositionTest(unittest.TestCase):
     def test_missing_policy_rejected(self):
         with self.assertRaisesRegex(ValueError, 'explicit decisions'):
             compose_platform('linux-amd64', store(), store(), ['resolver/qemu'], {}, {})
+
+
+class ViewerCompositionTest(unittest.TestCase):
+    def setUp(self):
+        self.baselines = {platform: store(platform) for platform in BASELINE_PLATFORMS}
+        self.candidates = {platform: {'schema': 1, 'platform': platform, 'packages': {
+            'resolvers': [entry('resolver', 'qemu', '1.3.8')]}} for platform in NATIVE_PLATFORMS}
+        self.viewer = entry('resolver', 'dockpipe.desktop.native', '0.1.0')
+        self.metadata = {'linux-amd64': {VIEWER_IDENTITY: {'package_platforms': ['deb']}}}
+        source = '1' * 40
+        self.request = {
+            'product_source_sha': source, 'orchestration_source_sha': '2' * 40,
+            'product_tag': 'catalog-native-candidate-' + source, 'channel': 'staging',
+            'public_origin': 'https://packages.staging.dockpipe.com', 'exclude_runtime_core': True,
+            'owned': ['resolver/qemu'], 'policy': {
+                platform: {'resolver/qemu': {'action': 'retain-baseline', 'reason': 'Preserve VM package'}}
+                for platform in BASELINE_PLATFORMS},
+        }
+
+    def test_viewer_is_added_to_linux_only_and_preserves_the_baseline(self):
+        self.request['policy']['linux-amd64'][VIEWER_IDENTITY] = {
+            'action': 'promote', 'reason': 'Qualified native viewer'}
+        plan = build_plan(self.request, self.baselines, self.candidates, self.metadata, viewer=self.viewer)
+        archives = [item for item in plan['objects'] if item['role'] == 'archive']
+        viewer_platforms = {item['platform'] for item in archives if item['identity'] == VIEWER_IDENTITY}
+        self.assertEqual(viewer_platforms, {'linux-amd64'})
+        for identity in ('resolver/qemu', 'workflow/unrelated'):
+            self.assertEqual({item['platform'] for item in archives if item['identity'] == identity},
+                             BASELINE_PLATFORMS)
+
+    def test_viewer_needs_linux_policy_and_never_promotes_to_windows(self):
+        with self.assertRaisesRegex(ValueError, 'explicitly promoted'):
+            build_plan(self.request, self.baselines, self.candidates, self.metadata, viewer=self.viewer)
+
+        for platform in ('linux-amd64', 'windows-amd64'):
+            self.request['policy'][platform][VIEWER_IDENTITY] = {
+                'action': 'promote', 'reason': 'Invalid multi-platform policy'}
+        with self.assertRaisesRegex(ValueError, 'explicit decisions'):
+            build_plan(self.request, self.baselines, self.candidates, self.metadata, viewer=self.viewer)
 
 
 class FakeProvider:
