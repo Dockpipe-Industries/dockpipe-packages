@@ -88,7 +88,7 @@ store silently fills a missing target.
 The native recipes use Qt 6.10.3 and exact upstream payload hashes, sizes,
 package identities and license inventories. The Linux profile requires Ubuntu
 22.04 and GNU 11.4.0; it does not silently select the legacy Ubuntu 24.04 lane.
-The Windows profile requires MSVC 19.51.36260.0 and Windows SDK 10.0.26100.0.
+The Windows profile requires MSVC 19.52.37029.0 and Windows SDK 10.0.26100.0.
 Every run rehashes its declared archive bytes before bounded extraction.
 Acquisition alone does not establish native compiler or producer qualification.
 
@@ -111,21 +111,21 @@ Existing `host-dpkg` behavior remains a separate explicit profile. Every declare
 package copyright record must be present in the exact prefix receipt before
 linking; an extracted dependency is not represented as rebuilt source.
 
-`release/native-compiler/windows-hosted-19.51.json` declares Windows compiler
+`release/native-compiler/windows-hosted-19.52.json` declares Windows compiler
 acquisition as `hosted-exact`. The supported public `windows-2025-vs2026` runner
 label supplies the preinstalled VS 2026 Enterprise toolset. This is a rolling
 host image, not an immutable or hermetic compiler bundle. Actual image details
 are recorded as observations. No installer, channel download, system install,
 repair or compiler fallback runs in this profile.
 
-The source-bound descriptor records the public SDK 79bb110 metadata identity,
+The source-bound descriptor records the public Windows SDK release metadata identity,
 compiler VSIX and desktop CRT VSIX URLs/hashes/sizes, and observed x64 PE file
 identities. Those payloads establish exact compiler and runtime byte references,
 not installer provenance. Only admitted preinstalled hosted files participate in
 this profile; channel downloads and installer execution are outside its contract.
 
 `prepare_msvc.ps1` requires the owning GitHub-hosted Windows job and selects
-`Program Files/Microsoft Visual Studio/18/Enterprise/VC/Tools/MSVC/14.51.36231`.
+`Program Files/Microsoft Visual Studio/18/Enterprise/VC/Tools/MSVC/14.52.37025`.
 It verifies the exact cl.exe hash/version, all ten desktop CRT hashes/sizes/
 versions, x64 PE headers and valid Microsoft Authenticode signatures. It rejects
 reparse points and uncontained paths. Explicit `vcvars64.bat` arguments select
@@ -276,7 +276,7 @@ platform entry, preserving exact ownership and all checks for every selected hos
 
 
 The Windows profile matches the public Display SDK's exact compiler
-MSVC 19.51.36260.0 and pins desktop CRT 14.51.36247.0. Qt 6.10.3, GIO 2.90.1
+MSVC 19.52.37029.0 and pins desktop CRT 14.52.37029.0. Qt 6.10.3, GIO 2.90.1
 and Windows SDK 10.0.26100.0 remain unchanged. Only the admitted ten-file desktop
 CRT is copied beside the disposable C++ shared-library ABI probe. The probe
 checks actual loaded CRT module paths and rejects System32 runtime fallback.

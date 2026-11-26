@@ -1,43 +1,43 @@
 {
   "schema": 1,
   "dockpipe": {
-    "version": "0.6.33",
-    "release": "v0.6.33-staging.40247668385.1.b107ea64782c",
+    "version": "0.6.41-staging.cli.shaccc656b5a5eb",
+    "release": "cli-candidate-0.6.41-staging.ccc656b5a5ebedfdbb68596c11aa091ea8ff4a6d",
     "artifacts": {
       "darwin/amd64": {
-        "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/v0.6.33-staging.40247668385.1.b107ea64782c/dockpipe_0.6.33_darwin_amd64.tar.gz",
-        "size_bytes": 5202292,
-        "sha256": "e013bee5a1a81ce1d2d93d65111dd7e0805a9f553d1b1836f8b4c256d76dd4d1",
+        "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/cli-candidate-0.6.41-staging.ccc656b5a5ebedfdbb68596c11aa091ea8ff4a6d/dockpipe_0.6.41-staging.cli.shaccc656b5a5eb_darwin_amd64.tar.gz",
+        "size_bytes": 6924136,
+        "sha256": "04bbfa3f71bada175794a8afbe8c1b9c17aad47946d7a7bd2fa2dbd2e268626f",
         "executable": "dockpipe",
-        "executable_size_bytes": 13504032
+        "executable_size_bytes": 18246368
       },
       "darwin/arm64": {
-        "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/v0.6.33-staging.40247668385.1.b107ea64782c/dockpipe_0.6.33_darwin_arm64.tar.gz",
-        "size_bytes": 4758254,
-        "sha256": "e365747fc0d32fb45537d2c7e91dd1e845fd763dfd5a2a4d568d9fb29f62a18e",
+        "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/cli-candidate-0.6.41-staging.ccc656b5a5ebedfdbb68596c11aa091ea8ff4a6d/dockpipe_0.6.41-staging.cli.shaccc656b5a5eb_darwin_arm64.tar.gz",
+        "size_bytes": 6394939,
+        "sha256": "db5f8a6e4ccd870b1bb60f70bac0c1e27c843729d46a8ff1c021f89ff1cefb1b",
         "executable": "dockpipe",
-        "executable_size_bytes": 12329474
+        "executable_size_bytes": 16687938
       },
       "linux/amd64": {
-        "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/v0.6.33-staging.40247668385.1.b107ea64782c/dockpipe_0.6.33_linux_amd64.tar.gz",
-        "size_bytes": 5147466,
-        "sha256": "155388633f1f8ee31512a837555dfe8db445d4f8694adc38d9cc62820e40cafb",
+        "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/cli-candidate-0.6.41-staging.ccc656b5a5ebedfdbb68596c11aa091ea8ff4a6d/dockpipe_0.6.41-staging.cli.shaccc656b5a5eb_linux_amd64.tar.gz",
+        "size_bytes": 6912045,
+        "sha256": "61cb54f60fbf08ee3142df946d18d70beadd94dd024a34cf849b2bc7c5ec0bb6",
         "executable": "dockpipe",
-        "executable_size_bytes": 13291682
+        "executable_size_bytes": 18129161
       },
       "linux/arm64": {
-        "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/v0.6.33-staging.40247668385.1.b107ea64782c/dockpipe_0.6.33_linux_arm64.tar.gz",
-        "size_bytes": 4605349,
-        "sha256": "3fc23822eaafdb5945ebeca08f70e20ea9ffb4e0d0011d57ae62a172c06b7c7a",
+        "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/cli-candidate-0.6.41-staging.ccc656b5a5ebedfdbb68596c11aa091ea8ff4a6d/dockpipe_0.6.41-staging.cli.shaccc656b5a5eb_linux_arm64.tar.gz",
+        "size_bytes": 6236843,
+        "sha256": "09da3d2315763779d7c1b1fd06e79d16508866639e39ec0683087e519942abc6",
         "executable": "dockpipe",
-        "executable_size_bytes": 12058786
+        "executable_size_bytes": 16449801
       },
       "windows/amd64": {
-        "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/v0.6.33-staging.40247668385.1.b107ea64782c/dockpipe_0.6.33_windows_amd64.zip",
-        "size_bytes": 5090563,
-        "sha256": "075f39b60377a3840e69cab6a3cdeb792f2010047cfe87d3c0442cf899c7be32",
+        "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/cli-candidate-0.6.41-staging.ccc656b5a5ebedfdbb68596c11aa091ea8ff4a6d/dockpipe_0.6.41-staging.cli.shaccc656b5a5eb_windows_amd64.zip",
+        "size_bytes": 6734019,
+        "sha256": "5064eee277fe496a40d1ab2dcdf820f3f982ae59123e61b53ebe5f7525764a1b",
         "executable": "dockpipe.exe",
-        "executable_size_bytes": 13160448
+        "executable_size_bytes": 17628672
       }
     }
   }

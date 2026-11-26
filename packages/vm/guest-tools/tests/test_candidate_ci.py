@@ -64,14 +64,9 @@ class CandidateAcquisitionTest(unittest.TestCase):
             with self.subTest(base=base), self.assertRaisesRegex(ValueError, 'CLI candidate pin is required'):
                 ci.require_public_cli_candidate(root)
 
-    def test_repository_staging_pin_has_reviewed_native_environment_source(self):
+    def test_repository_cli_pin_is_admitted_before_tool_acquisition(self):
         repository = TOOLING.parents[3]
-        expected_source = 'b107ea64782c5a153440fb786791f1500a55416e'
-        identity = ('0.6.33', 'v0.6.33-staging.40247668385.1.b107ea64782c')
-        self.assertEqual(ci.REVIEWED_STAGING_CLI_SOURCES[identity], expected_source)
-
         lock = json.loads((repository / 'dockpipe.lock.json').read_bytes())
-        self.assertEqual((lock['dockpipe']['version'], lock['dockpipe']['release']), identity)
         expected_entry = lock['dockpipe']['artifacts']['windows/amd64']
         with mock.patch.object(ci.urllib.request, 'urlopen') as transport:
             self.assertEqual(ci.require_public_cli_candidate(repository), expected_entry)

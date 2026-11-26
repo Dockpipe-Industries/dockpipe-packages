@@ -103,7 +103,8 @@ def bundle_broker(binary, record, destination, system, gio, qt, inspector,
                 license_source = Path(record["licenses"][0]["path"])
             else:
                 package, version, license_source = package_license(source)
-            license_target = destination / "licenses/broker-runtime" / (package + ".copyright")
+            license_name = package.replace(":", "-") + ".copyright"
+            license_target = destination / "licenses/broker-runtime" / license_name
             license_target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(license_source, license_target)
             dependencies.append({"name": name, "sha256": digest(runtime / name),

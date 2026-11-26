@@ -159,7 +159,7 @@ class ToolchainTests(unittest.TestCase):
             self.assertTrue('license_path' in entry or 'license_asset' in entry)
         windows = json.loads((root / 'windows-amd64.json').read_text())
         self.assertEqual(windows['compiler']['id'], 'MSVC')
-        self.assertEqual(windows['compiler']['version'], '19.51.36260.0')
+        self.assertEqual(windows['compiler']['version'], '19.52.37029.0')
 
 
 

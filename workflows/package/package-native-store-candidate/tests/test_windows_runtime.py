@@ -23,8 +23,8 @@ class WindowsRuntimeTest(unittest.TestCase):
             (self.directory / name).write_bytes(data)
             records.append({'name': name, 'path': 'VC/Redist/exact/x64/CRT/' + name,
                             'sha256': hashlib.sha256(data).hexdigest(), 'size_bytes': len(data),
-                            'version': '14.51.36247.0'})
-        self.expected = {'version': '14.51.36247.0', 'sha256': 'a' * 64,
+                            'version': '14.52.37029.0'})
+        self.expected = {'version': '14.52.37029.0', 'sha256': 'a' * 64,
                          'directory': 'VC/Redist/exact/x64/CRT', 'files': records}
         self.receipt = {'version': self.expected['version'], 'source_sha256': self.expected['sha256'],
                         'directory': self.expected['directory'],
@@ -74,11 +74,11 @@ class WindowsRuntimeTest(unittest.TestCase):
 
     def test_official_desktop_inventory_binds_threads_and_not_onecore(self):
         source = Path(__file__).resolve().parents[4]
-        descriptor = json.loads((source / 'release/native-compiler/windows-hosted-19.51.json').read_bytes())
+        descriptor = json.loads((source / 'release/native-compiler/windows-hosted-19.52.json').read_bytes())
         runtime = descriptor['desktop_runtime']
-        self.assertEqual(runtime['package'], 'Microsoft.VC.14.51.CRT.Redist.X64.base')
+        self.assertEqual(runtime['package'], 'Microsoft.VC.14.52.CRT.Redist.X64.base')
         self.assertEqual(len(runtime['files']), 10)
         records = {record['name']: record for record in runtime['files']}
         self.assertEqual(records['vcruntime140_threads.dll']['sha256'],
-                         '40f39e8cee5f5a531b4010e18b807e8fe265b908dc58f959ecb7ebc6ea6cb11a')
-        self.assertEqual({record['version'] for record in records.values()}, {'14.51.36247.0'})
+                         '44a0a0b925242699f2b31bf40a43b54ab3513584dfe7869521d1983e40ea1f06')
+        self.assertEqual({record['version'] for record in records.values()}, {'14.52.37029.0'})
