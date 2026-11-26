@@ -8,6 +8,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
+from urllib.parse import urlsplit
 
 import dependencies
 
@@ -54,14 +55,28 @@ def prepare_inputs(lock, inputs):
     fetch(worker, inputs / worker["path"])
 
 
-def prepare_qt(profile, multimedia, cache, root):
+def prepare_qt(profile, multimedia, mirror, cache, root):
     entries = {entry["id"]: entry for entry in profile["native_inputs"]["archives"]}
     components = [entries["qt-qtbase"], entries["qt-icu"], multimedia]
     root.mkdir()
     writer = native_inputs.PrefixWriter(root, case_sensitive=True)
+    parsed_mirror = urlsplit(mirror)
+    if parsed_mirror.scheme != "https" or parsed_mirror.geturl() != "https://" + str(parsed_mirror.hostname):
+        raise ValueError("Viewer Qt mirror must bind one exact public HTTPS origin")
 
     for component in components:
-        archive = native_store.acquire(component["asset"], cache, fetch=True, upstream=True)
+        asset = component["asset"]
+        native_inputs.validate_asset(asset)
+        if parsed_mirror.hostname not in asset["redirect_hosts"]:
+            raise ValueError("Viewer Qt mirror is outside the reviewed archive hosts")
+
+        # Qt's redirect choice varies by runner. Fetch the reviewed mirror directly.
+        mirror_url = mirror + urlsplit(asset["url"]).path
+        target = cache / asset["sha256"]
+        run(["curl", "--disable", "--fail", "--silent", "--show-error",
+             "--proto", "=https", "--connect-timeout", "15", "--max-time", "180",
+             "--max-filesize", asset["size_bytes"], "--output", target, mirror_url], timeout=190)
+        archive = native_store.acquire(asset, cache, upstream=True)
         native_inputs.sevenzip_members(component, archive, writer)
 
     writer.finish_aliases()
@@ -102,7 +117,7 @@ def qualify(root):
 
     inputs = root / "inputs"
     prepare_inputs(lock, inputs)
-    qt = prepare_qt(profile, release["multimedia"], cache, root / "qt-inputs")
+    qt = prepare_qt(profile, release["multimedia"], release["qt_mirror"], cache, root / "qt-inputs")
     plugin = qt / "plugins/platforms/libqxcb.so"
     linkage = run(["ldd", plugin], capture_output=True, text=True, timeout=15).stdout
     missing = [line.strip() for line in linkage.splitlines() if "=> not found" in line]
