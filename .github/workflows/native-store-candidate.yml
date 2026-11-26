@@ -14,8 +14,8 @@ jobs:
     outputs:
       matrix: ${{ steps.prepare.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v6
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.13.7'
       - name: Install the exact native extraction implementation
@@ -26,7 +26,7 @@ jobs:
       - id: prepare
         name: Bind the accepted commit once without a self-referential source lock
         run: python -B workflows/package/package-native-store-candidate/assets/scripts/prepare_ci.py --template release/native-store.lock.json --output native-inputs
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: native-inputs-${{ github.sha }}
           path: native-inputs
@@ -39,11 +39,11 @@ jobs:
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 60
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v6
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.13.7'
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: native-inputs-${{ github.sha }}
           path: native-inputs
@@ -70,7 +70,7 @@ jobs:
           DOCKPIPE_NATIVE_OUTPUT: ${{ runner.temp }}/native-store-output
           DOCKPIPE_NATIVE_FETCH: '1'
         run: python -B workflows/package/package-native-store-candidate/assets/scripts/bootstrap.py
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: native-catalog-${{ matrix.platform }}-${{ github.sha }}
@@ -83,15 +83,15 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v6
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.13.7'
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: native-inputs-${{ github.sha }}
           path: native-inputs
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           pattern: native-catalog-*-${{ github.sha }}
           path: candidates
@@ -99,7 +99,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: python -B workflows/package/package-native-store-candidate/assets/scripts/publish_candidate.py --candidate-dir candidates --lock native-inputs/effective-lock.json --output publication
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: native-catalog-publication-${{ github.sha }}
           path: publication
