@@ -33,7 +33,9 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends g++ cmake make pkg-config \
-            libgl1-mesa-dev libegl1-mesa-dev libx11-dev libxcb-cursor0 \
+            libgl1-mesa-dev libegl1-mesa-dev libx11-dev libx11-xcb1 libxcb-cursor0 \
+            libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 \
+            libxcb-shape0 libxcb-sync1 libxcb-xfixes0 libxcb-xkb1 \
             libxkbcommon-x11-0 libpulse0 libva2 libva-drm2 libva-x11-2 xauth xvfb
           python -m pip install --require-hashes --only-binary=:all: -r release/native-extractor-linux-amd64.lock.txt
       - name: Build and package with native X11 tests

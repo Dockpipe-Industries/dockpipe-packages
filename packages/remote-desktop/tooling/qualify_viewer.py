@@ -103,6 +103,12 @@ def qualify(root):
     inputs = root / "inputs"
     prepare_inputs(lock, inputs)
     qt = prepare_qt(profile, release["multimedia"], cache, root / "qt-inputs")
+    plugin = qt / "plugins/platforms/libqxcb.so"
+    linkage = run(["ldd", plugin], capture_output=True, text=True, timeout=15).stdout
+    missing = [line.strip() for line in linkage.splitlines() if "=> not found" in line]
+    if missing:
+        raise ValueError("Qt X11 platform dependencies are missing: " + ", ".join(missing))
+
     toolchain = load(CATALOG / "release/native-toolchain/linux-amd64.json")
     go, = [item for item in toolchain["inputs"] if item["id"] == "go"]
     if "go" + go["version"] != lock["go"]["version"]:
