@@ -1604,7 +1604,7 @@
       "version": "19.52.37029.0",
       "os_id": "windows",
       "os_version": "2025",
-      "acquisition_sha256": "9b73ceb039069f43d4a5040c880fced1eafe2fa5a3e35a5eb8fb1c6c9392a1c2",
+      "acquisition_sha256": "f82505e3088c0769fe57aee41a9d7204a60db33019427b925134a8de595552be",
       "acquisition_mode": "hosted-exact"
     },
     "archives": [

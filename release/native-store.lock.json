@@ -1809,9 +1809,9 @@
           "root": ""
         },
         "display_sdk": {
-          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/display-sdk-1.0.0-windows-amd64-staging.79bb110c712e0d71d8bcde4cecff725f3c107a49/DockPipeDisplaySDK-1.0.0-windows-amd64.tar.gz",
-          "sha256": "1bfff278ac8a9abc448c7a097b7711fb0f4964fbd42604b950e72b4875c5c597",
-          "size_bytes": 8590,
+          "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/display-sdk-1.0.0-windows-amd64-staging.5f127e3732d7c367fcff891aa7aa9bc6b3e2fb3b/DockPipeDisplaySDK-1.0.0-windows-amd64.tar.gz",
+          "sha256": "a58fa0a10766ca713bcfa44b0c9bc68df4bce00c0a15bf686e766cf965204a26",
+          "size_bytes": 8609,
           "format": "tar.gz",
           "root": "DockPipeDisplaySDK-1.0.0-windows-amd64"
         },
@@ -1926,7 +1926,7 @@
           "version": "19.52.37029.0",
           "os_id": "windows",
           "os_version": "2025",
-          "acquisition_sha256": "9b73ceb039069f43d4a5040c880fced1eafe2fa5a3e35a5eb8fb1c6c9392a1c2",
+          "acquisition_sha256": "f82505e3088c0769fe57aee41a9d7204a60db33019427b925134a8de595552be",
           "acquisition_mode": "hosted-exact"
         },
         "archives": [
@@ -2760,7 +2760,7 @@
       },
       "toolchain_recipe": {
         "path": "release/native-toolchain/windows-amd64.json",
-        "sha256": "3e855a11037352ab26977530dffe138785534fea26cdaf2d8808950bafd81508"
+        "sha256": "03087b6c9c28f6dbb865fa6a7de58cad477ebc6ba4f02bd721a9fce1f11b844f"
       },
       "compatibility_overlay": {
         "source_commit": "30859228a77ba20a23a4b69ab81aae133d6ccfe9",

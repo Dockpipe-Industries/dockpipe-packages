@@ -107,15 +107,15 @@
     "policy": "matching host runtime; no System32 harvesting or VM-module redistribution"
   },
   "display_sdk": {
-    "source_sha": "79bb110c712e0d71d8bcde4cecff725f3c107a49",
-    "tag": "display-sdk-1.0.0-windows-amd64-staging.79bb110c712e0d71d8bcde4cecff725f3c107a49",
+    "source_sha": "5f127e3732d7c367fcff891aa7aa9bc6b3e2fb3b",
+    "tag": "display-sdk-1.0.0-windows-amd64-staging.5f127e3732d7c367fcff891aa7aa9bc6b3e2fb3b",
     "metadata": {
-      "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/display-sdk-1.0.0-windows-amd64-staging.79bb110c712e0d71d8bcde4cecff725f3c107a49/sdk-release.json",
-      "sha256": "cc083f7536667198b580a06f63602873fc1629055f898c6dab06830a30d6eaae",
+      "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/display-sdk-1.0.0-windows-amd64-staging.5f127e3732d7c367fcff891aa7aa9bc6b3e2fb3b/sdk-release.json",
+      "sha256": "64364447ae3a53fdad2570c4e316ddb66ec1ca2af637aa736433ec397d9fa516",
       "size_bytes": 978
     },
     "compiler_id": "MSVC",
-    "compiler_version": "19.51.36260.0",
+    "compiler_version": "19.52.37029.0",
     "qt_version": "6.10.3"
   },
   "policy": {

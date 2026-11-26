@@ -45,7 +45,7 @@ class RuntimeClosureTest(unittest.TestCase):
             self.assertEqual([record['name'] for record in records], ['libgio-2.0-0.dll'])
             self.assertFalse((output / 'MSVCP140.dll').exists())
             with patch('tooling.runtime_closure.capture', return_value='    VCRUNTIME999.dll\n'):
-                with self.assertRaisesRegex(ValueError, 'Unresolved native runtime DLL'):
+                with self.assertRaisesRegex(ValueError, 'Unqualified host CRT dependency: VCRUNTIME999.dll'):
                     windows_closure(module, output, gio, root / 'qt', inspector)
 
     @unittest.skipIf(os.name == 'nt', 'POSIX executable-mode contract')
@@ -68,6 +68,27 @@ class RuntimeClosureTest(unittest.TestCase):
             result = subprocess.run([str(executable)], env={'PATH': ''}, check=True,
                                     capture_output=True, text=True, timeout=3)
             self.assertEqual(result.stdout, 'private-broker-ok\n')
+
+    def test_linux_broker_license_uses_portable_archive_name(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            binary = root / 'dbus-daemon'
+            binary.write_bytes(b'broker fixture')
+            library = root / 'libexpat.so.1'
+            library.write_bytes(b'library fixture')
+            license_file = root / 'COPYING'
+            license_file.write_text('test license')
+            record = {'version': '1.16.2', 'licenses': [{'path': str(license_file)}]}
+            output = root / 'display'
+
+            bundle_broker(binary, record, output, 'Linux', None, None, None, None,
+                          lambda path: {library.name: library},
+                          lambda path: ('libexpat1:amd64', '2.4.7', license_file))
+
+            bundled = output / 'licenses/broker-runtime/libexpat1-amd64.copyright'
+            self.assertEqual(bundled.read_text(), 'test license')
+            provenance = json.loads((output / 'broker-provenance.json').read_text())
+            self.assertEqual(provenance['runtime_dependencies'][0]['package'], 'libexpat1:amd64')
 
     def test_broker_requires_exact_binary_and_license_hashes(self):
         with tempfile.TemporaryDirectory() as directory:

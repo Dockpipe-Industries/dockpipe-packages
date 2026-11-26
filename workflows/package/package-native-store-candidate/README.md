@@ -118,7 +118,7 @@ host image, not an immutable or hermetic compiler bundle. Actual image details
 are recorded as observations. No installer, channel download, system install,
 repair or compiler fallback runs in this profile.
 
-The source-bound descriptor records the public SDK 79bb110 metadata identity,
+The source-bound descriptor records the public Windows SDK release metadata identity,
 compiler VSIX and desktop CRT VSIX URLs/hashes/sizes, and observed x64 PE file
 identities. Those payloads establish exact compiler and runtime byte references,
 not installer provenance. Only admitted preinstalled hosted files participate in

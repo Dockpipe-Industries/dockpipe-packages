@@ -370,8 +370,8 @@ class NativeInputsTest(unittest.TestCase):
         files = {path.name for path in (source / 'release/native-compiler').iterdir()}
         self.assertEqual(files, {'windows-hosted-19.52.json'})
         descriptor = json.loads((source / 'release/native-compiler/windows-hosted-19.52.json').read_bytes())
-        self.assertEqual(descriptor['display_sdk']['source_sha'], '79bb110c712e0d71d8bcde4cecff725f3c107a49')
-        self.assertEqual(descriptor['display_sdk']['compiler_version'], '19.51.36260.0')
+        self.assertEqual(descriptor['display_sdk']['source_sha'], '5f127e3732d7c367fcff891aa7aa9bc6b3e2fb3b')
+        self.assertEqual(descriptor['display_sdk']['compiler_version'], descriptor['compiler_version'])
         self.assertEqual(descriptor['compiler_payload']['compiler_sha256'],
                          '87b094e4fb3c646247b8eb515b5daa4fd73f991fe7cc42e98c0c9e3d3805d6fb')
         self.assertFalse(descriptor['policy']['installer_execution'])
