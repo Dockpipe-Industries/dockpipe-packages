@@ -276,7 +276,7 @@ def prepare_macos(profile, prefix, acquire, environment):
     return environment
 
 
-def probe(prefix, work, target, environment):
+def probe(prefix, work, target, environment, compiler_version):
     work.mkdir(exist_ok=False)
     extension = '.exe' if target.startswith('windows-') else ''
     versions = {}
@@ -297,9 +297,16 @@ extern "C" @DECLARATION@ std::string native_value() {
 }
 """
     (source / 'library.cpp').write_text(library_source.replace('@DECLARATION@', declaration))
-    assertion = '_MSC_VER == 1951 && _MSC_FULL_VER == 195136260' if windows else '__GNUC__ == 11 && __GNUC_MINOR__ == 4'
-    if target == 'darwin-arm64':
+    if windows:
+        major, minor, build_number, _ = map(int, compiler_version.split('.'))
+        short_version = f'{major}{minor:02d}'
+        full_version = f'{short_version}{build_number:05d}'
+        assertion = f'_MSC_VER == {short_version} && _MSC_FULL_VER == {full_version}'
+    elif target == 'darwin-arm64':
         assertion = '__clang_major__ == 17'
+    else:
+        assertion = '__GNUC__ == 11 && __GNUC_MINOR__ == 4'
+
     runtime_check = '#ifndef _DLL\n#error Dynamic MSVC runtime required\n#endif\n' if windows else 'static_assert(_GLIBCXX_USE_CXX11_ABI == 1);\n'
     if target == 'darwin-arm64':
         runtime_check = '#ifndef __APPLE__\n#error Native Apple compiler required\n#endif\n'
@@ -443,7 +450,8 @@ def prepare(source, reference, target, prefix, cache, fetch, environment):
     for entry in profile['inputs']:
         if 'license_asset' in entry:
             shutil.copyfile(acquire(entry['license_asset']), license_root / (entry['id'] + '-COPYING'))
-    versions = probe(prefix, prefix.with_name(prefix.name + '-probe'), target, environment)
+    versions = probe(prefix, prefix.with_name(prefix.name + '-probe'), target, environment,
+                     profile['compiler']['version'])
     files = []
     for path in sorted(prefix.rglob('*')):
         if path.is_symlink():
