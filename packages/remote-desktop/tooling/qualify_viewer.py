@@ -125,9 +125,12 @@ def qualify(root):
                        DOCKPIPE_DESKTOP_HOST_LIBRARY_PREFIX="/usr/lib/x86_64-linux-gnu",
                        DOCKPIPE_DESKTOP_OUTPUT=str(candidate),
                        DOCKPIPE_TEST_INPUT_NATIVE_X11="1", QT_QPA_PLATFORM="xcb")
+    build_workspace = root / "build-workspace"
+    package_source = build_workspace / "packages/remote-desktop"
+    shutil.copytree(PACKAGE, package_source, ignore=shutil.ignore_patterns("__pycache__"))
     run(["xvfb-run", "-a", cli, "--no-compile-deps", "--no-vault", "--no-op-inject",
-         "--workdir", CATALOG, "--workflow-file",
-         PACKAGE / "workflows/build/config.yml"], env=environment, timeout=1200)
+         "--workdir", build_workspace, "--workflow-file",
+         package_source / "workflows/build/config.yml"], env=environment, timeout=1200)
 
     store = root / "staging-candidate"
     compile_store(cli, candidate, root, store, environment)
