@@ -1,0 +1,35 @@
+{
+  "cli_version": "0.6.41-staging.cli.shaccc656b5a5eb",
+  "cli": {
+    "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/cli-candidate-0.6.41-staging.ccc656b5a5ebedfdbb68596c11aa091ea8ff4a6d/dockpipe_0.6.41-staging.cli.shaccc656b5a5eb_linux_amd64.tar.gz",
+    "sha256": "61cb54f60fbf08ee3142df946d18d70beadd94dd024a34cf849b2bc7c5ec0bb6",
+    "size_bytes": 6912045,
+    "format": "tar.gz",
+    "root": ""
+  },
+  "multimedia": {
+    "id": "qt-qtmultimedia",
+    "destination": "qt/6.10.3/gcc_64",
+    "asset": {
+      "url": "https://download.qt.io/online/qtsdkrepository/linux_x64/desktop/qt6_6103/qt6_6103/qt.qt6.6103.addons.qtmultimedia.linux_gcc_64/6.10.3-0-202603310406qtmultimedia-Linux-RHEL_9_4-GCC-Linux-RHEL_9_4-X86_64.7z",
+      "sha256": "db1066ae70f13cbc74e5b4c6cc1b6c1c15964997f5e532ecb838fbe78b51df4d",
+      "size_bytes": 38952935,
+      "format": "7z",
+      "root": "",
+      "redirect_hosts": [
+        "download.qt.io",
+        "ftp.fau.de",
+        "ftp.jaist.ac.jp",
+        "mirror.aarnet.edu.au",
+        "mirror.accum.se",
+        "mirrors.20i.com",
+        "mirrors.ukfast.co.uk",
+        "qt.mirror.constant.com",
+        "qtproject.mirror.liquidtelecom.com",
+        "www.nic.funet.fi"
+      ]
+    },
+    "package": "qt-qtmultimedia",
+    "version": "6.10.3"
+  }
+}

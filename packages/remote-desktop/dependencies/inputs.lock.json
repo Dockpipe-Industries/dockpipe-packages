@@ -274,7 +274,8 @@
     "path": "native-worker-sdk-v1/DockpipeNativeWorkerPackage.h",
     "bytes": 2643,
     "sha256": "3fd970ef374c18674c4e63d2b9468f3da401a460be225f53157065e084423d57",
-    "provided_by": "Explicit unpublished reviewed host SDK artifact; independent of DisplaySDK 1.0",
+    "provided_by": "Commit-pinned Dockpipe host SDK source; independent of DisplaySDK 1.0",
+    "url": "https://raw.githubusercontent.com/Dockpipe-Industries/dockpipe/37dc28cf23848c2a5bd3946809e1a2b44b78be50/src/dockpipe-app/src/host-sdk/contracts/DockpipeNativeWorkerPackage.h",
     "published": false,
     "qt_dependency": false
   }

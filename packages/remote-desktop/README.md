@@ -147,7 +147,7 @@ The Darwin worker is a separate application bundle; a signing identity is
 explicit. Ad-hoc signing qualifies neither distribution nor native OS onboarding.
 
 Run the repository workflows with the released CLI pinned by the catalog's
-`dockpipe.config.json` (currently 0.6.33):
+`dockpipe.config.json`:
 
 ```bash
 export DOCKPIPE_BIN=/absolute/released/dockpipe
@@ -309,6 +309,16 @@ race checks and blocked-writer encrypted pipe fixtures are local qualification
 only. Rich native publication, installed consumers and actual paired PNG/files
 copying remain pending separate acceptance. Earlier text qualification and its
 three-second barrier do not establish that rich behavior.
+
+## Linux viewer staging candidate
+
+The Native desktop viewer candidate workflow builds the Linux amd64 viewer on
+Ubuntu 22.04 using the pinned standalone Dockpipe CLI, public DisplaySDK,
+Qt Multimedia kit, and the package's media input lock. It runs the native X11
+fixtures under Xvfb and exports a one-resolver store with its producer receipt
+and dependency inventory. The viewer workflow runs independently of VM catalog
+qualification. The resulting artifact is a candidate for the protected staging
+catalog promotion and carries the producer's distribution status.
 
 ## Distribution and license qualification
 

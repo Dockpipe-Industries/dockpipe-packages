@@ -1,0 +1,42 @@
+name: Native desktop viewer candidate
+
+on:
+  pull_request:
+    branches: [dev]
+    paths:
+      - .github/workflows/remote-desktop-viewer-candidate.yml
+      - packages/remote-desktop/**
+      - release/native-store.lock.json
+      - release/native-toolchain/linux-amd64.json
+      - release/native-extractor-linux-amd64.lock.txt
+      - workflows/package/package-native-store-candidate/assets/scripts/**
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  linux-amd64:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13.7'
+      - name: Install viewer build and X11 test dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends g++ cmake make pkg-config \
+            libgl1-mesa-dev libegl1-mesa-dev libx11-dev libxcb-cursor0 \
+            libxkbcommon-x11-0 libpulse0 libva2 libva-drm2 libva-x11-2 xauth xvfb
+          python -m pip install --require-hashes --only-binary=:all: -r release/native-extractor-linux-amd64.lock.txt
+      - name: Build and package with native X11 tests
+        run: python -B packages/remote-desktop/tooling/qualify_viewer.py --work "$RUNNER_TEMP/desktop-viewer"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: native-desktop-viewer-linux-amd64-${{ github.sha }}
+          path: ${{ runner.temp }}/desktop-viewer/staging-candidate/
+          if-no-files-found: error
