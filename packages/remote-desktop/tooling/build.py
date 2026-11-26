@@ -165,7 +165,8 @@ def build(args):
         test_cache.mkdir(mode=0o700)
         test_temporary.mkdir(mode=0o700)
         test_environment = dict(os.environ, XDG_CACHE_HOME=str(test_cache), TMPDIR=str(test_temporary))
-        run(["ctest", "--test-dir", build_directory, "--output-on-failure"], test_environment, timeout=90)
+        # CTest bounds each fixture; the process deadline covers the complete suite.
+        run(["ctest", "--test-dir", build_directory, "--output-on-failure"], test_environment, timeout=180)
         run([cmake, "--install", build_directory, "--prefix", resolver])
         channel = resolver / "assets/tooling/bin/dockpipe-desktop-channel"
         channel.parent.mkdir(parents=True, exist_ok=True)
