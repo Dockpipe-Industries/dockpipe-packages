@@ -215,12 +215,7 @@ def qualify(args):
     native_build.write_json(resolver / "assets/runtime-load.json", receipt)
     profile = resolver / "profile"
     profile.write_text(viewer_profile(profile.read_text()))
-    manifest = resolver / "package.yml"
-    declaration = "platforms: [deb, macos]"
-    text = manifest.read_text()
-    if text.count(declaration) != 1:
-        raise ValueError("Resolver platform declaration differs from the source contract")
-    manifest.write_text(text.replace(declaration, "platforms: [flatpak]"))
+    native_build.bind_resolver_platform(resolver, "flatpak")
     native_build.write_json(resolver / "assets/provider.json", {
         "schema": "dockpipe.desktop.native.artifact/v1", "id": "dockpipe.desktop.native", "version": "0.1.0",
         "platform": PROFILE["profile"], "role": "viewer", "transport": "wss-inner-tls",

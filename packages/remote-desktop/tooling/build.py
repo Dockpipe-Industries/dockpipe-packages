@@ -74,6 +74,15 @@ def write_json(path, value):
     path.write_text(json.dumps(value, indent=2) + "\n")
 
 
+def bind_resolver_platform(resolver, platform_name):
+    manifest = resolver / "package.yml"
+    declaration = "platforms: [deb, macos]"
+    text = manifest.read_text()
+    if text.count(declaration) != 1:
+        raise ValueError("Resolver platform declaration differs from the source contract")
+    manifest.write_text(text.replace(declaration, f"platforms: [{platform_name}]"))
+
+
 def copy_licenses(prepared, destination, go_root):
     destination.mkdir(parents=True)
     for relative, name in [("sdk/share/DockPipeDisplaySDK/LICENSE", "Dockpipe-DisplaySDK-Apache-2.0.txt"),
@@ -140,6 +149,7 @@ def build(args):
         build_directory = task / "native"
         resolver = task / "resolver"
         shutil.copytree(PACKAGE / "resolvers/dockpipe.desktop.native", resolver)
+        bind_resolver_platform(resolver, "deb" if platform_name == "linux-amd64" else "macos")
         if platform_name == "linux-amd64":
             dependencies.copy_linux_media_sources(inputs, resolver / "assets/media-sources", lock)
         configure = [cmake, "-S", PACKAGE, "-B", build_directory, "-DCMAKE_BUILD_TYPE=Release",
@@ -150,7 +160,12 @@ def build(args):
                               "-DPython3_EXECUTABLE=" + str(Path(os.sys.executable).resolve())])
         run(configure)
         run([cmake, "--build", build_directory, "--parallel", str(args.jobs)])
-        run(["ctest", "--test-dir", build_directory, "--output-on-failure"], timeout=90)
+        test_cache = task / "test-cache"
+        test_temporary = task / "test-tmp"
+        test_cache.mkdir(mode=0o700)
+        test_temporary.mkdir(mode=0o700)
+        test_environment = dict(os.environ, XDG_CACHE_HOME=str(test_cache), TMPDIR=str(test_temporary))
+        run(["ctest", "--test-dir", build_directory, "--output-on-failure"], test_environment, timeout=90)
         run([cmake, "--install", build_directory, "--prefix", resolver])
         channel = resolver / "assets/tooling/bin/dockpipe-desktop-channel"
         channel.parent.mkdir(parents=True, exist_ok=True)

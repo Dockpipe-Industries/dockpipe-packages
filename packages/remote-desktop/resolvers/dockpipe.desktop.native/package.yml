@@ -2,6 +2,7 @@ schema: 1
 kind: resolver
 name: dockpipe.desktop.native
 version: 0.1.0
+namespace: dockpipeproject
 title: Native remote desktop
 description: Authenticated native desktop sessions using an existing Dockpipe broker and paired worker.
 capability: remote.desktop
