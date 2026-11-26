@@ -1,0 +1,8 @@
+name: remote-desktop.build
+description: Build and qualify the native desktop provider from explicit pinned dependency artifacts.
+docker_preflight: false
+steps:
+  - id: build-native-desktop
+    kind: host
+    cwd: repo
+    cmd: python3 packages/remote-desktop/workflows/build/assets/run.py

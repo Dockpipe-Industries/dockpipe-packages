@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "profile": "linux-amd64-flatpak-org.kde.Platform-6.10",
+  "sdk": {
+    "ref": "runtime/org.kde.Sdk/x86_64/6.10",
+    "commit": "58a3c36a9e2cbd3fb3507d88d9195b3dcb8e8cde7bce86a0a0a5700a28a0ea18"
+  },
+  "runtime": {
+    "ref": "runtime/org.kde.Platform/x86_64/6.10",
+    "commit": "31742ff0f905913c512ea732960bbdeffa8306dcbebca45eeee62bfed0ca03a3"
+  },
+  "compiler": {"id": "GNU", "version": "15.2.0"},
+  "qt_version": "6.10.3",
+  "interface": "com.dockpipe.launcher.DisplayPackage/1.0",
+  "interface_sha256": "02c804668448d58615e7e458d441fed3524d626aa2330a66d63af9f0a05dfd83",
+  "native_library_scope_sha256": "feb63c9d52f85962fabd09c6b7e9599c6f0ac6a066a04945bb6a1799ea42f042",
+  "display_sdk": "Explicit separately qualified artifact; no released Flatpak SDK pin exists yet",
+  "media_origin": "matching Flatpak Platform; no bundled Qt or FFmpeg",
+  "distribution_qualified": false
+}

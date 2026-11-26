@@ -21,6 +21,22 @@ The root fields are exact; unknown or missing root fields stop preparation:
 | `named_workflow_qualification` | Path below `release/catalog-qualification/`, SHA256 and size of the reviewed public evidence projection |
 | `runtime` | Independent public runtime pointer/manifest pins and source/version; exact `cli_manifest` public CLI producer metadata; three platform package-owned `vmimage_run_sha256` values |
 
+An optional `viewer_candidate` includes the exact `source_sha`, `run_id`,
+`artifact_id`, `artifact_sha256`, `manifest_sha256`, `manifest_size_bytes`, and
+`package_sha256` from the successful native viewer build on `dev`. Include
+`distribution_review` with `path`, `sha256`, and `size_bytes` for a source-bound
+record below `release/catalog-qualification/`. The record has schema 1 and binds
+the same source, artifact and package hashes, platform `linux-amd64`, and
+package `resolver/dockpipe.desktop.native`. Its `checks` marks
+`media-source-and-build`, `license-and-relinking`, `codec-distribution`,
+`installed-viewer` and `paired-media-input-cleanup` as `passed` after review.
+
+With that input, add a `promote` decision for `resolver/dockpipe.desktop.native`
+in `promotion.policy.linux-amd64`. The viewer is additional to the eight owned
+VM catalog identities and the other platform policies. Prepare verifies the
+GitHub run and artifact before acquisition. The Linux consumer installs the
+viewer from the immutable catalog before promotion advances the staging pointer.
+
 All file pins use `url`, `sha256`, `size_bytes`; native outer pins also bind
 `manifest_sha256`. Candidate asset records additionally preserve actual immutable
 GitHub asset IDs/names and native run identity, as admitted by
@@ -33,7 +49,7 @@ The named-workflow projection has schema1, `product_source_sha`, and three
 `effective_vmimage_run_sha256`, empty `failed_checks`/`skipped_checks`, and bounded
 `raw_receipts` references (`role`, `sha256`, `size_bytes`). This supplementary
 review projection does not replace the required actual producer and three native
-consumer jobs. It must describe the actual VM1.3.7 cohort and admitted public runtime/CLI inputs.
+consumer jobs. It must describe the actual selected VM cohort and admitted public runtime/CLI inputs.
 
 The runtime pin resolves only `/packages/runtime/latest.json`, which the catalog
 publisher never writes. Empty or absent runtime package stores are valid. The

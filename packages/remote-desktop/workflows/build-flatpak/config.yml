@@ -1,0 +1,8 @@
+name: remote-desktop.build-flatpak
+description: Build or qualify the separate private KDE 6.10 viewer candidate.
+docker_preflight: false
+steps:
+  - id: flatpak-viewer
+    kind: host
+    cwd: repo
+    cmd: python3 packages/remote-desktop/workflows/build-flatpak/assets/run.py
