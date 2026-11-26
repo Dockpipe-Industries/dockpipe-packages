@@ -1,0 +1,9 @@
+schema: 1
+kind: workflow
+name: remote-desktop.build-flatpak
+version: 0.1.0
+min_dockpipe_version: 0.6.33-0
+title: Native remote desktop Flatpak producer
+description: Private KDE SDK build and Platform fixture qualification; does not declare provider distribution support.
+license: Apache-2.0
+platforms: [flatpak]

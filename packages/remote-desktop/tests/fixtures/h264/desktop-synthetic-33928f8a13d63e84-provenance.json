@@ -1,0 +1,44 @@
+{
+  "width": 64,
+  "height": 64,
+  "frames": [
+    {
+      "path": "desktop-synthetic-33928f8a13d63e84-0.h264",
+      "sha256": "10413759098fde0626089c1ecaff7d0c03f0a7060cf2a01e150ad1bace89b455",
+      "bytes": 180,
+      "pts_numerator": 0,
+      "pts_denominator": 30
+    },
+    {
+      "path": "desktop-synthetic-33928f8a13d63e84-1.h264",
+      "sha256": "7854338ec467306db197dc9c22e0d69c201047620b0d72865a25cd6e176ce539",
+      "bytes": 152,
+      "pts_numerator": 1,
+      "pts_denominator": 30
+    }
+  ],
+  "idr": true,
+  "hardware": true,
+  "profile_level_id": "42c001",
+  "source": "original synthetic four color bars; reversed second frame",
+  "source_sha256": "33928f8a13d63e84a8cf93d97e55d46a48e83ce521f127a29fecb4269f64fd2e",
+  "origin": "original generated numeric YUV bars; no screen or external media",
+  "toolchain_inventory": {
+    "go": [
+      {
+        "path": "/opt/homebrew/bin/go",
+        "version": [
+          "go version go1.27.3 darwin/arm64"
+        ]
+      }
+    ],
+    "cmake": [
+      {
+        "path": "/opt/homebrew/bin/cmake",
+        "version": [
+          "cmake version 4.4.5"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "id": "dockpipe.desktop.native",
+  "title": "Native remote desktop",
+  "snapshot": "assets/ui/snapshot/config.yml",
+  "actions": [],
+  "native_display": {
+    "interface": 1,
+    "libraries": {
+      "linux": "assets/display/libdockpipe-native-desktop-display.so"
+    }
+  }
+}

@@ -1,0 +1,7 @@
+name: native-desktop.snapshot
+description: Read-only native desktop surface metadata without starting a session.
+docker_preflight: false
+steps:
+  - id: snapshot
+    kind: host
+    run: assets/snapshot.sh

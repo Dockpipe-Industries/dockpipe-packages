@@ -1,0 +1,8 @@
+name: remote-desktop.test
+description: Run self-contained native desktop package contract and available component fixtures.
+docker_preflight: false
+steps:
+  - id: test-native-desktop
+    kind: host
+    cwd: repo
+    cmd: python3 packages/remote-desktop/workflows/test/assets/run.py

@@ -1,0 +1,60 @@
+{
+  "width": 64,
+  "height": 64,
+  "origin": "original generated numeric YUV bars; no screen or external media",
+  "source_sha256": "33928f8a13d63e84a8cf93d97e55d46a48e83ce521f127a29fecb4269f64fd2e",
+  "frames": [
+    {
+      "file": "desktop-synthetic-33928f8a13d63e84-0.h264",
+      "sha256": "10413759098fde0626089c1ecaff7d0c03f0a7060cf2a01e150ad1bace89b455",
+      "colors": [
+        [
+          255,
+          0,
+          0
+        ],
+        [
+          0,
+          255,
+          0
+        ],
+        [
+          0,
+          0,
+          255
+        ],
+        [
+          255,
+          255,
+          255
+        ]
+      ]
+    },
+    {
+      "file": "desktop-synthetic-33928f8a13d63e84-1.h264",
+      "sha256": "7854338ec467306db197dc9c22e0d69c201047620b0d72865a25cd6e176ce539",
+      "colors": [
+        [
+          255,
+          255,
+          255
+        ],
+        [
+          0,
+          0,
+          255
+        ],
+        [
+          0,
+          255,
+          0
+        ],
+        [
+          255,
+          0,
+          0
+        ]
+      ]
+    }
+  ]
+}

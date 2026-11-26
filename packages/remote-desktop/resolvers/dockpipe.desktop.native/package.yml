@@ -1,0 +1,11 @@
+schema: 1
+kind: resolver
+name: dockpipe.desktop.native
+version: 0.1.0
+title: Native remote desktop
+description: Authenticated native desktop sessions using an existing Dockpipe broker and paired worker.
+capability: remote.desktop
+surface: assets/ui/surface.json
+platforms: [deb, macos]
+catalog_type: integration
+categories: [networking, productivity]

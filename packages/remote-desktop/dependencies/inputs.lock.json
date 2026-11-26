@@ -1,0 +1,281 @@
+{
+  "schema": 1,
+  "host_sdk": {
+    "product": "DockPipeDisplaySDK",
+    "version": "1.0.0",
+    "interface": "com.dockpipe.launcher.DisplayPackage/1.0",
+    "qt_version": "6.10.3",
+    "source_commit": "d0768d69dc28fba250b3cb19b173457ae3fd3851",
+    "header_sha256": "02c804668448d58615e7e458d441fed3524d626aa2330a66d63af9f0a05dfd83",
+    "artifacts": [
+      {
+        "platform": "linux-amd64",
+        "tag": "display-sdk-1.0.0-linux-amd64-staging.d0768d69dc28fba250b3cb19b173457ae3fd3851",
+        "name": "DockPipeDisplaySDK-1.0.0-linux-amd64.tar.gz",
+        "bytes": 8524,
+        "sha256": "f142d21d5d0ca8001d54aec4f35d9941d794255d21afe1aeb6d408e93af08713",
+        "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/display-sdk-1.0.0-linux-amd64-staging.d0768d69dc28fba250b3cb19b173457ae3fd3851/DockPipeDisplaySDK-1.0.0-linux-amd64.tar.gz"
+      },
+      {
+        "platform": "linux-amd64",
+        "tag": "display-sdk-1.0.0-linux-amd64-staging.d0768d69dc28fba250b3cb19b173457ae3fd3851",
+        "name": "sdk-files.json",
+        "bytes": 1379,
+        "sha256": "8df1b78d5c53ba7031d9f5bdcc90ad7fe5578306cc2e1f8ef82a3ffeb73e61fe",
+        "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/display-sdk-1.0.0-linux-amd64-staging.d0768d69dc28fba250b3cb19b173457ae3fd3851/sdk-files.json"
+      },
+      {
+        "platform": "linux-amd64",
+        "tag": "display-sdk-1.0.0-linux-amd64-staging.d0768d69dc28fba250b3cb19b173457ae3fd3851",
+        "name": "sdk-release.json",
+        "bytes": 936,
+        "sha256": "c6549ce5033af955bd0fc01b846124156e7e8d4b7ae7cb32ee8690cebdbfa702",
+        "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/display-sdk-1.0.0-linux-amd64-staging.d0768d69dc28fba250b3cb19b173457ae3fd3851/sdk-release.json"
+      },
+      {
+        "platform": "darwin-arm64",
+        "tag": "display-sdk-1.0.0-darwin-arm64-staging.d0768d69dc28fba250b3cb19b173457ae3fd3851",
+        "name": "DockPipeDisplaySDK-1.0.0-darwin-arm64.tar.gz",
+        "bytes": 8575,
+        "sha256": "ebaf5dd177357274292a5ab4904ba174e09f271113db9b07e9487fffb1fd1d69",
+        "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/display-sdk-1.0.0-darwin-arm64-staging.d0768d69dc28fba250b3cb19b173457ae3fd3851/DockPipeDisplaySDK-1.0.0-darwin-arm64.tar.gz"
+      },
+      {
+        "platform": "darwin-arm64",
+        "tag": "display-sdk-1.0.0-darwin-arm64-staging.d0768d69dc28fba250b3cb19b173457ae3fd3851",
+        "name": "sdk-files.json",
+        "bytes": 1379,
+        "sha256": "2505443e93b96c971aad15de25993dda814587018e3bf8c836ca8c4e6fd9ca41",
+        "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/display-sdk-1.0.0-darwin-arm64-staging.d0768d69dc28fba250b3cb19b173457ae3fd3851/sdk-files.json"
+      },
+      {
+        "platform": "darwin-arm64",
+        "tag": "display-sdk-1.0.0-darwin-arm64-staging.d0768d69dc28fba250b3cb19b173457ae3fd3851",
+        "name": "sdk-release.json",
+        "bytes": 954,
+        "sha256": "c914b5846a1e4619e5323a5c4b6247ae0bc1d0bfa4ec4b7f28fc87dc83b4b4a8",
+        "url": "https://github.com/Dockpipe-Industries/dockpipe/releases/download/display-sdk-1.0.0-darwin-arm64-staging.d0768d69dc28fba250b3cb19b173457ae3fd3851/sdk-release.json"
+      }
+    ]
+  },
+  "ffmpeg": {
+    "version": "7.1.1",
+    "url": "https://ffmpeg.org/releases/ffmpeg-7.1.1.tar.xz",
+    "archive": "ffmpeg-7.1.1.tar.xz",
+    "sha256": "733984395e0dbbe5c046abda2dc49a5544e7e0e1e2366bba849222ae9e3a03b1",
+    "bytes": 11019500,
+    "license": "LGPL-2.1-or-later",
+    "configuration_header": {
+      "AV_HAVE_BIGENDIAN": 0,
+      "AV_HAVE_FAST_UNALIGNED": 1
+    },
+    "linux-amd64_runtime": [
+      {
+        "file": "libavcodec.so.61.19.101",
+        "soname": "libavcodec.so.61",
+        "bytes": 14858921,
+        "sha256": "a5466d3a3a95442aa7b1d37aa6fd7f6659411c763cde6f48c3d57e6ebda89db1"
+      },
+      {
+        "file": "libavutil.so.59.39.100",
+        "soname": "libavutil.so.59",
+        "bytes": 1120353,
+        "sha256": "1d7955074a2809f7da8c40d48a78f2c16768fbead062133a5881ad00b99167ab"
+      },
+      {
+        "file": "libswscale.so.8.3.100",
+        "soname": "libswscale.so.8",
+        "bytes": 612529,
+        "sha256": "00fb7715e074ee884f31bd7fbf7b14ecf33f944355dbf478ecaa7b16902f9770"
+      },
+      {
+        "file": "libswresample.so.5.3.100",
+        "soname": "libswresample.so.5",
+        "bytes": 124937,
+        "sha256": "6819cc2a2ab6a8aca255fd5ba22b0dbd8cf723eb2b2dffdb1f1707b1302760bf"
+      },
+      {
+        "file": "libQt6FFmpegStub-va.so.2",
+        "soname": "libQt6FFmpegStub-va.so.2",
+        "bytes": 31120,
+        "sha256": "e85617fa0134b350e2397e162b74af59d6dd5e7237aa5d662683a1f1c2ff50be"
+      },
+      {
+        "file": "libQt6FFmpegStub-va-drm.so.2",
+        "soname": "libQt6FFmpegStub-va-drm.so.2",
+        "bytes": 14664,
+        "sha256": "107a97844f53e0a58593488c4b1914b4559a6b1e24494cdedeedf5ee924145c4"
+      },
+      {
+        "file": "libQt6FFmpegStub-va-x11.so.2",
+        "soname": "libQt6FFmpegStub-va-x11.so.2",
+        "bytes": 14664,
+        "sha256": "0cfe4d2234a4762dca07de3b26d9d575802c4c1ac2811f9763ab9a5197caf782"
+      },
+      {
+        "file": "libQt6FFmpegStub-crypto.so.3",
+        "soname": "libQt6FFmpegStub-crypto.so.3",
+        "bytes": 14376,
+        "sha256": "1eb02557fcf39078a44532a8ee13011e6cb9ec79a289d7d597838b4794eefa79"
+      }
+    ],
+    "linux_host_runtime_requirements": [
+      "The matching Qt6.10.3 Core/Gui/Widgets/Multimedia/Network/DBus/Concurrent runtime",
+      "glibc, libstdc++, zlib, GL, PulseAudio, xkbcommon, libdrm and X11",
+      "Qt FFmpeg stubs require real backend symbol providers at load: OpenSSL3 Crypto and VAAPI2/DRM/X11. Native plugin-load proof must qualify the explicit selected linkage; stub SONAME presence alone is insufficient."
+    ],
+    "linux-amd64_distribution": {
+      "ffmpeg_version": "7.1.3",
+      "qt_multimedia_version": "6.10.3",
+      "sources": [
+        {
+          "file": "ffmpeg-n7.1.3.tar.gz",
+          "url": "https://github.com/FFmpeg/FFmpeg/archive/refs/tags/n7.1.3.tar.gz",
+          "bytes": 15908274,
+          "sha256": "e0b04c4b43d7e6d67cb6710334fb513adf13ac860532f30e1d0ac4c231f232fb"
+        },
+        {
+          "file": "qtmultimedia-everywhere-src-6.10.3.tar.xz",
+          "url": "https://download.qt.io/official_releases/qt/6.10/6.10.3/submodules/qtmultimedia-everywhere-src-6.10.3.tar.xz",
+          "bytes": 9914688,
+          "sha256": "dd228fe54051e8834ca53e558794742c8814f217849f9dfa8f9a9df80441903a"
+        },
+        {
+          "file": "install-ffmpeg-linux.sh",
+          "url": "https://raw.githubusercontent.com/qt/qt5/v6.10.3/coin/provisioning/common/linux/install-ffmpeg-linux.sh",
+          "bytes": 3647,
+          "sha256": "37d35856d03cafba90ff1c8b5662e600fc17ca230dfcffe2c7035f67244a0fe2"
+        },
+        {
+          "file": "ffmpeg-installation-utils.sh",
+          "url": "https://raw.githubusercontent.com/qt/qt5/v6.10.3/coin/provisioning/common/unix/ffmpeg-installation-utils.sh",
+          "bytes": 2107,
+          "sha256": "24509a4e515da6e941d8d56b14e7c11d517e061b775c3d4a9cc25f9d0c534ba5"
+        },
+        {
+          "file": "fix_ffmpeg_dependencies.sh",
+          "url": "https://raw.githubusercontent.com/qt/qt5/v6.10.3/coin/provisioning/common/shared/fix_ffmpeg_dependencies.sh",
+          "bytes": 3878,
+          "sha256": "565fde7526aabb648f09af2f9ca66688024ed18e1de9174adfef3a062874e4ed"
+        }
+      ]
+    }
+  },
+  "json": {
+    "version": "3.12.0",
+    "commit": "55f93686c01528224f448c19128836e7df245f72",
+    "url": "https://codeload.github.com/nlohmann/json/tar.gz/55f93686c01528224f448c19128836e7df245f72",
+    "archive": "json-55f93686c01528224f448c19128836e7df245f72.tar.gz",
+    "sha256": "67f4cdd9ca930c9c1e130af4a437c7fc98fab77a2846fc2d2a14b4943831f8ef",
+    "bytes": 9681256,
+    "license": "MIT"
+  },
+  "go": {
+    "version": "go1.26.10",
+    "module_dependencies": "standard-library-only",
+    "cgo_enabled": false,
+    "darwin-arm64_archive": {
+      "url": "https://go.dev/dl/go1.26.10.darwin-arm64.tar.gz",
+      "sha256": "0b5183492292ada170f9b561a834863808dd02edba599e4ad0e89899330020b3",
+      "purpose": "Explicit private native toolchain; never install globally or fall back to another Go version"
+    }
+  },
+  "qt": {
+    "version": "6.10.3",
+    "linux_kit": "gcc_64",
+    "provided_by": "explicit matching host SDK prefix; Qt runtime not redistributed by this package",
+    "components": [
+      "Core",
+      "Gui",
+      "Widgets",
+      "Network",
+      "Multimedia",
+      "DBus",
+      "Concurrent"
+    ],
+    "license": "LGPL-3.0-only OR commercial; exact installed kit license terms apply"
+  },
+  "native_macos": {
+    "minimum": "13.0",
+    "architectures": [
+      "arm64"
+    ],
+    "frameworks": [
+      "Foundation",
+      "AppKit",
+      "ScreenCaptureKit",
+      "VideoToolbox",
+      "CoreMedia",
+      "CoreVideo",
+      "CoreGraphics",
+      "ApplicationServices"
+    ]
+  },
+  "linux_host_runtime": {
+    "profile": "ubuntu-22.04-amd64",
+    "libraries": [
+      {
+        "file": "libcrypto.so.3",
+        "resolved_file": "libcrypto.so.3",
+        "bytes": 4455728,
+        "sha256": "7cc817ff1841b59516d684f357bc0c3fc2cc52c3fa9b4ffb8ce8bdc215f02915",
+        "package": "libssl3:amd64",
+        "version": "3.0.2-0ubuntu1.30",
+        "provided_by": "host; not bundled"
+      },
+      {
+        "file": "libva.so.2",
+        "resolved_file": "libva.so.2.1400.0",
+        "bytes": 195088,
+        "sha256": "7ee0c548a2ce345a74b482aef98a3ddcb825504db7f1cda75020f9f999fef1c1",
+        "package": "libva2:amd64",
+        "version": "2.14.0-1",
+        "provided_by": "host; not bundled"
+      },
+      {
+        "file": "libva-drm.so.2",
+        "resolved_file": "libva-drm.so.2.1400.0",
+        "bytes": 14656,
+        "sha256": "9cf5b3c1a3f86222272ed27f68c7bfcb8d1850d8b2cc9a4037d8298583420b99",
+        "package": "libva-drm2:amd64",
+        "version": "2.14.0-1",
+        "provided_by": "host; not bundled"
+      },
+      {
+        "file": "libva-x11.so.2",
+        "resolved_file": "libva-x11.so.2.1400.0",
+        "bytes": 27328,
+        "sha256": "7c74a5de024dcfdbe9e5cc9e202f06b0b30ddb8959841dbce52710407cc1c87c",
+        "package": "libva-x11-2:amd64",
+        "version": "2.14.0-1",
+        "provided_by": "host; not bundled"
+      },
+      {
+        "file": "libX11.so.6",
+        "resolved_file": "libX11.so.6.4.0",
+        "bytes": 1306280,
+        "sha256": "e23ed094eaf0a74a822a6d9d14eee628ab9f7ec08aecbf20ffd803f019ff6e98",
+        "package": "libx11-6:amd64",
+        "version": "2:1.7.5-1ubuntu0.4",
+        "provided_by": "host; not bundled"
+      }
+    ],
+    "abi_scope": "Explicit qualified host-library prefix; these host libraries are not included in the package runtime closure.",
+    "development_sdk": {
+      "package": "libx11-dev:amd64",
+      "version": "2:1.7.5-1ubuntu0.4",
+      "headers": "System X11 public SDK; no source copied into the package"
+    }
+  },
+  "native_worker_sdk": {
+    "schema": "dockpipe.native-worker-sdk/v1",
+    "abi_version": 1,
+    "entrypoint": "dockpipe_native_worker_package_v1",
+    "path": "native-worker-sdk-v1/DockpipeNativeWorkerPackage.h",
+    "bytes": 2643,
+    "sha256": "3fd970ef374c18674c4e63d2b9468f3da401a460be225f53157065e084423d57",
+    "provided_by": "Explicit unpublished reviewed host SDK artifact; independent of DisplaySDK 1.0",
+    "published": false,
+    "qt_dependency": false
+  }
+}

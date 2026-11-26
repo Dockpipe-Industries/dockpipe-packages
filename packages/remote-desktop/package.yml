@@ -1,0 +1,20 @@
+schema: 1
+kind: package
+name: remote-desktop
+version: 0.1.0
+min_dockpipe_version: 0.6.33-0
+title: Dockpipe native remote desktop
+description: Package-owned native desktop capture, input, H264 display and authenticated transport.
+platforms: [deb, macos]
+author: Dockpipe
+license: Apache-2.0
+repository: https://github.com/Dockpipe-Industries/dockpipe-packages
+tags: [remote, desktop, native]
+includes_resolvers: [dockpipe.desktop.native]
+script_contract:
+  inject: [workdir, script_dir, package_root, assets_dir, dockpipe_bin]
+build:
+  source:
+    script: assets/scripts/build-source.py
+test:
+  script: tests/run.py

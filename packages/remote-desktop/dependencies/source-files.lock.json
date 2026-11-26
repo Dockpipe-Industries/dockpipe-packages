@@ -1,0 +1,836 @@
+{
+  "schema": 1,
+  "status": "owner-frozen",
+  "files": [
+    {
+      "path": "channel/asset_session.go",
+      "bytes": 12082,
+      "sha256": "f26dbd4cbd8326b1be53184b7058652df8b781c0c91b68cf5ed5ca83cc54de02"
+    },
+    {
+      "path": "channel/assets.go",
+      "bytes": 9889,
+      "sha256": "dcfcfd70ecfdba2c89c34cc0d7d5998e1edac60b4f6dbdb9a166f8ce04e31126"
+    },
+    {
+      "path": "channel/assets_test.go",
+      "bytes": 16631,
+      "sha256": "6c6a8b13e39776a04b5111ca05eb4c959b0d789b79f2da0221e15fc1a3f89708"
+    },
+    {
+      "path": "channel/assets_transport_test.go",
+      "bytes": 5532,
+      "sha256": "0527ebdf2ab57834f99d946b4a1bbb64ab764c2884a96065b0dad3528704bbf8"
+    },
+    {
+      "path": "channel/authority.go",
+      "bytes": 1437,
+      "sha256": "27b686a54982a632b3a0ef1afa28dc4f05e4f179117a2811598eb2703419d63c"
+    },
+    {
+      "path": "channel/capture.go",
+      "bytes": 5227,
+      "sha256": "b7ff84e9f3195688859792bb01f34743f7d4ccd067474f5b2fc576a73d5e4fed"
+    },
+    {
+      "path": "channel/capture_test.go",
+      "bytes": 7656,
+      "sha256": "bb029e5dc34342e2df6cf1741417e8f539b856be20c0a985433c8b5632b8eb4f"
+    },
+    {
+      "path": "channel/channel_test.go",
+      "bytes": 17229,
+      "sha256": "101dca029854530a04edf5c8d94dce3ba49aed8d20cc1e09575b5d926be4746b"
+    },
+    {
+      "path": "channel/child.go",
+      "bytes": 2403,
+      "sha256": "83887b39dde65654ee4f0882d3022fe00ee7b17c3e9d9eb44694c4b343f4e176"
+    },
+    {
+      "path": "channel/clipboard.go",
+      "bytes": 1996,
+      "sha256": "f7c8b9275a9a2b915ebcaa20aa39752f27173d54261e65992fcbe46a5c742d20"
+    },
+    {
+      "path": "channel/clipboard_test.go",
+      "bytes": 4903,
+      "sha256": "1f7353adbcca6be7ae9aadacec4366308a2563bbf87a0587abbafcfca062e9db"
+    },
+    {
+      "path": "channel/control_transport_test.go",
+      "bytes": 5346,
+      "sha256": "ab2a82ada0825ecc844f050a0ab856bfefef3f4faa05a9c089af7f587cae4c1b"
+    },
+    {
+      "path": "channel/go.mod",
+      "bytes": 48,
+      "sha256": "d6bb9b681ea1b726e08a853110907dde8fd2964faac03c386d4a66cf5bd6b31d"
+    },
+    {
+      "path": "channel/helper_integration_test.go",
+      "bytes": 7073,
+      "sha256": "e12730456b6909d81c135cb4b9e8099c175e4d2ef7bb317ae8188abfe9a9e49c"
+    },
+    {
+      "path": "channel/identity.go",
+      "bytes": 5671,
+      "sha256": "2d718709adb21906bb57c2c39f2b1f56626b8a0f4112187e0be9f950faeee3b3"
+    },
+    {
+      "path": "channel/main.go",
+      "bytes": 7338,
+      "sha256": "dfd20b5e89ed33a84b2576a1682b8259d18d77b3230304fde91315c760fa0cd9"
+    },
+    {
+      "path": "channel/protocol.go",
+      "bytes": 5756,
+      "sha256": "8c51f439a72ef6831ab78acb6ac6555b7778b4836e9e6583bf8cdf45b55978cd"
+    },
+    {
+      "path": "channel/session.go",
+      "bytes": 6337,
+      "sha256": "71c0d561235d12fb46aa923e93a954f530fb19c3a5592919d6e49ef2500a9387"
+    },
+    {
+      "path": "channel/transport.go",
+      "bytes": 4811,
+      "sha256": "93808499d13586910f9e646f3aeeed3e296625837938cf59b8c218833a371e72"
+    },
+    {
+      "path": "native/AssetClipboardProtocol.h",
+      "bytes": 14256,
+      "sha256": "05f175d41e51a6706dd8b5d2d697c853dc42d1fb9334f003dd2e4d74c8b228c8"
+    },
+    {
+      "path": "native/AssetClipboardProtocolTest.cpp",
+      "bytes": 4849,
+      "sha256": "973a529d7aa8ae3658ecd807e922b9f3b925a2615f016860a7064bb968acce4f"
+    },
+    {
+      "path": "native/AssetClipboardTransfer.cpp",
+      "bytes": 25790,
+      "sha256": "64ae7caf7b4e7b1e611643665593d5f77c5f04c34692488f39e43a5795ce6649"
+    },
+    {
+      "path": "native/AssetClipboardTransfer.h",
+      "bytes": 4416,
+      "sha256": "f07c902f43351ab6ce78ffc7233137334a1dcea88035398f324680ccd8a96ebb"
+    },
+    {
+      "path": "native/AssetClipboardTransferTest.cpp",
+      "bytes": 10063,
+      "sha256": "118b8c9207ba01f6db631ea0706af41e192a6962f68a4d6746662b09a31fee6a"
+    },
+    {
+      "path": "native/CaptureLifecycle.h",
+      "bytes": 1649,
+      "sha256": "bcdfe997e0ccbb46b2943d991cbb8b95b82bdebde6e19e43674d9e6bb102ed8d"
+    },
+    {
+      "path": "native/CaptureProfile.h",
+      "bytes": 3231,
+      "sha256": "0619ab6932907957b2c41711758aea0a6bbb2cb87a4ffe0eb094096125ea206f"
+    },
+    {
+      "path": "native/ClipboardPng.h",
+      "bytes": 5207,
+      "sha256": "95b41c1674660e87060239aae53642a7df083037bb973cbd9333754fd1add9cd"
+    },
+    {
+      "path": "native/ClipboardPngTest.cpp",
+      "bytes": 2500,
+      "sha256": "4d3d10059682e37170f7453303d6465855367c372b06b351f4b642b5be54e016"
+    },
+    {
+      "path": "native/ClipboardProtocol.h",
+      "bytes": 5051,
+      "sha256": "ec6db24264280f4f019ed085e120c5398f60a70506ed973b0a378ac3d23d3025"
+    },
+    {
+      "path": "native/H264Contract.h",
+      "bytes": 9585,
+      "sha256": "ea5077b71bfd380be00bb1f462bd20e079363406c799cc599c29cddea93b2f62"
+    },
+    {
+      "path": "native/H264ContractTest.cpp",
+      "bytes": 5236,
+      "sha256": "48f6826eed00cf626b40fdf1e67d22dbdabb18fa582f3dab2e37f44d17178655"
+    },
+    {
+      "path": "native/InputState.cpp",
+      "bytes": 6435,
+      "sha256": "64b12e19aaa4895653c01ef93dab1aae6d8d9d9bc4e012e282aa1f7a082c85b1"
+    },
+    {
+      "path": "native/InputState.h",
+      "bytes": 1583,
+      "sha256": "90c90e99149843fe40d33283f474c638fe08278c8e1b69f81066d39de8599339"
+    },
+    {
+      "path": "native/NativeDesktopBackend.h",
+      "bytes": 3294,
+      "sha256": "8900a6fc1a241dfc4514903c3196f24d7810234a13707fc7896e59519edbd2ec"
+    },
+    {
+      "path": "native/NativeDesktopBackend.mm",
+      "bytes": 36273,
+      "sha256": "17275fae77d51c523b0c3223732ddc4f7f7ef3ac649f65a2b7516a0a501e760a"
+    },
+    {
+      "path": "native/NativePowerAssertion.cpp",
+      "bytes": 4509,
+      "sha256": "10498157cfaf1cff09019c5f9ad987c5e1ed5596e4c3e19243187155b9b4433a"
+    },
+    {
+      "path": "native/NativePowerAssertion.h",
+      "bytes": 2129,
+      "sha256": "9a0b49ee0de557dc335f79dd5e2bc0119ab5e6c07d65798eceab81009d2c4b6f"
+    },
+    {
+      "path": "native/NativePowerAssertion.mm",
+      "bytes": 2322,
+      "sha256": "bfab1e17a8b327a5c7478a8c07e8212eab8d48365ad5e672a1e4ed93eafa429f"
+    },
+    {
+      "path": "native/NativePowerAssertionTest.cpp",
+      "bytes": 7988,
+      "sha256": "be09cfaf0c7829fcd69e28be76b4a2198bff3849b4254e644035d55dd6075ba8"
+    },
+    {
+      "path": "native/NativePowerProbe.mm",
+      "bytes": 8293,
+      "sha256": "6c0cc9ac8d0f108212e2b1554dcf3863ecb196c7998f2b8a93e2558845a017ba"
+    },
+    {
+      "path": "native/NativeVirtualDisplay.h",
+      "bytes": 2858,
+      "sha256": "af3d44a2275e74ad9446b284b7429298129a0d84634a6e49c4bdade6f22f3bce"
+    },
+    {
+      "path": "native/NativeVirtualDisplay.mm",
+      "bytes": 23918,
+      "sha256": "269f9c31c5179571bc0eaa29aeac73683769c9c5af2c6d6fec27a98be1fc6762"
+    },
+    {
+      "path": "native/NativeVirtualDisplayObserver.h",
+      "bytes": 2118,
+      "sha256": "ed866159c732e86362a4612abcdd439d8e24089f62e3f8d1e0557a4b4d208f81"
+    },
+    {
+      "path": "native/NativeVirtualDisplayObserver.mm",
+      "bytes": 6174,
+      "sha256": "7477dba836938a11096f5dae7b7b9b504f287e0520d8dee53751b908e0c493d9"
+    },
+    {
+      "path": "native/NativeVirtualDisplayObserverClient.cpp",
+      "bytes": 8551,
+      "sha256": "ba66a9a13a740919fb759ea87584cb694070162658cb0966cb7a09d077c6cd76"
+    },
+    {
+      "path": "native/NativeVirtualDisplayObserverProtocol.cpp",
+      "bytes": 5201,
+      "sha256": "b3568522a1bbbf0069cd18c972d29f6ce739d9e7140345765fa7039cf39c0bd0"
+    },
+    {
+      "path": "native/NativeVirtualDisplayObserverTest.cpp",
+      "bytes": 8103,
+      "sha256": "e8f248ea372ef3ce65c567e877273e417e18c2ce0da8d9bcde07b3f471643b15"
+    },
+    {
+      "path": "native/NativeVirtualDisplayOwner.h",
+      "bytes": 1813,
+      "sha256": "95e880210a969c91d2371455cc1d94efa62436dd4f69f7393fe39dae8e3d253a"
+    },
+    {
+      "path": "native/NativeVirtualDisplayOwner.mm",
+      "bytes": 10134,
+      "sha256": "e9dde52ca6463389ecd84d033d0c128afd2ba4c1a8ff4d7acf40c753348838e6"
+    },
+    {
+      "path": "native/NativeVirtualDisplayOwnerClient.cpp",
+      "bytes": 17344,
+      "sha256": "9f5b9f28b2924518512a253ceb6978688d7f4cf0de155da410868683d5f15b9a"
+    },
+    {
+      "path": "native/NativeVirtualDisplayOwnerClient.h",
+      "bytes": 1298,
+      "sha256": "0b20a416cc51fe92a9e4596d9fa830627fdd36fdec24279e0b38bffb6a178f4c"
+    },
+    {
+      "path": "native/NativeVirtualDisplayOwnerClientTest.cpp",
+      "bytes": 19970,
+      "sha256": "f7614a0b93bc9d4e5c61e2b950628ee52df73de71bb61f28c67373d1c10f11b2"
+    },
+    {
+      "path": "native/NativeVirtualDisplayOwnerProtocol.cpp",
+      "bytes": 5656,
+      "sha256": "6f1e6bc74b2ea02664225585703a885d9f6194ea1a2f4b94dd3cb0a9f11ef8f5"
+    },
+    {
+      "path": "native/NativeVirtualDisplayOwnerProtocol.h",
+      "bytes": 698,
+      "sha256": "0923e91a43ebfb34f89bf7c6a7c71f47aba105498e2acde7b6a711ea86fe65ad"
+    },
+    {
+      "path": "native/NativeVirtualDisplayOwnerProtocolTest.cpp",
+      "bytes": 2507,
+      "sha256": "5298bafaba2c684a473ae164cf7096de97cc967831e442338c1ab44450785325"
+    },
+    {
+      "path": "native/NativeVirtualDisplayProbe.mm",
+      "bytes": 6500,
+      "sha256": "592cf69f833a7392fa4d7ed21a94fc46fe40e2372349f01f54ad859c2ae1be6d"
+    },
+    {
+      "path": "native/NativeVirtualDisplaySnapshot.cpp",
+      "bytes": 5366,
+      "sha256": "926f9455759457891b0f6a921e1c7a41f9dc0360abc829fb0cb376e72b35c2f3"
+    },
+    {
+      "path": "native/NativeVirtualDisplaySnapshot.h",
+      "bytes": 1081,
+      "sha256": "8132f2fdc34393c76ac756eeace93855ebc3263687d53568b9b6bd16fb7659a3"
+    },
+    {
+      "path": "native/NativeVirtualDisplaySnapshotTest.cpp",
+      "bytes": 4361,
+      "sha256": "a1891c9d3c7d177aa0766151315553a2681f54f9157826004146ea9b226bbfb2"
+    },
+    {
+      "path": "native/NativeVirtualDisplayTest.mm",
+      "bytes": 14941,
+      "sha256": "916a280be65af989ef554918d914871ca64f1b1871dd63436a33bd98354c33b4"
+    },
+    {
+      "path": "native/NativeVirtualMode.h",
+      "bytes": 858,
+      "sha256": "68805a9ce74e1e8941555f2e781a742d195e1763db340af7d3a6722b4de7ac30"
+    },
+    {
+      "path": "native/NativeVirtualModeTest.cpp",
+      "bytes": 1442,
+      "sha256": "c16cb3075aca48741a140d652c1e0a7f30afe0a94acdef92b16ecf150c535b07"
+    },
+    {
+      "path": "native/Readiness.mm",
+      "bytes": 482,
+      "sha256": "c467cc54da87d2ecc62522ff3ce1a48f2990b0a4df8ef602e65004618baf56e3"
+    },
+    {
+      "path": "native/StateTest.cpp",
+      "bytes": 4482,
+      "sha256": "0813a09b9a738162b30a0e469f69160167b586781dbd62b3aa8cbedd434fcc02"
+    },
+    {
+      "path": "native/TestSps.h",
+      "bytes": 3670,
+      "sha256": "f628c210343410ecdf299c60b57b4a6b46f5a8c05a27eace0e32db687dc87c99"
+    },
+    {
+      "path": "native/worker/AssetStore.cpp",
+      "bytes": 27057,
+      "sha256": "e2739302af3df8a1edd32f310bca165fd0d3673508a1192a6d8f304fbf5cb146"
+    },
+    {
+      "path": "native/worker/AssetStore.h",
+      "bytes": 2441,
+      "sha256": "5940eb8cb5eb6a6a8bf7ad0b34f811477a4e97f4a3f47e29bbcfc5ffd0311884"
+    },
+    {
+      "path": "native/worker/AssetStoreTest.cpp",
+      "bytes": 4319,
+      "sha256": "2b847b62ed6347f93294bf28def3ef0b1b2204d3ee7010f564e48d43bf7fdbf2"
+    },
+    {
+      "path": "native/worker/ChildProcess.cpp",
+      "bytes": 15470,
+      "sha256": "afe057a8e286ea395947b984af5a9818d50acc9d5469a39722a3a2a4fd84f73c"
+    },
+    {
+      "path": "native/worker/ChildProcess.h",
+      "bytes": 2213,
+      "sha256": "fd416b534ea8d084ee78b9e7ddd9a659eb6c99827e3a3c967b4b911be13420e5"
+    },
+    {
+      "path": "native/worker/ChildProcessDeadlineTest.cpp",
+      "bytes": 7400,
+      "sha256": "04d369907ae96697ffa38303cb9d373c2dce5c523263f4bd751c654d3e245001"
+    },
+    {
+      "path": "native/worker/ClipboardProtocolTest.cpp",
+      "bytes": 2448,
+      "sha256": "62dfe04c5159949b9c9cb02be5bec4c5e7d6cfabcba036c25527ffc2de4bc20a"
+    },
+    {
+      "path": "native/worker/HostPipeTest.cpp",
+      "bytes": 1365,
+      "sha256": "ec0e1e691779473f3ba97dce8560d447cf3fd35ae6d5971f5bb42fe5d638f50c"
+    },
+    {
+      "path": "native/worker/MediaWriter.h",
+      "bytes": 11434,
+      "sha256": "4c4636278aea483cec33b79fccad2ce54e4f3660f4c162d0e1afe75dc1ae6f82"
+    },
+    {
+      "path": "native/worker/MediaWriterTest.cpp",
+      "bytes": 15189,
+      "sha256": "a240f54b5c7a282bd75cdea5674a3baaca54d5832958658f740b84623c44818e"
+    },
+    {
+      "path": "native/worker/NativeAssetClipboard.h",
+      "bytes": 784,
+      "sha256": "099fbed826de5df077cdadd5cb3c38d2479af45dabd4664865e16694535abddb"
+    },
+    {
+      "path": "native/worker/NativeAssetClipboard.mm",
+      "bytes": 15009,
+      "sha256": "6921cf0ebf5e477c82416656497fdb97d496f424d842948d948270acf77e4f66"
+    },
+    {
+      "path": "native/worker/NativeAssetImageTest.mm",
+      "bytes": 2951,
+      "sha256": "158ce4c3200c36aa46b53619c45db8fc50954f3c196ad0a5b8413461e5cb6fcb"
+    },
+    {
+      "path": "native/worker/NativeAssets.cpp",
+      "bytes": 16172,
+      "sha256": "bcdccabbe9b9f49450ac0df78d00d7b20816b8f42c4f2694206324e634389b9b"
+    },
+    {
+      "path": "native/worker/NativeAssets.h",
+      "bytes": 1133,
+      "sha256": "55e893280af42a95eccfa976bdc656f788b6193e07c9d368e287f40b4fbe1f9c"
+    },
+    {
+      "path": "native/worker/NativeAssetsTest.cpp",
+      "bytes": 8382,
+      "sha256": "22ccc06e66190f54168ff6c7d45797f92991428ab23eecd55fbf4afd2ccd8e62"
+    },
+    {
+      "path": "native/worker/NativeCaptureConfigurationTest.mm",
+      "bytes": 4492,
+      "sha256": "85f509bad47458d26c79f164993908831fda5d9d79c21cc0fafe46c1c5391917"
+    },
+    {
+      "path": "native/worker/NativeClipboard.h",
+      "bytes": 237,
+      "sha256": "897ee71ebffd54ecfdf4a008a9b9460233231a10a7723dc69e9cfaf3e074194a"
+    },
+    {
+      "path": "native/worker/NativeClipboard.mm",
+      "bytes": 2726,
+      "sha256": "ee8ea207fa5bf8952e04528e9e574b9324bf8ec05b6e3d2494703c330ec2dadd"
+    },
+    {
+      "path": "native/worker/NativeHardwareCaptureTest.mm",
+      "bytes": 7546,
+      "sha256": "036bcfd6f1ddf5bc76e2688b3fe0c26b08788a7fb8f0299877e574222a46f92a"
+    },
+    {
+      "path": "native/worker/NativePowerPolicy.mm",
+      "bytes": 4429,
+      "sha256": "2c476226bffe915d3873fe45d626b5b21243d01549534950358bd05364da46c2"
+    },
+    {
+      "path": "native/worker/NativeStopOwnershipTest.mm",
+      "bytes": 5366,
+      "sha256": "01e8a2ee29b339c788b7d60097bb4818c41f612234a4e84c889a0a1f2efb63b6"
+    },
+    {
+      "path": "native/worker/NativeWorker.mm",
+      "bytes": 44345,
+      "sha256": "199fb0b9d1701a2f7382edecf2d2c6f8cf3c8b0367932345fc67a3f4a1caa8b1"
+    },
+    {
+      "path": "native/worker/NativeWorkerPackage.mm",
+      "bytes": 7113,
+      "sha256": "c96875b9eefc429cd65540b817168e5f2ebce024722d63554407850c633f6f50"
+    },
+    {
+      "path": "native/worker/PowerPolicy.h",
+      "bytes": 1839,
+      "sha256": "22279accd1a05af3ac9da6433826eefd32db157f628067ff9f9a03233c58173a"
+    },
+    {
+      "path": "native/worker/PowerPolicyFile.h",
+      "bytes": 4451,
+      "sha256": "e582c46378f459b7999ca495806e0e823484668ea174193423e7099769bf7484"
+    },
+    {
+      "path": "native/worker/PowerPolicyTest.cpp",
+      "bytes": 3152,
+      "sha256": "2d9567d648e5e2f2a6a95e6a5c1c8585721c971bf31707aae152f31fc2f23a70"
+    },
+    {
+      "path": "native/worker/ProcessIOTest.cpp",
+      "bytes": 1859,
+      "sha256": "bcdf509cd9e92cd9c6d398b4f4e95cd8bbea96378079c254e29d5af63b7acca0"
+    },
+    {
+      "path": "native/worker/WorkerApplication.h",
+      "bytes": 907,
+      "sha256": "baaa19541d2ea28c9ee7e9d4c458658eedb773c430db401c06ce9ea33ecaf19c"
+    },
+    {
+      "path": "native/worker/WorkerApplicationTest.mm",
+      "bytes": 480,
+      "sha256": "98f8a5d4bf75981f7dfa0d80b4c81a24c204649f20285cb9d653b3c9d0e7d1f6"
+    },
+    {
+      "path": "native/worker/WorkerArguments.h",
+      "bytes": 1644,
+      "sha256": "019f1766cf403838a0991373d63c802a80fee4fe4e7964a6372fa1e73e4dcaca"
+    },
+    {
+      "path": "native/worker/WorkerArgumentsTest.cpp",
+      "bytes": 1553,
+      "sha256": "5aded48d56c7b956d7dcbc61a8dc369b7e6bd851a8dba3abe0cbf7c752f68b31"
+    },
+    {
+      "path": "native/worker/WorkerCaptureProfileTest.cpp",
+      "bytes": 9450,
+      "sha256": "7575e9572464d867f62cf533e2b696cf69fa6d4acabe9932649c188b3819c324"
+    },
+    {
+      "path": "native/worker/WorkerChannel.h",
+      "bytes": 3887,
+      "sha256": "11f12914b8b992faa5469f9e57682d499febd3b4ec2388b619ba330e573cc310"
+    },
+    {
+      "path": "native/worker/WorkerChannelTest.cpp",
+      "bytes": 9995,
+      "sha256": "41be9e4dcdae2792737e6d8a41e00791b493465f73072eb7c26012e64330472d"
+    },
+    {
+      "path": "native/worker/WorkerCleanup.h",
+      "bytes": 2872,
+      "sha256": "ac235e30f759150d7837eb5bcf0d24b0e8e866369461494cc396087d2ab71dc0"
+    },
+    {
+      "path": "native/worker/WorkerCleanupTest.cpp",
+      "bytes": 4688,
+      "sha256": "8d675277ffe02d332e545f38bbc6a4b5049e6699a81e61175d69630554bf2667"
+    },
+    {
+      "path": "native/worker/WorkerClipboard.h",
+      "bytes": 5454,
+      "sha256": "6f4ca4cbce3b814145d9412d7acdd360a9f6a5a455039e104dd0d80349cf2999"
+    },
+    {
+      "path": "native/worker/WorkerClipboardTest.cpp",
+      "bytes": 6865,
+      "sha256": "d960284f026e666112756dadaa387df3627b0e486d61dbc45e0c249a7bed1485"
+    },
+    {
+      "path": "native/worker/WorkerDiagnostics.h",
+      "bytes": 9527,
+      "sha256": "becab8baab867d14ef0c825edf71d0e132019984f757ca714f19784421523750"
+    },
+    {
+      "path": "native/worker/WorkerDiagnosticsTest.cpp",
+      "bytes": 3126,
+      "sha256": "fff94f4d8f699edc30b7340e1532837d8e0cd33c5b9a1dea6f7f54da8ff7f4df"
+    },
+    {
+      "path": "native/worker/WorkerHostTemplate.h",
+      "bytes": 5921,
+      "sha256": "9fd512e5ef2cc4bd98b0c5d4b26efa5483c4628e6ee7b9c31427db40b5ac97de"
+    },
+    {
+      "path": "native/worker/WorkerHostTemplateIOTest.mm",
+      "bytes": 1444,
+      "sha256": "cd822b06233af86bbd7aca77d9a8281e243e92b3febf76036ccfc87344db3c26"
+    },
+    {
+      "path": "native/worker/WorkerHostTemplateMac.mm",
+      "bytes": 8242,
+      "sha256": "aeb78a9d9a1a93f18e6cf32bd99ca4c3c7c5e02f2488178bb4f01c0b90b31d6f"
+    },
+    {
+      "path": "native/worker/WorkerHostTemplateTest.cpp",
+      "bytes": 5756,
+      "sha256": "9bb3d11fe6e90964993a7f0ae62b7861da04b59a518e227a44813bf6d086700e"
+    },
+    {
+      "path": "native/worker/WorkerModuleTest.cpp",
+      "bytes": 2998,
+      "sha256": "1b0b54461ed32e7500e94c4f86cb4544d35d59135100591a1d4157dbb5e2a7bf"
+    },
+    {
+      "path": "native/worker/WorkerPackageContract.h",
+      "bytes": 7211,
+      "sha256": "c18d1b16400ce64c97d3a601c07db03ebe3ca85111e1553d7f94ae96fbdd82a8"
+    },
+    {
+      "path": "native/worker/WorkerPackageContractTest.cpp",
+      "bytes": 6143,
+      "sha256": "c0011ce3c2e813ae9b2043ab52c092710eaa140d95f60777dad48ff4b202168b"
+    },
+    {
+      "path": "native/worker/WorkerProtocol.h",
+      "bytes": 13584,
+      "sha256": "966cbce76d87ef94a92539f73fcdc5e9ed3b0a746a1c73919ee2accae3f0716a"
+    },
+    {
+      "path": "native/worker/WorkerProtocolTest.cpp",
+      "bytes": 4059,
+      "sha256": "7361f4421cf710b59439ff998cf0250c9116f2f742bc261db610fbb28141fad7"
+    },
+    {
+      "path": "native/worker/WorkerReadiness.h",
+      "bytes": 877,
+      "sha256": "fd76414e9aa3fbe48fba402c4fc8bfa8385359fb551cfff400fdc8ff3fd3b898"
+    },
+    {
+      "path": "native/worker/WorkerReadinessTest.cpp",
+      "bytes": 2327,
+      "sha256": "3b744832f24af793e9bdee3fc9063eae21899c13b225cba2a047614d5518882d"
+    },
+    {
+      "path": "native/worker/WorkerReports.h",
+      "bytes": 1099,
+      "sha256": "8d92b11c6a6eba4ca50fbd0c3b3a291ee540010a09e70df95857dbdf6310e89c"
+    },
+    {
+      "path": "native/worker/WorkerReportsTest.cpp",
+      "bytes": 5254,
+      "sha256": "1c4b5543da7f0523fab8c4aa7b2be084565e95c1f66632227d25eeb121cfafab"
+    },
+    {
+      "path": "native/worker/WorkerRunLoop.h",
+      "bytes": 241,
+      "sha256": "43a4b772ee96373f465822e4654dc14eefbf938791978c858412bd73836e947e"
+    },
+    {
+      "path": "native/worker/WorkerRunLoop.mm",
+      "bytes": 822,
+      "sha256": "8fe0090441bdd161a3989f5d70b6843270e7349ab8af149b5356b6dd557fdb7c"
+    },
+    {
+      "path": "native/worker/WorkerRunLoopTest.mm",
+      "bytes": 1183,
+      "sha256": "e410a2ea47e2552989cf3a77b6c38400827800d91b3a11cd9badfc7d026d2236"
+    },
+    {
+      "path": "native/worker/WorkerRuntime.h",
+      "bytes": 1516,
+      "sha256": "e4544e3442246a9945f6c1871bb6463e04822828ec215e98f1d8a25651c953b1"
+    },
+    {
+      "path": "source/ClipboardPasteIntent.cpp",
+      "bytes": 2609,
+      "sha256": "c185878e503ae2470648ea9922cebaec2df32be9dd5780a7d5760fa92c402f65"
+    },
+    {
+      "path": "source/ClipboardPasteIntent.h",
+      "bytes": 1253,
+      "sha256": "36d5349940695808d53bfa52647a41722630082bb67968bb592cddb06062f54e"
+    },
+    {
+      "path": "source/ClipboardSelection.cpp",
+      "bytes": 7172,
+      "sha256": "a1c207436d88013aca82522acad21ffd121f1da83b024c8d4d9809eeea2f6ae1"
+    },
+    {
+      "path": "source/ClipboardSelection.h",
+      "bytes": 1526,
+      "sha256": "93eb324e88218f306ea4d8a544a680fc273d6f78d76886fa7144aeef3a4f05c1"
+    },
+    {
+      "path": "source/DecoderAllocation.h",
+      "bytes": 905,
+      "sha256": "907bfb3cc852c96996d9b92135b2664698cce84d9f22fc81233d81993438585b"
+    },
+    {
+      "path": "source/DesktopDisplayPlugin.cpp",
+      "bytes": 3608,
+      "sha256": "40207d62b3dc52e04bef27b1cf26f3efd8af48ad172b1a4d388f46501138334e"
+    },
+    {
+      "path": "source/DesktopViewerSurface.cpp",
+      "bytes": 73718,
+      "sha256": "2654ca0ceeb932e917154be68d0b651f73bfd76786dfba07bfa136ae4042ad5f"
+    },
+    {
+      "path": "source/DesktopViewerSurface.h",
+      "bytes": 2115,
+      "sha256": "e5d7fb103997a02cdc36b874fef2f8d37a2daf5bcbb8534006c7087e83866859"
+    },
+    {
+      "path": "source/FrameCodec.h",
+      "bytes": 6152,
+      "sha256": "f0f2e75ccc6d3bd25b0515462e1bd238981aace04adc9925efd3e20833ba264f"
+    },
+    {
+      "path": "source/GpuVideoWidget.cpp",
+      "bytes": 16765,
+      "sha256": "2ca172871b1a3dd36766b6d904cfba258cb403cf3259a46cbc22d8bfde739fe6"
+    },
+    {
+      "path": "source/GpuVideoWidget.h",
+      "bytes": 957,
+      "sha256": "017fef63eee7475572f3d07cdd7d3b317b43debbf7903dfbe53aad724b777449"
+    },
+    {
+      "path": "source/H264Decoder.cpp",
+      "bytes": 10647,
+      "sha256": "bfae1e915af0ed4fa14778f6ef9fa7dafafea52b339c85b11b9525d0fbc81ea3"
+    },
+    {
+      "path": "source/H264Decoder.h",
+      "bytes": 1647,
+      "sha256": "8f601168aa861d415ea7174930c94379e862c098de194d223d5c3a310a80f90c"
+    },
+    {
+      "path": "source/HardwareVideoDecoder.cpp",
+      "bytes": 9381,
+      "sha256": "291fee35f17bd983841f2c2796fea8f11ba421decbba019f96c6a0792f0f9ac9"
+    },
+    {
+      "path": "source/HardwareVideoDecoder.h",
+      "bytes": 2360,
+      "sha256": "ddd0c9e9e6860dd16b2cb0a74a0c8d2d4087342b9a0194e6c426fcfbcccd2a3f"
+    },
+    {
+      "path": "source/InputMapping.cpp",
+      "bytes": 10967,
+      "sha256": "10708da52e51b9482db53e75b788dbb8905d4fdb257e74e92b60cbcca4ccfe7c"
+    },
+    {
+      "path": "source/InputMapping.h",
+      "bytes": 1313,
+      "sha256": "51094e3e6f8d5cc9fafbccf93eb1741a76b5f37a07de3dc795373eaf1e42a3da"
+    },
+    {
+      "path": "source/NativeVideoFrame.h",
+      "bytes": 160,
+      "sha256": "ee777b4799a16f8921b09926c33c06985c544a8dca9eedefbcca100f27f41765"
+    },
+    {
+      "path": "source/ProcessChannel.cpp",
+      "bytes": 17705,
+      "sha256": "2f3e6b91d60ef693c1bdbd907e588dafd616c4d4a259600cde3af2a78935d5e6"
+    },
+    {
+      "path": "source/ProcessChannel.h",
+      "bytes": 2056,
+      "sha256": "f75ea7d67c5cdd9af82ae6a0121c6ce6dc439069b56ab91a3566746424d556e0"
+    },
+    {
+      "path": "source/RichClipboardTransfer.cpp",
+      "bytes": 37048,
+      "sha256": "9cfe4c30c791e20d299aa8704f0fce4fef652cfd1784912942a8e8e7c03f6d01"
+    },
+    {
+      "path": "source/RichClipboardTransfer.h",
+      "bytes": 2041,
+      "sha256": "5fa127ea244999dc22b078c9772ab1c85b3323eb609eabd0016444e1593a2922"
+    },
+    {
+      "path": "source/ViewerPreferences.h",
+      "bytes": 4422,
+      "sha256": "591e2bc351457407fa836340922a4d58ae61eba1294a2af5303f2e11785b2385"
+    },
+    {
+      "path": "source/cuda/dynlink_cuda.h",
+      "bytes": 21936,
+      "sha256": "2c74cf9b0ace0503ca18d2c43645d6cb1ec0dd7ea7163f7880bba5141586f275"
+    },
+    {
+      "path": "tests/ClipboardPasteIntentTest.cpp",
+      "bytes": 5486,
+      "sha256": "baa5b34fdcd48d075632e60bfccea30aa7e93cfedbb82d8153ad18e59e13dd3e"
+    },
+    {
+      "path": "tests/ClipboardSelectionTest.cpp",
+      "bytes": 9699,
+      "sha256": "144bc8a9b73d3226e709d43b901522dd10825065cd6a0d76cd3103df39e9cc02"
+    },
+    {
+      "path": "tests/DesktopViewerSurfaceTest.cpp",
+      "bytes": 73745,
+      "sha256": "6ee219619c3b8969d6fa7a9877a1a582202f5d85a807fb65f2d4e4cda82471ec"
+    },
+    {
+      "path": "tests/FrameCodecTest.cpp",
+      "bytes": 2823,
+      "sha256": "b78181c208c877d5dba6f1bca30104239365c3062451f1c0c2bf8ba6186095b8"
+    },
+    {
+      "path": "tests/GpuVideoWidgetTest.cpp",
+      "bytes": 3632,
+      "sha256": "35ab91dd829ba2ccad493c2861b88c3a15af2eae2301445e86e16495c37785c0"
+    },
+    {
+      "path": "tests/H264DecoderTest.cpp",
+      "bytes": 11450,
+      "sha256": "147ae3affbf5dab5dd8892bef3cd632b84ba487c40dd3a329b1e18e0fcc46ad6"
+    },
+    {
+      "path": "tests/HardwareVideoDecoderTest.cpp",
+      "bytes": 3384,
+      "sha256": "800f067bdc9931677e01e86f95fe612a99df71a827ed7a59da84f214e8ac5ce8"
+    },
+    {
+      "path": "tests/InputMappingTest.cpp",
+      "bytes": 8057,
+      "sha256": "06e1c3a897b94a19f88eee596a0aea7546668287231f0289798ed960e305f49c"
+    },
+    {
+      "path": "tests/MediaClosure.cpp",
+      "bytes": 579,
+      "sha256": "64ef3db04e7d52b5c8c62670567fafbab7f0a78874163e50556e181bd5140f20"
+    },
+    {
+      "path": "tests/PluginAdmissionTest.cpp",
+      "bytes": 7545,
+      "sha256": "841fbc473c81e8ed4097b4840e6eb68c4f950f0297048ae4c28270aca320601e"
+    },
+    {
+      "path": "tests/ProcessChannelTest.cpp",
+      "bytes": 22692,
+      "sha256": "d51b9557247e6cacabd7094ff89317664f0e79c32816ac5b52c0b50a18f9b804"
+    },
+    {
+      "path": "tests/RichClipboardTransferTest.cpp",
+      "bytes": 20803,
+      "sha256": "b315434084f2d7fdf3d94c7b7606fdbbc2dde8bf0ac8a40a92c56acc21c57c7e"
+    },
+    {
+      "path": "tests/fixtures/h264/README.md",
+      "bytes": 1053,
+      "sha256": "4fbe6767db8da81d3e131fc3212030befa2fd67c22db9a44af0c6a21fb575711"
+    },
+    {
+      "path": "tests/fixtures/h264/SyntheticH264.mm",
+      "bytes": 8574,
+      "sha256": "33928f8a13d63e84a8cf93d97e55d46a48e83ce521f127a29fecb4269f64fd2e"
+    },
+    {
+      "path": "tests/fixtures/h264/desktop-synthetic-33928f8a13d63e84-0.h264",
+      "bytes": 180,
+      "sha256": "10413759098fde0626089c1ecaff7d0c03f0a7060cf2a01e150ad1bace89b455"
+    },
+    {
+      "path": "tests/fixtures/h264/desktop-synthetic-33928f8a13d63e84-1.h264",
+      "bytes": 152,
+      "sha256": "7854338ec467306db197dc9c22e0d69c201047620b0d72865a25cd6e176ce539"
+    },
+    {
+      "path": "tests/fixtures/h264/desktop-synthetic-33928f8a13d63e84-provenance.json",
+      "bytes": 1145,
+      "sha256": "bb864197e8bf4026582f2cedb5e0884f353c141c84561a6cf6fb537a56002143"
+    },
+    {
+      "path": "tests/fixtures/h264/fixture.json",
+      "bytes": 1077,
+      "sha256": "ce07fdb87d8b9ef23f665e9840f9014a374e9800c28f805542cc098e400d5ab4"
+    },
+    {
+      "path": "tests/viewer_fixture.py",
+      "bytes": 11517,
+      "sha256": "dba924017cab9c7dddba96f98e361911f1708bfc8b2e2cfe713914c9cf1ee36c"
+    }
+  ]
+}

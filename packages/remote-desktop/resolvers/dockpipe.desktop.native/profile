@@ -1,0 +1,6 @@
+# Candidate provider. Paths resolve only within this compiled package.
+DOCKPIPE_REMOTE_DESKTOP_PROTOCOL=dockpipe.desktop.native/v1
+DOCKPIPE_REMOTE_DESKTOP_DISPLAY=assets/display/display-factory.json
+DOCKPIPE_REMOTE_DESKTOP_CHANNEL=assets/tooling/bin/dockpipe-desktop-channel
+DOCKPIPE_REMOTE_DESKTOP_WORKER=assets/tooling/dockpipe-native-desktop-worker.app/Contents/MacOS/dockpipe-native-desktop-worker
+DOCKPIPE_REMOTE_DESKTOP_NATIVE_WORKER=assets/worker/worker-factory.json
